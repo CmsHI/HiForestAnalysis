@@ -1,6 +1,8 @@
 #ifndef TrackUtilities_C
 #define TrackUtilities_C
 
+#include <TMath.h>
+
 // Calo Matching -----------------------------------------
 void HiForest::matchTrackCalo(bool allEvents){
 
@@ -93,7 +95,7 @@ double HiForest::getTrackCorrection(int j)
       if (leadingJetPtForTrkCor<-1) {
       // Select leading and subleading jet
          for (int k=0; k<akPu3PF.nref; k++) {
-            if (fabs(akPu3PF.jteta[k])>2) continue;
+            if (TMath::Abs(akPu3PF.jteta[k])>2) continue;
             if (akPu3PF.jtpt[k]>leadingJetPtForTrkCor) {
      	       leadingJetPtForTrkCor = akPu3PF.jtpt[k];
 	       leadingJetEtaForTrkCor = akPu3PF.jteta[k];
@@ -137,10 +139,10 @@ bool HiForest::selectTrack(int j){
 
    if(1 || collisionMode==cPPb){
       if(!(track.highPurity[j])) return 0 ;
-      if(fabs(track.trkDz1[j]/track.trkDzError1[j]) > 3) return 0 ;
-      if(fabs(track.trkDxy1[j]/track.trkDxyError1[j]) > 3) return 0 ;
+      if(TMath::Abs(track.trkDz1[j]/track.trkDzError1[j]) > 3) return 0 ;
+      if(TMath::Abs(track.trkDxy1[j]/track.trkDxyError1[j]) > 3) return 0 ;
       if(track.trkPtError[j]/track.trkPt[j]>0.1) return 0 ;
-      if(fabs(track.trkEta[j]) > 2.4) return 0;
+      if(TMath::Abs(track.trkEta[j]) > 2.4) return 0;
       if(track.trkPt[j] < 0.4) return 0;      
    }else{
       cout<<"Track selection not implemented for this type of collision!"<<endl;

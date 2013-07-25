@@ -1,3 +1,5 @@
+#include <TMath.h>
+
 double angularRangeReduce(double x)
 {
   const double cody_waite_x_max = 1608.4954386379741381;
@@ -29,5 +31,5 @@ double deltaR2(double eta1, double phi1, double eta2, double phi2) {
 
 double deltaR(double eta1, double phi1, double eta2, double phi2) {
     double r2 = (deltaR2(eta1,phi1,eta2,phi2));
-    return sqrt(r2);
+    return TMath::Sqrt(r2);
 }

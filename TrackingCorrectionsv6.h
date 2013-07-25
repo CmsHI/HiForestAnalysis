@@ -8,6 +8,8 @@
 #include "TH3.h"
 #include "TString.h"
 #include "TLine.h"
+#include <TMath.h>
+
 using namespace std;
 
 class TrackingCorrections
@@ -327,10 +329,10 @@ void TrackingCorrections::Init()
 //                                  if (!trkPhiMode_&&jetBin_->GetBinLowEdge(ijet_neighbor)>=40 && (ptHatMin_[s]+ptHatMargin > jetBin_->GetBinLowEdge(ijet_neighbor))) continue;
                                  
 if (!weightSamples_) {                                 content[m]+=inputHists_[lv][s][c][m]->GetBinContent(ieta_neighbor,ipt_neighbor,ijet_neighbor);
-                                 error[m] = sqrt(pow(error[m],2)+pow(inputHists_[lv][s][c][m]->GetBinError(ieta_neighbor,ipt_neighbor,ijet_neighbor),2));
+                                 error[m] = TMath::Sqrt(TMath::Power(error[m],2)+TMath::Power(inputHists_[lv][s][c][m]->GetBinError(ieta_neighbor,ipt_neighbor,ijet_neighbor),2));
                                  } else {
 content[m]+=inputHists_[lv][s][c][m]->GetBinContent(ieta_neighbor,ipt_neighbor,ijet_neighbor)*sampleCroSec_[s]/numOfEvts_[s][c];
-                                 error[m] = sqrt(pow(error[m],2)+pow(inputHists_[lv][s][c][m]->GetBinError(ieta_neighbor,ipt_neighbor,ijet_neighbor)*sampleCroSec_[s]/numOfEvts_[s][c],2));
+                                 error[m] = TMath::Sqrt(TMath::Power(error[m],2)+TMath::Power(inputHists_[lv][s][c][m]->GetBinError(ieta_neighbor,ipt_neighbor,ijet_neighbor)*sampleCroSec_[s]/numOfEvts_[s][c],2));
                                  }
                               } // end of for pt hat loop
                            }

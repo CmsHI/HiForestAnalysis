@@ -12,6 +12,8 @@
 #include <TTree.h>
 #include <TBranch.h>
 
+using namespace std;
+
 class GenParticles {
 public :
    GenParticles(){};
