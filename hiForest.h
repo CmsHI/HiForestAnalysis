@@ -51,7 +51,7 @@ class HiForest : public TNamed
 {
 
   public: 
-   HiForest(const char *file, const char *name="forest", collisionType cMode = cPbPb, bool ismc = 0, bool isrecorrected = 0);
+   HiForest(const char *file, const char *name="forest", collisionType cMode = cPbPb, bool ismc = 0);
   ~HiForest();
 
   //==================================================================================================================================
@@ -67,7 +67,10 @@ class HiForest : public TNamed
   void SetOutputFile(const char *name);               		// Set output file name for skim
   void AddCloneTree(TTree* t, const char *dirName, const char *treeName);   // Add a clone tree to the clone forest
   void FillOutput();						// Fill output forest  
-  
+
+  void Draw(Option_t* option){
+    return tree->Draw(option);
+  }
   Long64_t Draw(const char* varexp, const char* selection, Option_t* option = "", Long64_t nentries = 1000000000, Long64_t firstentry = 0){
      return tree->Draw(varexp,selection,option,nentries,firstentry);
   }
@@ -94,7 +97,7 @@ class HiForest : public TNamed
   //==================================================================================================================================
   // Jet utility functions
   //==================================================================================================================================
-  void sortJets(TTree* jetTree, Jets& jets, double etaMax = 2, double ptMin = 40, bool allEvents = 1, int smearType = -1);
+  void sortJets(TTree* jetTree, Jets& jets, double etaMax = 2, bool allEvents = 1, int smearType = -1);
   int leadingJet();
   int subleadingJet();
   int thirdJet();
@@ -120,7 +123,7 @@ class HiForest : public TNamed
   // Get track-jet correlated variables. Not needed if correlatePF is run.
   //==================================================================================================================================
   void correlateTracks(TTree* jetTree, Jets& jets, bool allEvents = 1, bool smeared = 0);
-  void correlatePF(TTree* jetTree, Jets& jets, bool allEvents = 1){return;}
+  //void correlatePF(TTree* jetTree, Jets& jets, bool allEvents = 1){return;}
 
   // TFile
   TFile *inf; 					// Input file 
@@ -349,7 +352,7 @@ class HiForest : public TNamed
   
 };
 
-HiForest::HiForest(const char *infName, const char* name, collisionType cMode, bool ismc, bool recjec):
+HiForest::HiForest(const char *infName, const char* name, collisionType cMode, bool ismc):
    tree(0),
    fGauss(0),
    verbose(0),
@@ -776,7 +779,7 @@ void HiForest::InitTree()
 //       trackCorrections.push_back(new TrackingCorrections("Forest2STAv12","Forest2_MergedGeneral_j1"));
 //       trackCorrections.push_back(new TrackingCorrections("Forest2STAv12","Forest2_MergedGeneral_j2"));
 
-      for(int i = 0; i < trackCorrections.size(); ++i){
+      for(unsigned int i = 0; i < trackCorrections.size(); ++i){
          if (collisionMode==cPbPb) {
            trackCorrections[i]->AddSample("trkcorr/IterTrkCorrv14XSec/IterTrkCorrv14XSec_hy18dj80to100_akPu3PF_100_-1_-1000_genJetMode0.root",80);
            trackCorrections[i]->AddSample("trkcorr/IterTrkCorrv14XSec/IterTrkCorrv14XSec_hy18dj100to170_akPu3PF_100_-1_-1000_genJetMode0.root",100);
@@ -836,14 +839,14 @@ void HiForest::CheckArraySizes(){
     if(icPu5.nref > maxEntry) objectOverflow.push_back(icPu5.nref);
   }
 
-  for(int i = 0; i < trackOverflow.size(); ++i){
+  for(unsigned int i = 0; i < trackOverflow.size(); ++i){
     cout<<trackOverflow[i]<<endl;
   }
 
   if(trackOverflow.size() == 0) cout<<"Track sizes OK"<<endl;
   else cout<<"tracks crash"<<endl; // TODO : really crash
 
-  for(int i = 0; i < objectOverflow.size(); ++i){
+  for(unsigned int i = 0; i < objectOverflow.size(); ++i){
     cout<<objectOverflow[i]<<endl;
   }
 

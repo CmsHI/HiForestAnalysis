@@ -185,7 +185,7 @@ namespace jetsmear{
 
 
 
-void HiForest::sortJets(TTree* jetTree, Jets& jets, double etaMax, double ptMin, bool allEvents, int smearType){
+void HiForest::sortJets(TTree* jetTree, Jets& jets, double etaMax, bool allEvents, int smearType){
 
   jetsmear::JetResolution* res = 0;
   if(smearType==0){
@@ -262,7 +262,7 @@ void HiForest::sortJets(TTree* jetTree, Jets& jets, double etaMax, double ptMin,
 	 }
       }
 
-      for(int ib = 0; ib < branches.size(); ++ib){
+      for(unsigned int ib = 0; ib < branches.size(); ++ib){
 	 branches[ib]->Fill();
       }
 
@@ -463,9 +463,9 @@ bool HiForest::hasDiJet(Jets& jets, double pt1, double pt2, double dphiMin){
   return true;
 };
 
-double HiForest::jetFracChg(int i){ return 0;}
-double HiForest::jetFracNeut(int i){ return 0;}
-double HiForest::jetFracEM(int i){ return 0;}
+//double HiForest::jetFracChg(int i){ return 0;}
+//double HiForest::jetFracNeut(int i){ return 0;}
+//double HiForest::jetFracEM(int i){ return 0;}
 
 
 void HiForest::fakeRejection(TTree *jetTree, Jets &jets, bool allEvents)
