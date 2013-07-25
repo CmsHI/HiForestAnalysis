@@ -1,0 +1,13 @@
+# C++ and root offal
+*.o
+*_C.d
+*.so
+
+# cvs
+CVS
+
+#image formats
+*.pdf
+*.gif
+*.eps
+*.png
