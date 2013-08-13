@@ -112,30 +112,40 @@ bool HiForest::isFragPhoton(int j)
 
 float HiForest::getCorrEt(int j)
 {
-   if ( !photon.isEB[j]) return  -100; // photon correction valid only for barrel photons
-   if ( photon.pt[j]<20 ) return -100; // photon correction valid only for photon pt > 40 GeV b/c we are using photon embedded sample
+   if ( !photon.isEB[j]) return  photon.pt[j]; // photon correction valid only for barrel photons
+   if ( photon.pt[j]<20 ) return -100;
    
-   if ( evt.hiBin == -1 ) 
-     return photon.pt[j];
-
-   int icent(0);
-   int isConv(0);
-   if ( photon.r9[j] > 0.94 ) 
-      isConv = 0;
-   else
-      isConv = 1;
+   if  ( (collisionMode == cPPb) || (collisionMode == cPP) )  {
+     if ( photon.r9[j] > 0.94 )
+       return  ( photon.pt[j] / (0.9969-0.0000289*photon.pt[j]) ) ; 
+     else 
+       return   ( photon.pt[j] / (0.9957+0.0000343*photon.pt[j]) ) ; 
+   }
+   else  {  // ( if collisionMode == cPbPb  )
+     if ( evt.hiBin == -1 ) 
+       return photon.pt[j];
+     
+     int icent(0);
+     int isConv(0);
+     if ( photon.r9[j] > 0.94 ) 
+       isConv = 0;
+     else
+       isConv = 1;
+     
+     if ( evt.hiBin < 4 ) 
+       icent = 1;
+     else if ( evt.hiBin < 12 ) 
+       icent = 2;
+     else if ( evt.hiBin < 40 )
+       icent = 3;
+     else
+       return -90;
+     
+     float corrFactor = fEnergyScale[isConv][icent]->Eval( photon.pt[j]);
+     return photon.pt[j]/corrFactor ;
+   }
    
-   if ( evt.hiBin < 4 ) 
-      icent = 1;
-   else if ( evt.hiBin < 12 ) 
-      icent = 2;
-   else if ( evt.hiBin < 40 )
-      icent = 3;
-   else
-      return -90;
-   
-   float corrFactor = fEnergyScale[isConv][icent]->Eval( photon.pt[j]);
-   return photon.pt[j]/corrFactor ;
+   return -1;
 }
 
 
