@@ -28,6 +28,7 @@ bool HiForest::isLooseEGamma(int j)
 bool HiForest::isLoosePhoton(int j)
 {
   //
+  //
    if (photon.isEB[j]) {
       // Barrel photon                                                                                                                       
       if (photon.hadronicOverEm[j]>0.1) return 0;
