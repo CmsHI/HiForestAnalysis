@@ -67,6 +67,9 @@ class HiForest : public TNamed
   void SetOutputFile(const char *name);               		// Set output file name for skim
   void AddCloneTree(TTree* t, const char *dirName, const char *treeName);   // Add a clone tree to the clone forest
   void FillOutput();						// Fill output forest  
+  void LoadNoTrees();
+  void ResetBooleans();
+
 
   void Draw(Option_t* option){
     return tree->Draw(option);
@@ -368,6 +371,14 @@ HiForest::HiForest(const char *infName, const char* name, collisionType cMode, b
 
   cone = 0.3;
   doTrackCorrections = 0;
+  
+  minJetPtForTrkCor = 40;
+  leadingJetPtForTrkCor = -100;
+  subleadingJetPtForTrkCor = -100;
+  leadingJetEtaForTrkCor = -100;
+  subleadingJetEtaForTrkCor = -100;
+  leadingJetPhiForTrkCor = -100;
+  subleadingJetPhiForTrkCor = -100;
 
   // Track correction initialized?
   initialized = 0;
@@ -525,13 +536,7 @@ void HiForest::GetEntry(int i)
   if (hasGenpTree)     genpTree   ->GetEntry(i);
   if (hasGenParticleTree) genParticleTree   ->GetEntry(i);
 
-  minJetPtForTrkCor = 40;
-  leadingJetPtForTrkCor = -100;
-  subleadingJetPtForTrkCor = -100;
-  leadingJetEtaForTrkCor = -100;
-  subleadingJetEtaForTrkCor = -100;
-  leadingJetPhiForTrkCor = -100;
-  subleadingJetPhiForTrkCor = -100;
+
 }
 
 int HiForest::GetEntries()
@@ -1007,6 +1012,98 @@ void HiForest::GetEnergyScaleTable(char *fileNameTable) {
    fEnergyScale[1][2] = (TF1*)f->Get("fit_hscale_r9lt94_2");
    fEnergyScale[1][3] = (TF1*)f->Get("fit_hscale_r9lt94_3");
 }
+
+void HiForest::LoadNoTrees()
+{
+  cout<<"Note: LoadNoTrees called, all hasTree booleans temporarily set to false"<<endl;
+  hasPhotonTree = false;
+  hasEvtTree = false;
+  hasMetTree = false;
+  hasNoiseTree = false;
+
+  hasPFTree = false;
+  hasIcPu5JetTree = false;
+  hasAkPu2JetTree = false;
+  hasAkPu3JetTree = false;
+  hasAkPu4JetTree = false;
+  hasAkPu5JetTree = false;
+  hasAkPu6JetTree = false;
+
+  hasAkPu2CaloJetTree = false;
+  hasAkPu3CaloJetTree = false;
+  hasAkPu4CaloJetTree = false;
+  hasAkPu5CaloJetTree = false;
+  hasAkPu6CaloJetTree = false;
+
+  hasAk2JetTree = false;
+  hasAk3JetTree = false;
+  hasAk4JetTree = false;
+  hasAk5JetTree = false;
+  hasAk6JetTree = false;
+
+  hasAk2CaloJetTree = false;
+  hasAk3CaloJetTree = false;
+  hasAk4CaloJetTree = false;
+  hasAk5CaloJetTree = false;
+  hasAk6CaloJetTree = false;
+
+  hasHltTree = false;
+  hasTrackTree = false;
+  hasPixTrackTree = false;
+  hasSkimTree = false;
+  hasTowerTree = false;
+  hasHbheTree = false;
+  hasEbTree = false;
+  hasGenpTree = false;
+  hasGenParticleTree = false;
+}
+
+void HiForest::ResetBooleans()
+{
+hasPhotonTree        = (photonTree       	!= 0);
+  hasPFTree            = (pfTree     		!= 0);
+  hasEvtTree           = (evtTree      		!= 0);
+  hasMetTree           = (metTree      		!= 0);
+  hasNoiseTree           = (noiseTree               != 0);
+
+  hasIcPu5JetTree      = (icPu5jetTree 		!= 0);
+
+  hasAkPu2JetTree      = (akPu2jetTree 		!= 0);
+  hasAkPu3JetTree      = (akPu3jetTree 		!= 0);
+  hasAkPu4JetTree      = (akPu4jetTree 		!= 0);
+  hasAkPu5JetTree      = (akPu5jetTree          != 0);
+  hasAkPu6JetTree      = (akPu6jetTree          != 0);
+
+  hasAkPu2CaloJetTree  = (akPu2CaloJetTree 	!= 0);
+  hasAkPu3CaloJetTree  = (akPu3CaloJetTree 	!= 0);
+  hasAkPu4CaloJetTree  = (akPu4CaloJetTree 	!= 0);
+  hasAkPu5CaloJetTree  = (akPu5CaloJetTree      != 0);
+  hasAkPu6CaloJetTree  = (akPu6CaloJetTree      != 0);
+
+  hasAk2JetTree      = (ak2jetTree          != 0);
+  hasAk3JetTree      = (ak3jetTree          != 0);
+  hasAk4JetTree      = (ak4jetTree          != 0);
+  hasAk5JetTree      = (ak5jetTree          != 0);
+  hasAk6JetTree      = (ak6jetTree          != 0);
+
+  hasAk2CaloJetTree  = (ak2CaloJetTree      != 0);
+  hasAk3CaloJetTree  = (ak3CaloJetTree      != 0);
+  hasAk4CaloJetTree  = (ak4CaloJetTree      != 0);
+  hasAk5CaloJetTree  = (ak5CaloJetTree      != 0);
+  hasAk6CaloJetTree  = (ak6CaloJetTree      != 0);
+
+
+  hasTrackTree     = (trackTree    		!= 0);
+  hasHltTree       = (hltTree    		!= 0);
+  hasSkimTree      = (skimTree   		!= 0);
+  hasTowerTree     = (towerTree    		!= 0);
+  hasHbheTree      = (hbheTree     		!= 0);
+  hasEbTree        = (ebTree       		!= 0);
+  hasGenpTree	   = (genpTree     		!=0);
+  hasGenParticleTree = (genParticleTree   	!=0);
+  cout<<"Note: ResetBooleans called, all hasTree booleans reset to correct values"<<endl;
+}
+
 
 
 // ====================== Track Utilities ========================
