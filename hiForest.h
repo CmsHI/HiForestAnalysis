@@ -977,16 +977,12 @@ bool HiForest::selectEvent(){
    bool select = skim.pHBHENoiseFilter || mc;
    if(collisionMode==cPbPb){
       select = select && skim.pcollisionEventSelection;
-   }else if(collisionMode==cPPb){
-      select = select &&
-	 hlt.HLT_PAZeroBiasPixel_SingleTrack_v1 &&
-	 //	 skim.pPAcollisionEventSelection &&
-	 skim.phfPosFilter1&&
-	 skim.phfNegFilter1&&
-	 skim.phltPixelClusterShapeFilter&&
-	 skim.pprimaryvertexFilter;
-   }else if(collisionMode==cPP){
-      select = select && skim.phfCoincFilter && skim.ppurityFractionFilter;
+   }else if(collisionMode==cPPb || collisionMode==cPP){
+    select = select &&
+       skim.phfPosFilter1 &&
+       skim.phfNegFilter1 &&
+       skim.pBeamScrapingFilter &&
+       skim.pprimaryvertexFilter;
    }
    return select;
 }
