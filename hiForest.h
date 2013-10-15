@@ -916,6 +916,12 @@ void HiForest::SetOutputFile(const char *name)
   if (hasAkPu5JetTree) AddCloneTree(akPu5jetTree, "akPu5PFJetAnalyzer", "t");
   if (hasAkPu6JetTree) AddCloneTree(akPu6jetTree, "akPu6PFJetAnalyzer", "t");
 
+  if (hasAk2JetTree) AddCloneTree(ak2jetTree, "ak2PFJetAnalyzer", "t");
+  if (hasAk3JetTree) AddCloneTree(ak3jetTree, "ak3PFJetAnalyzer", "t");
+  if (hasAk4JetTree) AddCloneTree(ak4jetTree, "ak4PFJetAnalyzer", "t");
+  if (hasAk5JetTree) AddCloneTree(ak5jetTree, "ak5PFJetAnalyzer", "t");
+  if (hasAk6JetTree) AddCloneTree(ak6jetTree, "ak6PFJetAnalyzer", "t");
+
   if (hasAkPu2CaloJetTree) AddCloneTree(akPu2CaloJetTree, "akPu2CaloJetAnalyzer", "t");
   if (hasAkPu3CaloJetTree) AddCloneTree(akPu3CaloJetTree, "akPu3CaloJetAnalyzer", "t");
   if (hasAkPu4CaloJetTree) AddCloneTree(akPu4CaloJetTree, "akPu4CaloJetAnalyzer", "t");
