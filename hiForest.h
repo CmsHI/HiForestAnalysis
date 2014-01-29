@@ -21,7 +21,7 @@
 #include "SetupGenParticleTree.h"
 #include "TrackingCorrectionsv6.h"
 #include "TrackingParam.h"
-#include <TTree.h>
+#include <TChain.h>
 #include <TFile.h>
 #include <TString.h>
 #include <TF1.h>
@@ -50,23 +50,23 @@ enum collisionType { cPbPb, cPP, cPPb };
 class HiForest : public TNamed
 {
 
-  public: 
+  public:
    HiForest(const char *file, const char *name="forest", collisionType cMode = cPbPb, bool ismc = 0);
   ~HiForest();
 
   //==================================================================================================================================
   // Utility functions
   //==================================================================================================================================
-  void CheckTree(TTree *t,const char *title);			// Check the status of a tree
+  void CheckTree(TChain *t,const char *title);			// Check the status of a tree
   void CheckArraySizes();					// Check if array size is large enough
   void GetEntry(int i);
-  int  GetEntries();  						// Get the number of entries 
+  int  GetEntries();  						// Get the number of entries
   void GetEnergyScaleTable(char *fileNameTable);                // Get photon energy scale table
   void InitTree();						// Initialize track correction
   void PrintStatus();						// Print the status of the hiForest
   void SetOutputFile(const char *name);               		// Set output file name for skim
-  void AddCloneTree(TTree* t, const char *dirName, const char *treeName);   // Add a clone tree to the clone forest
-  void FillOutput();						// Fill output forest  
+  void AddCloneTree(TChain* t, const char *dirName, const char *treeName);   // Add a clone tree to the clone forest
+  void FillOutput();						// Fill output forest
   void LoadNoTrees();
   void ResetBooleans();
 
@@ -100,13 +100,13 @@ class HiForest : public TNamed
   //==================================================================================================================================
   // Jet utility functions
   //==================================================================================================================================
-  void sortJets(TTree* jetTree, Jets& jets, double etaMax = 2, bool allEvents = 1, int smearType = -1);
+  void sortJets(TChain* jetTree, Jets& jets, double etaMax = 2, bool allEvents = 1, int smearType = -1);
   int leadingJet();
   int subleadingJet();
   int thirdJet();
   double deltaPhiDijet(Jets& jets);
   bool hasDiJet(Jets& jets, double pt1 = 100, double pt2 = 40, double dphiMin = 2.*3.1415926/3.);
-  void fakeRejection(TTree *jetTree, Jets &jets, bool allEvents);
+  void fakeRejection(TChain *jetTree, Jets &jets, bool allEvents);
   double jetFracChg(int i);
   double jetFracNeut(int i);
   double jetFracEM(int i);
@@ -121,64 +121,64 @@ class HiForest : public TNamed
   double getTrackCorrectionPara(int j);
   double getTrackCorrection(int j);
   bool selectTrack(int j);
-  
+
   //==================================================================================================================================
   // Get track-jet correlated variables. Not needed if correlatePF is run.
   //==================================================================================================================================
-  void correlateTracks(TTree* jetTree, Jets& jets, bool allEvents = 1, bool smeared = 0);
+  void correlateTracks(TChain* jetTree, Jets& jets, bool allEvents = 1, bool smeared = 0);
   //void correlatePF(TTree* jetTree, Jets& jets, bool allEvents = 1){return;}
 
   // TFile
-  TFile *inf; 					// Input file 
+  TFile *inf; 					// Input file
   TFile *outf;                                  // Output file if we want to export the forest
 
   // Trees
-  TTree *photonTree;				// Photon Tree, see branches in SetupPhotonTree.h
-  TTree *icPu5jetTree;				// Jet Tree with icPu5 algorithm, see branches in SetupJetTree.h
-  TTree *akPu2jetTree;				// Jet Tree with akPu2PF algorithm, see branches in SetupJetTree.h
-  TTree *akPu3jetTree;				// Jet Tree with akPu3PF algorithm, see branches in SetupJetTree.h
-  TTree *akPu4jetTree;				// Jet Tree with akPu4PF algorithm, see branches in SetupJetTree.h
-  TTree *akPu5jetTree;                          // Jet Tree with akPu4PF algorithm, see branches in SetupJetTree.h
-  TTree *akPu6jetTree;
+  TChain *photonTree;				// Photon Tree, see branches in SetupPhotonTree.h
+  TChain *icPu5jetTree;				// Jet Tree with icPu5 algorithm, see branches in SetupJetTree.h
+  TChain *akPu2jetTree;				// Jet Tree with akPu2PF algorithm, see branches in SetupJetTree.h
+  TChain *akPu3jetTree;				// Jet Tree with akPu3PF algorithm, see branches in SetupJetTree.h
+  TChain *akPu4jetTree;				// Jet Tree with akPu4PF algorithm, see branches in SetupJetTree.h
+  TChain *akPu5jetTree;                          // Jet Tree with akPu4PF algorithm, see branches in SetupJetTree.h
+  TChain *akPu6jetTree;
 
-  TTree *ak2jetTree;
-  TTree *ak3jetTree;
-  TTree *ak4jetTree;
-  TTree *ak5jetTree;
-  TTree *ak6jetTree;
+  TChain *ak2jetTree;
+  TChain *ak3jetTree;
+  TChain *ak4jetTree;
+  TChain *ak5jetTree;
+  TChain *ak6jetTree;
 
-  TTree *akPu2CaloJetTree;			// Jet Tree with akPu2Calo algorithm, see branches in SetupJetTree.h
-  TTree *akPu3CaloJetTree;			// Jet Tree with akPu3Calo algorithm, see branches in SetupJetTree.h
-  TTree *akPu4CaloJetTree;		        // Jet Tree with akPu4Calo algorithm, see branches in SetupJetTree.h
-  TTree *akPu5CaloJetTree;                      // Jet Tree with akPu5Calo algorithm, see branches in SetupJetTree.h
-  TTree *akPu6CaloJetTree;
+  TChain *akPu2CaloJetTree;			// Jet Tree with akPu2Calo algorithm, see branches in SetupJetTree.h
+  TChain *akPu3CaloJetTree;			// Jet Tree with akPu3Calo algorithm, see branches in SetupJetTree.h
+  TChain *akPu4CaloJetTree;		        // Jet Tree with akPu4Calo algorithm, see branches in SetupJetTree.h
+  TChain *akPu5CaloJetTree;                      // Jet Tree with akPu5Calo algorithm, see branches in SetupJetTree.h
+  TChain *akPu6CaloJetTree;
 
-  TTree *ak2CaloJetTree;
-  TTree *ak3CaloJetTree;
-  TTree *ak4CaloJetTree;
-  TTree *ak5CaloJetTree;
-  TTree *ak6CaloJetTree;
+  TChain *ak2CaloJetTree;
+  TChain *ak3CaloJetTree;
+  TChain *ak4CaloJetTree;
+  TChain *ak5CaloJetTree;
+  TChain *ak6CaloJetTree;
 
-  TTree *hltTree;				// OpenHLT Tree, see branches in SetupHltTree.h
-  TTree *trackTree;				// Track Tree, see branches in SetupTrackTree.h
-  TTree *pixtrackTree;				// Track Tree, see branches in SetupTrackTree.h
-  TTree *skimTree;				// Skim Tree, contains event selection info, see branches in SetupSkimTree.h
-  TTree *towerTree;                             // Tower Tree
-  TTree *hbheTree;                              // HCAL HBHE Tree
-  TTree *ebTree;                                // ECAL eb Tree
-  TTree *evtTree;                               // Event Tree
-  TTree *metTree;                               // MET Tree
+  TChain *hltTree;				// OpenHLT Tree, see branches in SetupHltTree.h
+  TChain *trackTree;				// Track Tree, see branches in SetupTrackTree.h
+  TChain *pixtrackTree;				// Track Tree, see branches in SetupTrackTree.h
+  TChain *skimTree;				// Skim Tree, contains event selection info, see branches in SetupSkimTree.h
+  TChain *towerTree;                             // Tower Tree
+  TChain *hbheTree;                              // HCAL HBHE Tree
+  TChain *ebTree;                                // ECAL eb Tree
+  TChain *evtTree;                               // Event Tree
+  TChain *metTree;                               // MET Tree
 
-  TTree *noiseTree;
+  TChain *noiseTree;
 
-  TTree *pfTree;                                // PF candidate Tree, see branches in SetupPFTree.h
-  TTree *genpTree;                              // Gen photon of the signal event Tree
-  TTree *genParticleTree;                       // Stable Gen particles
-  
-  TTree *tree;					// Pointer to the available tree, all trees in the forest are friended to each other
+  TChain *pfTree;                                // PF candidate Tree, see branches in SetupPFTree.h
+  TChain *genpTree;                              // Gen photon of the signal event Tree
+  TChain *genParticleTree;                       // Stable Gen particles
 
-  vector<TTree*> jetTrees;
-  vector<TTree*> cloneForest;                   // Vector of clones for skim
+  TChain *tree;					// Pointer to the available tree, all trees in the forest are friended to each other
+
+  vector<TChain*> jetTrees;
+  vector<TChain*> cloneForest;                   // Vector of clones for skim
 
   TF1* fGauss;
 
@@ -225,7 +225,7 @@ class HiForest : public TNamed
   PFs pf;
   Genps genp;
   GenParticles genparticle;
-    
+
   // Booleans
   bool hasPhotonTree;
   bool hasEvtTree;
@@ -347,12 +347,12 @@ class HiForest : public TNamed
   TrackingParam *trackCorrFromParam;
 
   vector<TrackingCorrections*> trackCorrections;
-  TF1* fEnergyScale[2][10];  // [a][b],  a =0 for unconverted,  a=1 for converted.   b: 1,2,3 is centrality bin. b=0 is empty                                                                                       
-  
+  TF1* fEnergyScale[2][10];  // [a][b],  a =0 for unconverted,  a=1 for converted.   b: 1,2,3 is centrality bin. b=0 is empty
+
  private:
-  
-  
-  
+
+
+
 };
 
 HiForest::HiForest(const char *infName, const char* name, collisionType cMode, bool ismc):
@@ -364,14 +364,15 @@ HiForest::HiForest(const char *infName, const char* name, collisionType cMode, b
    nEntries(0),
    currentEvent(0)
 {
-   tree = new TTree("tree","");
+  tree = new TChain("tree","");
   SetName(name);
   // Input file
-  inf = TFile::Open(infName);
+  //inf = TFile::Open(infName);
+  tree->Add(infName);
 
   cone = 0.3;
   doTrackCorrections = 0;
-  
+
   minJetPtForTrkCor = 40;
   leadingJetPtForTrkCor = -100;
   subleadingJetPtForTrkCor = -100;
@@ -385,53 +386,140 @@ HiForest::HiForest(const char *infName, const char* name, collisionType cMode, b
 
   // Print out collision mode:
   cout <<"Collision Mode:";
-  if (collisionMode == cPP) cout <<" P+P"<<endl;  
-  if (collisionMode == cPPb) cout <<" P+Pb"<<endl;  
-  if (collisionMode == cPbPb) cout <<" Pb+Pb"<<endl;  
+  if (collisionMode == cPP) cout <<" P+P"<<endl;
+  if (collisionMode == cPPb) cout <<" P+Pb"<<endl;
+  if (collisionMode == cPbPb) cout <<" Pb+Pb"<<endl;
 
-  // Load trees. Hard coded for the moment
-  hltTree          = (TTree*) inf->Get("hltanalysis/HltTree");
-  skimTree         = (TTree*) inf->Get("skimanalysis/HltTree");
-  photonTree       = (TTree*) inf->Get("multiPhotonAnalyzer/photon");
-  if (collisionMode == cPbPb || collisionMode == cPP) trackTree        = (TTree*) inf->Get("anaTrack/trackTree");
-  if (collisionMode == cPPb) trackTree        = (TTree*) inf->Get("ppTrack/trackTree");
-  towerTree        = (TTree*) inf->Get("rechitanalyzer/tower");
-  icPu5jetTree     = (TTree*) inf->Get("icPu5JetAnalyzer/t");
+  /* // Load trees. Hard coded for the moment */
+  /* hltTree          = (TTree*) inf->Get("hltanalysis/HltTree"); */
+  /* skimTree         = (TTree*) inf->Get("skimanalysis/HltTree"); */
+  /* photonTree       = (TTree*) inf->Get("multiPhotonAnalyzer/photon"); */
+  /* if (collisionMode == cPbPb || collisionMode == cPP) trackTree        = (TTree*) inf->Get("anaTrack/trackTree"); */
+  /* if (collisionMode == cPPb) trackTree        = (TTree*) inf->Get("ppTrack/trackTree"); */
+  /* towerTree        = (TTree*) inf->Get("rechitanalyzer/tower"); */
+  /* icPu5jetTree     = (TTree*) inf->Get("icPu5JetAnalyzer/t"); */
 
-  akPu2jetTree     = (TTree*) inf->Get("akPu2PFJetAnalyzer/t");
-  akPu3jetTree     = (TTree*) inf->Get("akPu3PFJetAnalyzer/t");
-  akPu4jetTree     = (TTree*) inf->Get("akPu4PFJetAnalyzer/t");
-  akPu5jetTree     = (TTree*) inf->Get("akPu5PFJetAnalyzer/t");
-  akPu6jetTree     = (TTree*) inf->Get("akPu6PFJetAnalyzer/t");
-  ak2jetTree     = (TTree*) inf->Get("ak2PFJetAnalyzer/t");
-  ak3jetTree     = (TTree*) inf->Get("ak3PFJetAnalyzer/t");
-  ak4jetTree     = (TTree*) inf->Get("ak4PFJetAnalyzer/t");
-  ak5jetTree     = (TTree*) inf->Get("ak5PFJetAnalyzer/t");
-  ak6jetTree     = (TTree*) inf->Get("ak6PFJetAnalyzer/t");
+  /* akPu2jetTree     = (TTree*) inf->Get("akPu2PFJetAnalyzer/t"); */
+  /* akPu3jetTree     = (TTree*) inf->Get("akPu3PFJetAnalyzer/t"); */
+  /* akPu4jetTree     = (TTree*) inf->Get("akPu4PFJetAnalyzer/t"); */
+  /* akPu5jetTree     = (TTree*) inf->Get("akPu5PFJetAnalyzer/t"); */
+  /* akPu6jetTree     = (TTree*) inf->Get("akPu6PFJetAnalyzer/t"); */
+  /* ak2jetTree     = (TTree*) inf->Get("ak2PFJetAnalyzer/t"); */
+  /* ak3jetTree     = (TTree*) inf->Get("ak3PFJetAnalyzer/t"); */
+  /* ak4jetTree     = (TTree*) inf->Get("ak4PFJetAnalyzer/t"); */
+  /* ak5jetTree     = (TTree*) inf->Get("ak5PFJetAnalyzer/t"); */
+  /* ak6jetTree     = (TTree*) inf->Get("ak6PFJetAnalyzer/t"); */
 
-  akPu2CaloJetTree = (TTree*) inf->Get("akPu2CaloJetAnalyzer/t");
-  akPu3CaloJetTree = (TTree*) inf->Get("akPu3CaloJetAnalyzer/t");
-  akPu4CaloJetTree = (TTree*) inf->Get("akPu4CaloJetAnalyzer/t");
-  akPu5CaloJetTree = (TTree*) inf->Get("akPu5CaloJetAnalyzer/t");
-  akPu6CaloJetTree = (TTree*) inf->Get("akPu6CaloJetAnalyzer/t");
+  /* akPu2CaloJetTree = (TTree*) inf->Get("akPu2CaloJetAnalyzer/t"); */
+  /* akPu3CaloJetTree = (TTree*) inf->Get("akPu3CaloJetAnalyzer/t"); */
+  /* akPu4CaloJetTree = (TTree*) inf->Get("akPu4CaloJetAnalyzer/t"); */
+  /* akPu5CaloJetTree = (TTree*) inf->Get("akPu5CaloJetAnalyzer/t"); */
+  /* akPu6CaloJetTree = (TTree*) inf->Get("akPu6CaloJetAnalyzer/t"); */
 
-  ak2CaloJetTree = (TTree*) inf->Get("ak2CaloJetAnalyzer/t");
-  ak3CaloJetTree = (TTree*) inf->Get("ak3CaloJetAnalyzer/t");
-  ak4CaloJetTree = (TTree*) inf->Get("ak4CaloJetAnalyzer/t");
-  ak5CaloJetTree = (TTree*) inf->Get("ak5CaloJetAnalyzer/t");
-  ak6CaloJetTree = (TTree*) inf->Get("ak6CaloJetAnalyzer/t");
+  /* ak2CaloJetTree = (TTree*) inf->Get("ak2CaloJetAnalyzer/t"); */
+  /* ak3CaloJetTree = (TTree*) inf->Get("ak3CaloJetAnalyzer/t"); */
+  /* ak4CaloJetTree = (TTree*) inf->Get("ak4CaloJetAnalyzer/t"); */
+  /* ak5CaloJetTree = (TTree*) inf->Get("ak5CaloJetAnalyzer/t"); */
+  /* ak6CaloJetTree = (TTree*) inf->Get("ak6CaloJetAnalyzer/t"); */
 
-  hbheTree         = (TTree*) inf->Get("rechitanalyzer/hbhe");
-  ebTree           = (TTree*) inf->Get("rechitanalyzer/eb");
-  evtTree          = (TTree*) inf->Get("hiEvtAnalyzer/HiTree");
-  metTree          = (TTree*) inf->Get("anaMET/metTree");
-  noiseTree      = (TTree*) inf->Get("hcalNoise/hcalNoise");
+  /* hbheTree         = (TTree*) inf->Get("rechitanalyzer/hbhe"); */
+  /* ebTree           = (TTree*) inf->Get("rechitanalyzer/eb"); */
+  /* evtTree          = (TTree*) inf->Get("hiEvtAnalyzer/HiTree"); */
+  /* metTree          = (TTree*) inf->Get("anaMET/metTree"); */
+  /* noiseTree      = (TTree*) inf->Get("hcalNoise/hcalNoise"); */
 
-  pfTree           = (TTree*) inf->Get("pfcandAnalyzer/pfTree");
-  genpTree         = (TTree*) inf->Get("genpana/photon");
-  
+  /* pfTree           = (TTree*) inf->Get("pfcandAnalyzer/pfTree"); */
+  /* genpTree         = (TTree*) inf->Get("genpana/photon"); */
+
+  /* // doesn't load genParticle by default */
+  /* genParticleTree  = (TTree*) inf->Get("HiGenParticleAna/hi"); */
+
+  // Load trees into chains. Hard coded for the moment
+  hltTree          = new TChain("hltanalysis/HltTree");
+  skimTree         = new TChain("skimanalysis/HltTree");
+  photonTree       = new TChain("multiPhotonAnalyzer/photon");
+  if (collisionMode == cPbPb || collisionMode == cPP) trackTree        = new TChain("anaTrack/trackTree");
+  if (collisionMode == cPPb) trackTree        = new TChain("ppTrack/trackTree");
+  towerTree        = new TChain("rechitanalyzer/tower");
+  icPu5jetTree     = new TChain("icPu5JetAnalyzer/t");
+
+  akPu2jetTree     = new TChain("akPu2PFJetAnalyzer/t");
+  akPu3jetTree     = new TChain("akPu3PFJetAnalyzer/t");
+  akPu4jetTree     = new TChain("akPu4PFJetAnalyzer/t");
+  akPu5jetTree     = new TChain("akPu5PFJetAnalyzer/t");
+  akPu6jetTree     = new TChain("akPu6PFJetAnalyzer/t");
+  ak2jetTree     = new TChain("ak2PFJetAnalyzer/t");
+  ak3jetTree     = new TChain("ak3PFJetAnalyzer/t");
+  ak4jetTree     = new TChain("ak4PFJetAnalyzer/t");
+  ak5jetTree     = new TChain("ak5PFJetAnalyzer/t");
+  ak6jetTree     = new TChain("ak6PFJetAnalyzer/t");
+
+  akPu2CaloJetTree = new TChain("akPu2CaloJetAnalyzer/t");
+  akPu3CaloJetTree = new TChain("akPu3CaloJetAnalyzer/t");
+  akPu4CaloJetTree = new TChain("akPu4CaloJetAnalyzer/t");
+  akPu5CaloJetTree = new TChain("akPu5CaloJetAnalyzer/t");
+  akPu6CaloJetTree = new TChain("akPu6CaloJetAnalyzer/t");
+
+  ak2CaloJetTree = new TChain("ak2CaloJetAnalyzer/t");
+  ak3CaloJetTree = new TChain("ak3CaloJetAnalyzer/t");
+  ak4CaloJetTree = new TChain("ak4CaloJetAnalyzer/t");
+  ak5CaloJetTree = new TChain("ak5CaloJetAnalyzer/t");
+  ak6CaloJetTree = new TChain("ak6CaloJetAnalyzer/t");
+
+  hbheTree         = new TChain("rechitanalyzer/hbhe");
+  ebTree           = new TChain("rechitanalyzer/eb");
+  evtTree          = new TChain("hiEvtAnalyzer/HiTree");
+  metTree          = new TChain("anaMET/metTree");
+  noiseTree      = new TChain("hcalNoise/hcalNoise");
+
+  pfTree           = new TChain("pfcandAnalyzer/pfTree");
+  genpTree         = new TChain("genpana/photon");
+
+  genParticleTree  = new TChain("HiGenParticleAna/hi");
+
+    // Load trees. Hard coded for the moment
+  hltTree->Add(tree);
+  skimTree->Add(tree);
+  photonTree->Add(tree);
+  trackTree->Add(tree);
+  towerTree->Add(tree);
+  icPu5jetTree->Add(tree);
+
+  akPu2jetTree->Add(tree);
+  akPu3jetTree->Add(tree);
+  akPu4jetTree->Add(tree);
+  akPu5jetTree->Add(tree);
+  akPu6jetTree->Add(tree);
+  ak2jetTree->Add(tree);
+  ak3jetTree->Add(tree);
+  ak4jetTree->Add(tree);
+  ak5jetTree->Add(tree);
+  ak6jetTree->Add(tree);
+
+  akPu2CaloJetTree->Add(tree);
+  akPu3CaloJetTree->Add(tree);
+  akPu4CaloJetTree->Add(tree);
+  akPu5CaloJetTree->Add(tree);
+  akPu6CaloJetTree->Add(tree);
+
+  ak2CaloJetTree->Add(tree);
+  ak3CaloJetTree->Add(tree);
+  ak4CaloJetTree->Add(tree);
+  ak5CaloJetTree->Add(tree);
+  ak6CaloJetTree->Add(tree);
+
+  hbheTree->Add(tree);
+  ebTree->Add(tree);
+  evtTree->Add(tree);
+  metTree->Add(tree);
+  noiseTree->Add(tree);
+
+  pfTree->Add(tree);
+  genpTree->Add(tree);
+
   // doesn't load genParticle by default
-  genParticleTree  = (TTree*) inf->Get("HiGenParticleAna/hi");
+  genParticleTree->Add(tree);
+
 
   // Check the validity of the trees.
   hasPhotonTree        = (photonTree       	!= 0);
@@ -771,7 +859,7 @@ void HiForest::InitTree()
    // Print the status of thre forest
    PrintStatus();
 
-   // Setup Track Corrections 	 
+   // Setup Track Corrections
    if(doTrackCorrections){
 
       trackCorrFromParam = new TrackingParam();
@@ -819,7 +907,7 @@ void HiForest::InitTree()
    }
 }
 
-void HiForest::CheckTree(TTree *t,const char *title)
+void HiForest::CheckTree(TChain *t,const char *title)
 {
   int entries = t->GetEntries();
   if (nEntries==0) nEntries = entries;
@@ -940,7 +1028,7 @@ void HiForest::SetOutputFile(const char *name)
   setupOutput = true;
 }
 
-void HiForest::AddCloneTree(TTree* t, const char *dirName, const char *treeName)
+void HiForest::AddCloneTree(TChain* t, const char *dirName, const char *treeName)
 {
   // Make directory
   outf->cd();
@@ -948,10 +1036,10 @@ void HiForest::AddCloneTree(TTree* t, const char *dirName, const char *treeName)
   outf->cd(dirName);
 
   // Add a clone tree to the clone forest
-  TTree *tClone = t->CloneTree(0);
+  TChain *tClone = t->CloneTree(0);
   tClone->SetMaxTreeSize(4000000000);
   tClone->SetName(treeName);
-  
+
   cloneForest.push_back(tClone);
 }
 
@@ -961,7 +1049,7 @@ void HiForest::FillOutput()
      for (unsigned int i=0; i<cloneForest.size(); i++)
      {
        cloneForest[i]->Fill();
-     } 
+     }
   } else {
        cout <<"ERROR: Specify an output file by hiForest.SetOutputFile(filename)!"<<endl;
   }
@@ -971,12 +1059,12 @@ void HiForest::FillOutput()
 
 bool HiForest::selectEvent(){
   /*
-   bool select = skim.phbheReflagNewTimeEnv 
-      && 
-      skim.phcalTimingFilter 
-      && 
-      skim.pHBHENoiseFilter 
-      && 
+   bool select = skim.phbheReflagNewTimeEnv
+      &&
+      skim.phcalTimingFilter
+      &&
+      skim.pHBHENoiseFilter
+      &&
       skim.phiEcalRecHitSpikeFilter;
   */
 
