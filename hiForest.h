@@ -178,7 +178,7 @@ class HiForest : public TNamed
   TChain *tree;					// Pointer to the available tree, all trees in the forest are friended to each other
 
   vector<TChain*> jetTrees;
-  vector<TChain*> cloneForest;                   // Vector of clones for skim
+  vector<TTree*> cloneForest;                   // Vector of clones for skim
 
   TF1* fGauss;
 
@@ -364,7 +364,7 @@ HiForest::HiForest(const char *infName, const char* name, collisionType cMode, b
    nEntries(0),
    currentEvent(0)
 {
-  tree = new TChain("tree","");
+  tree = new TChain("hiEvtAnalyzer/HiTree","");
   SetName(name);
   // Input file
   //inf = TFile::Open(infName);
@@ -992,7 +992,7 @@ void HiForest::AddCloneTree(TChain* t, const char *dirName, const char *treeName
   outf->cd(dirName);
 
   // Add a clone tree to the clone forest
-  TChain *tClone = t->CloneTree(0);
+  TTree *tClone = t->CloneTree(0);
   tClone->SetMaxTreeSize(4000000000);
   tClone->SetName(treeName);
 
