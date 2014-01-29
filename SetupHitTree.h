@@ -1,7 +1,7 @@
 //////////////////////////////////////////////////////////
 // This class has been automatically generated on
 // Sun Jul  8 19:18:37 2012 by ROOT version 5.27/06b
-// from TTree hbhe/v1
+// from TChain hbhe/v1
 // found on file: /d102/yjlee/hiForest2MC/Pythia80_HydjetDrum_mix01_HiForest2_v20.root
 //////////////////////////////////////////////////////////
 #include "commonSetup.h"
@@ -9,7 +9,7 @@
 #include <TROOT.h>
 #include <TChain.h>
 #include <TFile.h>
-#include <TTree.h>
+#include <TChain.h>
 #include <TBranch.h>
 
 using namespace std;
@@ -42,7 +42,7 @@ public :
 };
 
 
-void setupHitTree(TTree *t,Hits &tHits,bool doCheck = 0)
+void setupHitTree(TChain *t,Hits &tHits,bool doCheck = 0)
 {
    // Set branch addresses and branch pointers
    if (t->GetBranch("n")) t->SetBranchAddress("n", &tHits.n, &tHits.b_n);

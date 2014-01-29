@@ -1,7 +1,7 @@
 //////////////////////////////////////////////////////////
 // This class has been automatically generated on
 // Wed Jun 20 12:21:51 2012 by ROOT version 5.27/06b
-// from TTree t/akPu3PFpatJets Jet Analysis Tree
+// from TChain t/akPu3PFpatJets Jet Analysis Tree
 // found on file: ../Pythia30_HydjetDrum_mix01_HiForest2_v19.root
 //////////////////////////////////////////////////////////
 #include "commonSetup.h"
@@ -9,7 +9,7 @@
 #include <TROOT.h>
 #include <TChain.h>
 #include <TFile.h>
-#include <TTree.h>
+#include <TChain.h>
 #include <TBranch.h>
 
 using namespace std;
@@ -175,7 +175,7 @@ public :
 };
 
 
-void setupJetTree(TTree *t,Jets &tJets,bool doCheck = 0)
+void setupJetTree(TChain *t,Jets &tJets,bool doCheck = 0)
 {
    // Set branch addresses and branch pointers
    if (t->GetBranch("evt")) t->SetBranchAddress("evt", &tJets.evt, &tJets.b_evt);

@@ -1,7 +1,7 @@
 //////////////////////////////////////////////////////////
 // This class has been automatically generated on
 // Sun Jul  8 19:18:37 2012 by ROOT version 5.27/06b
-// from TTree photon/Tree of Rechits around photon
+// from TChain photon/Tree of Rechits around photon
 // found on file: /d102/yjlee/hiForest2MC/Pythia80_HydjetDrum_mix01_HiForest2_v20.root
 //////////////////////////////////////////////////////////
 #include "commonSetup.h"
@@ -9,7 +9,7 @@
 #include <TROOT.h>
 #include <TChain.h>
 #include <TFile.h>
-#include <TTree.h>
+#include <TChain.h>
 #include <TBranch.h>
 
 using namespace std;
@@ -48,7 +48,7 @@ public :
 };
 
 
-void setupGenpTree(TTree *t,Genps &tGenps,bool doCheck = 0)
+void setupGenpTree(TChain *t,Genps &tGenps,bool doCheck = 0)
 {
    // Set branch addresses and branch pointers
    if (t->GetBranch("cBin")) t->SetBranchAddress("cBin", &tGenps.cBin, &tGenps.b_cBin);

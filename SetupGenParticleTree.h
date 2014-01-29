@@ -1,7 +1,7 @@
 //////////////////////////////////////////////////////////
 // This class has been automatically generated on
 // Wed Jul 18 23:43:21 2012 by ROOT version 5.27/06b
-// from TTree hi/Tree of Hi gen Event
+// from TChain hi/Tree of Hi gen Event
 // found on file: /d102/yjlee/hiForest2MC/lowPtSimTrack/mergedFile100.root
 //////////////////////////////////////////////////////////
 #include "commonSetup.h"
@@ -9,7 +9,7 @@
 #include <TROOT.h>
 #include <TChain.h>
 #include <TFile.h>
-#include <TTree.h>
+#include <TChain.h>
 #include <TBranch.h>
 
 using namespace std;
@@ -66,7 +66,7 @@ public :
 };
 
 
-void setupGenParticleTree(TTree *t,GenParticles &tGenParticles,bool doCheck = 0)
+void setupGenParticleTree(TChain *t,GenParticles &tGenParticles,bool doCheck = 0)
 {
    // Set branch addresses and branch pointers
    if (t->GetBranch("event")) t->SetBranchAddress("event", &tGenParticles.event, &tGenParticles.b_event);

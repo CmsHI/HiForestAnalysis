@@ -1,7 +1,7 @@
 //////////////////////////////////////////////////////////
 // This class has been automatically generated on
 // Sun Jul  8 19:18:37 2012 by ROOT version 5.27/06b
-// from TTree photon/v1
+// from TChain photon/v1
 // found on file: /d102/yjlee/hiForest2MC/Pythia80_HydjetDrum_mix01_HiForest2_v20.root
 //////////////////////////////////////////////////////////
 #include "commonSetup.h"
@@ -9,7 +9,7 @@
 #include <TROOT.h>
 #include <TChain.h>
 #include <TFile.h>
-#include <TTree.h>
+#include <TChain.h>
 #include <TBranch.h>
 
 using namespace std;
@@ -404,7 +404,7 @@ public :
 };
 
 
-void setupPhotonTree(TTree *t,Photons &tPhotons,bool doCheck = 0)
+void setupPhotonTree(TChain *t,Photons &tPhotons,bool doCheck = 0)
 {
    // Set branch addresses and branch pointers
    if (t->GetBranch("run")) t->SetBranchAddress("run", &tPhotons.run, &tPhotons.b_run);

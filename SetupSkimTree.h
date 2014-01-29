@@ -1,7 +1,7 @@
 //////////////////////////////////////////////////////////
 // This class has been automatically generated on
 // Fri Feb  1 19:17:02 2013 by ROOT version 5.32/00
-// from TTree HltTree/
+// from TChain HltTree/
 // found on file: root://eoscms//eos/cms/store/caf/user/yjlee/pPb2013/promptReco/PA2013_HiForest_PromptRecofirstPR_forestv68.root
 //////////////////////////////////////////////////////////
 #include "commonSetup.h"
@@ -9,7 +9,7 @@
 #include <TROOT.h>
 #include <TChain.h>
 #include <TFile.h>
-#include <TTree.h>
+#include <TChain.h>
 #include <TBranch.h>
 
 class Skims {
@@ -78,7 +78,7 @@ public :
 };
 
 
-void setupSkimTree(TTree *t,Skims &tSkims,bool doCheck = 0)
+void setupSkimTree(TChain *t,Skims &tSkims,bool doCheck = 0)
 {
    // Set branch addresses and branch pointers
    t->SetBranchAddress("superFilterPath", &tSkims.superFilterPath, &tSkims.b_superFilterPath);

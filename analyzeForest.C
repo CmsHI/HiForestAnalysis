@@ -274,7 +274,7 @@ void analyzeForest(
    float tdt1[4], tdt2[4], tdt1a[4], tdt2a[4], tdt1b[4], tdt2b[4], tdt1c[4], tdt2c[4];
 
    Jets *jets0 = 0, * jets1 = 0, *jets2 = 0;
-   TTree  *jetTree0 = 0, * jetTree1 = 0, *jetTree2 = 0;
+   TChain  *jetTree0 = 0, * jetTree1 = 0, *jetTree2 = 0;
 
    if(usePF){
 

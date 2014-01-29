@@ -1,7 +1,7 @@
 //////////////////////////////////////////////////////////
 // This class has been automatically generated on
 // Wed Jan 23 16:17:05 2013 by ROOT version 5.32/00
-// from TTree HiTree/
+// from TChain HiTree/
 // found on file: root://eoscms//eos/cms/store/caf/user/velicanu/PA2013_merged/pPb_hiForest2_monster_logerrevent_HI2013_express_v1_210634_210635_v14.root
 //////////////////////////////////////////////////////////
 #include "commonSetup.h"
@@ -9,7 +9,7 @@
 #include <TROOT.h>
 #include <TChain.h>
 #include <TFile.h>
-#include <TTree.h>
+#include <TChain.h>
 #include <TBranch.h>
 
 using namespace std;
@@ -87,7 +87,7 @@ public :
 };
 
 
-void setupEvtTree(TTree *t,Evts &tEvts,bool doCheck = 0)
+void setupEvtTree(TChain *t,Evts &tEvts,bool doCheck = 0)
 {
    // Set branch addresses and branch pointers
    t->SetBranchAddress("run", &tEvts.run, &tEvts.b_run);

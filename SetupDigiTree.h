@@ -1,7 +1,7 @@
 //////////////////////////////////////////////////////////
 // This class has been automatically generated on
 // Wed Jan 23 16:17:05 2013 by ROOT version 5.32/00
-// from TTree zdcdigi/v1
+// from TChain zdcdigi/v1
 // found on file: root://eoscms//eos/cms/store/caf/user/velicanu/PA2013_merged/pPb_hiForest2_monster_logerrevent_HI2013_express_v1_210634_210635_v14.root
 //////////////////////////////////////////////////////////
 #include "commonSetup.h"
@@ -9,7 +9,7 @@
 #include <TROOT.h>
 #include <TChain.h>
 #include <TFile.h>
-#include <TTree.h>
+#include <TChain.h>
 #include <TBranch.h>
 
 class Digis {
@@ -72,7 +72,7 @@ public :
 };
 
 
-void setupDigiTree(TTree *t,Digis &tDigis,bool doCheck = 0)
+void setupDigiTree(TChain *t,Digis &tDigis,bool doCheck = 0)
 {
    // Set branch addresses and branch pointers
    t->SetBranchAddress("n", &tDigis.n, &tDigis.b_n);

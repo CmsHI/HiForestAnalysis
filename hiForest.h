@@ -126,7 +126,7 @@ class HiForest : public TNamed
   // Get track-jet correlated variables. Not needed if correlatePF is run.
   //==================================================================================================================================
   void correlateTracks(TChain* jetTree, Jets& jets, bool allEvents = 1, bool smeared = 0);
-  //void correlatePF(TTree* jetTree, Jets& jets, bool allEvents = 1){return;}
+  //void correlatePF(TChain* jetTree, Jets& jets, bool allEvents = 1){return;}
 
   // TFile
   TFile *inf; 					// Input file
@@ -389,50 +389,6 @@ HiForest::HiForest(const char *infName, const char* name, collisionType cMode, b
   if (collisionMode == cPP) cout <<" P+P"<<endl;
   if (collisionMode == cPPb) cout <<" P+Pb"<<endl;
   if (collisionMode == cPbPb) cout <<" Pb+Pb"<<endl;
-
-  /* // Load trees. Hard coded for the moment */
-  /* hltTree          = (TTree*) inf->Get("hltanalysis/HltTree"); */
-  /* skimTree         = (TTree*) inf->Get("skimanalysis/HltTree"); */
-  /* photonTree       = (TTree*) inf->Get("multiPhotonAnalyzer/photon"); */
-  /* if (collisionMode == cPbPb || collisionMode == cPP) trackTree        = (TTree*) inf->Get("anaTrack/trackTree"); */
-  /* if (collisionMode == cPPb) trackTree        = (TTree*) inf->Get("ppTrack/trackTree"); */
-  /* towerTree        = (TTree*) inf->Get("rechitanalyzer/tower"); */
-  /* icPu5jetTree     = (TTree*) inf->Get("icPu5JetAnalyzer/t"); */
-
-  /* akPu2jetTree     = (TTree*) inf->Get("akPu2PFJetAnalyzer/t"); */
-  /* akPu3jetTree     = (TTree*) inf->Get("akPu3PFJetAnalyzer/t"); */
-  /* akPu4jetTree     = (TTree*) inf->Get("akPu4PFJetAnalyzer/t"); */
-  /* akPu5jetTree     = (TTree*) inf->Get("akPu5PFJetAnalyzer/t"); */
-  /* akPu6jetTree     = (TTree*) inf->Get("akPu6PFJetAnalyzer/t"); */
-  /* ak2jetTree     = (TTree*) inf->Get("ak2PFJetAnalyzer/t"); */
-  /* ak3jetTree     = (TTree*) inf->Get("ak3PFJetAnalyzer/t"); */
-  /* ak4jetTree     = (TTree*) inf->Get("ak4PFJetAnalyzer/t"); */
-  /* ak5jetTree     = (TTree*) inf->Get("ak5PFJetAnalyzer/t"); */
-  /* ak6jetTree     = (TTree*) inf->Get("ak6PFJetAnalyzer/t"); */
-
-  /* akPu2CaloJetTree = (TTree*) inf->Get("akPu2CaloJetAnalyzer/t"); */
-  /* akPu3CaloJetTree = (TTree*) inf->Get("akPu3CaloJetAnalyzer/t"); */
-  /* akPu4CaloJetTree = (TTree*) inf->Get("akPu4CaloJetAnalyzer/t"); */
-  /* akPu5CaloJetTree = (TTree*) inf->Get("akPu5CaloJetAnalyzer/t"); */
-  /* akPu6CaloJetTree = (TTree*) inf->Get("akPu6CaloJetAnalyzer/t"); */
-
-  /* ak2CaloJetTree = (TTree*) inf->Get("ak2CaloJetAnalyzer/t"); */
-  /* ak3CaloJetTree = (TTree*) inf->Get("ak3CaloJetAnalyzer/t"); */
-  /* ak4CaloJetTree = (TTree*) inf->Get("ak4CaloJetAnalyzer/t"); */
-  /* ak5CaloJetTree = (TTree*) inf->Get("ak5CaloJetAnalyzer/t"); */
-  /* ak6CaloJetTree = (TTree*) inf->Get("ak6CaloJetAnalyzer/t"); */
-
-  /* hbheTree         = (TTree*) inf->Get("rechitanalyzer/hbhe"); */
-  /* ebTree           = (TTree*) inf->Get("rechitanalyzer/eb"); */
-  /* evtTree          = (TTree*) inf->Get("hiEvtAnalyzer/HiTree"); */
-  /* metTree          = (TTree*) inf->Get("anaMET/metTree"); */
-  /* noiseTree      = (TTree*) inf->Get("hcalNoise/hcalNoise"); */
-
-  /* pfTree           = (TTree*) inf->Get("pfcandAnalyzer/pfTree"); */
-  /* genpTree         = (TTree*) inf->Get("genpana/photon"); */
-
-  /* // doesn't load genParticle by default */
-  /* genParticleTree  = (TTree*) inf->Get("HiGenParticleAna/hi"); */
 
   // Load trees into chains. Hard coded for the moment
   hltTree          = new TChain("hltanalysis/HltTree");

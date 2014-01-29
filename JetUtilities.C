@@ -185,7 +185,7 @@ namespace jetsmear{
 
 
 
-void HiForest::sortJets(TTree* jetTree, Jets& jets, double etaMax, bool allEvents, int smearType){
+void HiForest::sortJets(TChain* jetTree, Jets& jets, double etaMax, bool allEvents, int smearType){
 
   jetsmear::JetResolution* res = 0;
   if(smearType==0){
@@ -272,7 +272,7 @@ void HiForest::sortJets(TTree* jetTree, Jets& jets, double etaMax, bool allEvent
 }
 
 
-void HiForest::correlateTracks(TTree* jetTree, Jets& jets, bool allEvents, bool smeared){ 
+void HiForest::correlateTracks(TChain* jetTree, Jets& jets, bool allEvents, bool smeared){ 
 
    vector<TBranch*> branches(0);
 
@@ -468,7 +468,7 @@ bool HiForest::hasDiJet(Jets& jets, double pt1, double pt2, double dphiMin){
 //double HiForest::jetFracEM(int i){ return 0;}
 
 
-void HiForest::fakeRejection(TTree *jetTree, Jets &jets, bool allEvents)
+void HiForest::fakeRejection(TChain *jetTree, Jets &jets, bool allEvents)
 {
 	std::vector<TBranch *> branch;
 
