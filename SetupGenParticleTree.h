@@ -66,7 +66,7 @@ public :
 };
 
 
-void setupGenParticleTree(TTree *t,GenParticles &tGenParticles,bool doCheck = 0)
+void setupGenParticleTree(TTree *t,GenParticles &tGenParticles,bool doCheck = 1)
 {
    // Set branch addresses and branch pointers
    if (t->GetBranch("event")) t->SetBranchAddress("event", &tGenParticles.event, &tGenParticles.b_event);
