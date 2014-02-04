@@ -87,7 +87,7 @@ public :
 };
 
 
-void setupEvtTree(TTree *t,Evts &tEvts,bool doCheck = 0)
+void setupEvtTree(TTree *t,Evts &tEvts,bool doCheck = 1)
 {
    // Set branch addresses and branch pointers
    t->SetBranchAddress("run", &tEvts.run, &tEvts.b_run);
