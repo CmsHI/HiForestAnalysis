@@ -72,7 +72,7 @@ public :
 };
 
 
-void setupDigiTree(TTree *t,Digis &tDigis,bool doCheck = 0)
+void setupDigiTree(TTree *t,Digis &tDigis,bool doCheck = 1)
 {
    // Set branch addresses and branch pointers
    t->SetBranchAddress("n", &tDigis.n, &tDigis.b_n);
