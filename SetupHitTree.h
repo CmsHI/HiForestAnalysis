@@ -42,7 +42,7 @@ public :
 };
 
 
-void setupHitTree(TTree *t,Hits &tHits,bool doCheck = 0)
+void setupHitTree(TTree *t,Hits &tHits,bool doCheck = 1)
 {
    // Set branch addresses and branch pointers
    if (t->GetBranch("n")) t->SetBranchAddress("n", &tHits.n, &tHits.b_n);
