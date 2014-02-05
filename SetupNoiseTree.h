@@ -90,7 +90,7 @@ public :
 };
 
 
-void setupNoiseTree(TTree *t,Noises &tNoises,bool doCheck = 0)
+void setupNoiseTree(TTree *t,Noises &tNoises,bool doCheck = 1)
 {
    // Set branch addresses and branch pointers
    t->SetBranchAddress("run", &tNoises.run, &tNoises.b_run);
