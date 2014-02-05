@@ -1474,7 +1474,7 @@ public :
 };
 
 
-void setupHltTree(TTree *t,Hlts &tHlts,bool doCheck = 0)
+void setupHltTree(TTree *t,Hlts &tHlts,bool doCheck = 1)
 {
    // Set branch addresses and branch pointers
    t->SetBranchAddress("NL1IsolEm", &tHlts.NL1IsolEm, &tHlts.b_NL1IsolEm);
