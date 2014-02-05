@@ -431,7 +431,7 @@ Int_t makeClass(TTree *fTree, const char *className, const char *option, double 
 //======================================================================================================
 // generate code for setup function, first pass = get branch pointer
 //======================================================================================================
-   fprintf(fp,"void setup%sTree(TTree *t,%s &t%s,bool doCheck = 0)\n",classNameOld,className,className);
+   fprintf(fp,"void setup%sTree(TTree *t,%s &t%s,bool doCheck = 1)\n",classNameOld,className,className);
    fprintf(fp,"{\n");
    if (mustInit.Last()) {
       TIter next(&mustInit);
