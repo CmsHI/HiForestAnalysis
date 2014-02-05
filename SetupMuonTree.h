@@ -164,7 +164,7 @@ public :
 };
 
 
-void setupMuonTree(TTree *t,Muons &tMuons,bool doCheck = 0)
+void setupMuonTree(TTree *t,Muons &tMuons,bool doCheck = 1)
 {
    // Set branch addresses and branch pointers
    t->SetBranchAddress("Run", &tMuons.Run, &tMuons.b_run);
