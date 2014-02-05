@@ -112,7 +112,7 @@ public :
 };
 
 
-void setupTrackTree(TTree *t,Tracks &tTracks,bool doCheck = 0)
+void setupTrackTree(TTree *t,Tracks &tTracks,bool doCheck = 1)
 {
    // Set branch addresses and branch pointers
    t->SetBranchAddress("nEv", &tTracks.nEv, &tTracks.b_nEv);
