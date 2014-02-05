@@ -404,7 +404,7 @@ public :
 };
 
 
-void setupPhotonTree(TTree *t,Photons &tPhotons,bool doCheck = 0)
+void setupPhotonTree(TTree *t,Photons &tPhotons,bool doCheck = 1)
 {
    // Set branch addresses and branch pointers
    if (t->GetBranch("run")) t->SetBranchAddress("run", &tPhotons.run, &tPhotons.b_run);
