@@ -78,7 +78,7 @@ public :
 };
 
 
-void setupSkimTree(TTree *t,Skims &tSkims,bool doCheck = 0)
+void setupSkimTree(TTree *t,Skims &tSkims,bool doCheck = 1)
 {
    // Set branch addresses and branch pointers
    t->SetBranchAddress("superFilterPath", &tSkims.superFilterPath, &tSkims.b_superFilterPath);
