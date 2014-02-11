@@ -42,27 +42,27 @@ public :
    Float_t         yVtxErr[2];   //[nVtx]
    Float_t         zVtxErr[2];   //[nVtx]
    Int_t           nTrk;
-   Float_t         trkPt[2302];   //[nTrk]
-   Float_t         trkPtError[2302];   //[nTrk]
-   Int_t           trkNHit[2302];   //[nTrk]
-   Int_t           trkNlayer[2302];   //[nTrk]
-   Float_t         trkEta[2302];   //[nTrk]
-   Float_t         trkPhi[2302];   //[nTrk]
-   Int_t           trkCharge[2302];   //[nTrk]
-   Bool_t          highPurity[2302];   //[nTrk]
-   Bool_t          highPuritySetWithPV[2302];   //[nTrk]
-   Float_t         trkChi2[2302];   //[nTrk]
-   Float_t         trkNdof[2302];   //[nTrk]
-   Float_t         trkDxy1[2302];   //[nTrk]
-   Float_t         trkDxyError1[2302];   //[nTrk]
-   Float_t         trkDz1[2302];   //[nTrk]
-   Float_t         trkDzError1[2302];   //[nTrk]
-   Bool_t          trkFake[2302];   //[nTrk]
-   Float_t         trkAlgo[2302];   //[nTrk]
-   Int_t           pfType[2302];   //[nTrk]
-   Float_t         pfCandPt[2302];   //[nTrk]
-   Float_t         pfSumEcal[2302];   //[nTrk]
-   Float_t         pfSumHcal[2302];   //[nTrk]
+   Float_t         trkPt[maxTracks];   //[nTrk]
+   Float_t         trkPtError[maxTracks];   //[nTrk]
+   Int_t           trkNHit[maxTracks];   //[nTrk]
+   Int_t           trkNlayer[maxTracks];   //[nTrk]
+   Float_t         trkEta[maxTracks];   //[nTrk]
+   Float_t         trkPhi[maxTracks];   //[nTrk]
+   Int_t           trkCharge[maxTracks];   //[nTrk]
+   Bool_t          highPurity[maxTracks];   //[nTrk]
+   Bool_t          highPuritySetWithPV[maxTracks];   //[nTrk]
+   Float_t         trkChi2[maxTracks];   //[nTrk]
+   Float_t         trkNdof[maxTracks];   //[nTrk]
+   Float_t         trkDxy1[maxTracks];   //[nTrk]
+   Float_t         trkDxyError1[maxTracks];   //[nTrk]
+   Float_t         trkDz1[maxTracks];   //[nTrk]
+   Float_t         trkDzError1[maxTracks];   //[nTrk]
+   Bool_t          trkFake[maxTracks];   //[nTrk]
+   Float_t         trkAlgo[maxTracks];   //[nTrk]
+   Int_t           pfType[maxTracks];   //[nTrk]
+   Float_t         pfCandPt[maxTracks];   //[nTrk]
+   Float_t         pfSumEcal[maxTracks];   //[nTrk]
+   Float_t         pfSumHcal[maxTracks];   //[nTrk]
 
    // List of branches
    TBranch        *b_nEv;   //!
@@ -161,7 +161,6 @@ void setupTrackTree(TTree *t,Tracks &tTracks,bool doCheck = 1)
    if (doCheck) {
       if (t->GetMaximum("nv")>4) cout <<"FATAL ERROR: Arrary size of nv too small!!!  "<<t->GetMaximum("nv")<<endl;
       if (t->GetMaximum("nVtx")>2) cout <<"FATAL ERROR: Arrary size of nVtx too small!!!  "<<t->GetMaximum("nVtx")<<endl;
-      if (t->GetMaximum("nTrk")>2302) cout <<"FATAL ERROR: Arrary size of nTrk too small!!!  "<<t->GetMaximum("nTrk")<<endl;
+      if (t->GetMaximum("nTrk")>maxTracks) cout <<"FATAL ERROR: Arrary size of nTrk too small!!!  "<<t->GetMaximum("nTrk")<<endl;
    }
 }
-
