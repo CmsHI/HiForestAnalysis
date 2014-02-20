@@ -12,7 +12,14 @@
 #include <TTree.h>
 #include <TBranch.h>
 
+//added here the trigObj required to new HLT merge method from Kurt
+//Feb20 2014
+#include "DataFormats/HLTReco/interface/TriggerObject.h"
+
 using namespace std;
+
+typedef std::vector<trigger::TriggerObject> trigO;
+
 
 class Hlts {
 public :
@@ -745,6 +752,20 @@ public :
    Int_t           L1Tech_ZDC_Scint_tight_vertex_v0;
    Int_t           L1Tech_ZDC_Scint_tight_vertex_v0_Prescl;
 
+   trigO HLT_PAJet_NoJetID_v1_trigObject_20;
+   trigO HLT_PAJet_NOJetID_v1_trigObject_40;
+   trigO HLT_PAJet_NOJetID_v1_trigObject_60;
+   trigO HLT_PAJet_NOJetID_v1_trigObject_80;
+   trigO HLT_PAJet_NOJetID_v1_trigObject_100;
+   trigO HLT_PAJet_NOJetID_v1_trigObject_120;
+
+   //for(int i = 0;i<6;i++){
+   //  HLT_PAJet_NoJetID_v1_trigObject[i] = new trigO;
+   //}
+
+   
+
+
    // List of branches
    TBranch        *b_NL1IsolEm;   //!
    TBranch        *b_L1IsolEmEt;   //!
@@ -866,18 +887,33 @@ public :
    TBranch        *b_HLT_PASingleForJet15_v1_Prescl;   //!
    TBranch        *b_HLT_PASingleForJet25_v1;   //!
    TBranch        *b_HLT_PASingleForJet25_v1_Prescl;   //!
+
+
    TBranch        *b_HLT_PAJet20_NoJetID_v1;   //!
    TBranch        *b_HLT_PAJet20_NoJetID_v1_Prescl;   //!
+   TBranch        *b_HLT_PAJet20_NoJetID_v1_trigObject; //!
+
    TBranch        *b_HLT_PAJet40_NoJetID_v1;   //!
    TBranch        *b_HLT_PAJet40_NoJetID_v1_Prescl;   //!
+   TBranch        *b_HLT_PAJet40_NoJetID_v1_trigObject; //!
+
    TBranch        *b_HLT_PAJet60_NoJetID_v1;   //!
    TBranch        *b_HLT_PAJet60_NoJetID_v1_Prescl;   //!
+   TBranch        *b_HLT_PAJet60_NoJetID_v1_trigObject; //!
+
    TBranch        *b_HLT_PAJet80_NoJetID_v1;   //!
    TBranch        *b_HLT_PAJet80_NoJetID_v1_Prescl;   //!
+   TBranch        *b_HLT_PAJet80_NoJetID_v1_trigObject; //!
+
    TBranch        *b_HLT_PAJet100_NoJetID_v1;   //!
    TBranch        *b_HLT_PAJet100_NoJetID_v1_Prescl;   //!
+   TBranch        *b_HLT_PAJet100_NoJetID_v1_trigObject; //!
+
    TBranch        *b_HLT_PAJet120_NoJetID_v1;   //!
    TBranch        *b_HLT_PAJet120_NoJetID_v1_Prescl;   //!
+   TBranch        *b_HLT_PAJet120_NoJetID_v1_trigObject; //!
+
+
    TBranch        *b_HLT_PAForJet20Eta2_v1;   //!
    TBranch        *b_HLT_PAForJet20Eta2_v1_Prescl;   //!
    TBranch        *b_HLT_PAForJet40Eta2_v1;   //!
@@ -1597,18 +1633,33 @@ void setupHltTree(TTree *t,Hlts &tHlts,bool doCheck = 1)
    t->SetBranchAddress("HLT_PASingleForJet15_v1_Prescl", &tHlts.HLT_PASingleForJet15_v1_Prescl, &tHlts.b_HLT_PASingleForJet15_v1_Prescl);
    t->SetBranchAddress("HLT_PASingleForJet25_v1", &tHlts.HLT_PASingleForJet25_v1, &tHlts.b_HLT_PASingleForJet25_v1);
    t->SetBranchAddress("HLT_PASingleForJet25_v1_Prescl", &tHlts.HLT_PASingleForJet25_v1_Prescl, &tHlts.b_HLT_PASingleForJet25_v1_Prescl);
+   
+
    t->SetBranchAddress("HLT_PAJet20_NoJetID_v1", &tHlts.HLT_PAJet20_NoJetID_v1, &tHlts.b_HLT_PAJet20_NoJetID_v1);
    t->SetBranchAddress("HLT_PAJet20_NoJetID_v1_Prescl", &tHlts.HLT_PAJet20_NoJetID_v1_Prescl, &tHlts.b_HLT_PAJet20_NoJetID_v1_Prescl);
+   t->SetBranchAddress("HLT_PAJet20_NoJetID_v1_trigObject",&HLT_PAJet_NoJetID_v1_trigObject_20, &tHlts.b_HLT_PAJet20_NoJetID_v1_trigObject);
+
    t->SetBranchAddress("HLT_PAJet40_NoJetID_v1", &tHlts.HLT_PAJet40_NoJetID_v1, &tHlts.b_HLT_PAJet40_NoJetID_v1);
    t->SetBranchAddress("HLT_PAJet40_NoJetID_v1_Prescl", &tHlts.HLT_PAJet40_NoJetID_v1_Prescl, &tHlts.b_HLT_PAJet40_NoJetID_v1_Prescl);
+   t->SetBranchAddress("HLT_PAJet40_NoJetID_v1_trigObject",&HLT_PAJet_NoJetID_v1_trigObject_40, &tHlts.b_HLT_PAJet40_NoJetID_v1_trigObject);
+
    t->SetBranchAddress("HLT_PAJet60_NoJetID_v1", &tHlts.HLT_PAJet60_NoJetID_v1, &tHlts.b_HLT_PAJet60_NoJetID_v1);
    t->SetBranchAddress("HLT_PAJet60_NoJetID_v1_Prescl", &tHlts.HLT_PAJet60_NoJetID_v1_Prescl, &tHlts.b_HLT_PAJet60_NoJetID_v1_Prescl);
+   t->SetBranchAddress("HLT_PAJet60_NoJetID_v1_trigObject",&HLT_PAJet_NoJetID_v1_trigObject_60, &tHlts.b_HLT_PAJet60_NoJetID_v1_trigObject);
+
    t->SetBranchAddress("HLT_PAJet80_NoJetID_v1", &tHlts.HLT_PAJet80_NoJetID_v1, &tHlts.b_HLT_PAJet80_NoJetID_v1);
    t->SetBranchAddress("HLT_PAJet80_NoJetID_v1_Prescl", &tHlts.HLT_PAJet80_NoJetID_v1_Prescl, &tHlts.b_HLT_PAJet80_NoJetID_v1_Prescl);
+   t->SetBranchAddress("HLT_PAJet80_NoJetID_v1_trigObject",&HLT_PAJet_NoJetID_v1_trigObject_80, &tHlts.b_HLT_PAJet80_NoJetID_v1_trigObject);
+
    t->SetBranchAddress("HLT_PAJet100_NoJetID_v1", &tHlts.HLT_PAJet100_NoJetID_v1, &tHlts.b_HLT_PAJet100_NoJetID_v1);
    t->SetBranchAddress("HLT_PAJet100_NoJetID_v1_Prescl", &tHlts.HLT_PAJet100_NoJetID_v1_Prescl, &tHlts.b_HLT_PAJet100_NoJetID_v1_Prescl);
+   t->SetBranchAddress("HLT_PAJet100_NoJetID_v1_trigObject",&HLT_PAJet_NoJetID_v1_trigObject_100, &tHlts.b_HLT_PAJet100_NoJetID_v1_trigObject);
+
    t->SetBranchAddress("HLT_PAJet120_NoJetID_v1", &tHlts.HLT_PAJet120_NoJetID_v1, &tHlts.b_HLT_PAJet120_NoJetID_v1);
    t->SetBranchAddress("HLT_PAJet120_NoJetID_v1_Prescl", &tHlts.HLT_PAJet120_NoJetID_v1_Prescl, &tHlts.b_HLT_PAJet120_NoJetID_v1_Prescl);
+   t->SetBranchAddress("HLT_PAJet120_NoJetID_v1_trigObject",&HLT_PAJet_NoJetID_v1_trigObject_120, &tHlts.b_HLT_PAJet120_NoJetID_v1_trigObject);
+
+
    t->SetBranchAddress("HLT_PAForJet20Eta2_v1", &tHlts.HLT_PAForJet20Eta2_v1, &tHlts.b_HLT_PAForJet20Eta2_v1);
    t->SetBranchAddress("HLT_PAForJet20Eta2_v1_Prescl", &tHlts.HLT_PAForJet20Eta2_v1_Prescl, &tHlts.b_HLT_PAForJet20Eta2_v1_Prescl);
    t->SetBranchAddress("HLT_PAForJet40Eta2_v1", &tHlts.HLT_PAForJet40Eta2_v1, &tHlts.b_HLT_PAForJet40Eta2_v1);
