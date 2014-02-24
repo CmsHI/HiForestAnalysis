@@ -159,6 +159,18 @@ class HiForest : public TNamed
   TTree *ak5CaloJetTree;
   TTree *ak6CaloJetTree;
 
+  TTree* akVs2PFJetTree;                        // Jet Tree with akVs2PF algorithm, see branches in SetupJetTree.h
+  TTree* akVs3PFJetTree;                        // Jet Tree with akVs3PF algorithm, see branches in SetupJetTree.h
+  TTree* akVs4PFJetTree;                        // Jet Tree with akVs4PF algorithm, see branches in SetupJetTree.h
+  TTree* akVs5PFJetTree;                        // Jet Tree with akVs5PF algorithm, see branches in SetupJetTree.h
+  TTree* akVs6PFJetTree;                        // Jet Tree with akVs6PF algorithm, see branches in SetupJetTree.h
+
+  TTree* akVs2CaloJetTree;                      // Jet Tree with akVs2Calo algorithm, see branches in SetupJetTree.h
+  TTree* akVs3CaloJetTree;                      // Jet Tree with akVs3Calo algorithm, see branches in SetupJetTree.h
+  TTree* akVs4CaloJetTree;                      // Jet Tree with akVs4Calo algorithm, see branches in SetupJetTree.h
+  TTree* akVs5CaloJetTree;                      // Jet Tree with akVs5Calo algorithm, see branches in SetupJetTree.h
+  TTree* akVs6CaloJetTree;                      // Jet Tree with akVs6Calo algorithm, see branches in SetupJetTree.h
+
   TTree *hltTree;				// OpenHLT Tree, see branches in SetupHltTree.h
   TTree *trackTree;				// Track Tree, see branches in SetupTrackTree.h
   TTree *pixtrackTree;				// Track Tree, see branches in SetupTrackTree.h
@@ -214,6 +226,18 @@ class HiForest : public TNamed
   Jets ak5Calo;
   Jets ak6Calo;
 
+  Jets akVs2PF;
+  Jets akVs3PF;
+  Jets akVs4PF;
+  Jets akVs5PF;
+  Jets akVs6PF;
+
+  Jets akVs2Calo;
+  Jets akVs3Calo;
+  Jets akVs4Calo;
+  Jets akVs5Calo;
+  Jets akVs6Calo;
+
   Photons photon;
   Tracks track;
   Tracks pixtrack;
@@ -257,6 +281,18 @@ class HiForest : public TNamed
   bool hasAk4CaloJetTree;
   bool hasAk5CaloJetTree;
   bool hasAk6CaloJetTree;
+
+  bool hasAkVs2PFJetTree;
+  bool hasAkVs3PFJetTree;
+  bool hasAkVs4PFJetTree;
+  bool hasAkVs5PFJetTree;
+  bool hasAkVs6PFJetTree;
+
+  bool hasAkVs2CaloJetTree;
+  bool hasAkVs3CaloJetTree;
+  bool hasAkVs4CaloJetTree;
+  bool hasAkVs5CaloJetTree;
+  bool hasAkVs6CaloJetTree;
 
   bool hasHltTree;
   bool hasTrackTree;
@@ -421,6 +457,18 @@ HiForest::HiForest(const char *infName, const char* name, collisionType cMode, b
   ak5CaloJetTree = (TTree*) inf->Get("ak5CaloJetAnalyzer/t");
   ak6CaloJetTree = (TTree*) inf->Get("ak6CaloJetAnalyzer/t");
 
+  akVs2PFJetTree = (TTree*) inf->Get("akVs2PFJetAnalyzer/t");
+  akVs3PFJetTree = (TTree*) inf->Get("akVs3PFJetAnalyzer/t");
+  akVs4PFJetTree = (TTree*) inf->Get("akVs4PFJetAnalyzer/t");
+  akVs5PFJetTree = (TTree*) inf->Get("akVs5PFJetAnalyzer/t");
+  akVs6PFJetTree = (TTree*) inf->Get("akVs6PFJetAnalyzer/t");
+
+  akVs2CaloJetTree = (TTree*) inf->Get("akVs2CaloJetAnalyzer/t");
+  akVs3CaloJetTree = (TTree*) inf->Get("akVs3CaloJetAnalyzer/t");
+  akVs4CaloJetTree = (TTree*) inf->Get("akVs4CaloJetAnalyzer/t");
+  akVs5CaloJetTree = (TTree*) inf->Get("akVs5CaloJetAnalyzer/t");
+  akVs6CaloJetTree = (TTree*) inf->Get("akVs6CaloJetAnalyzer/t");
+
   hbheTree         = (TTree*) inf->Get("rechitanalyzer/hbhe");
   ebTree           = (TTree*) inf->Get("rechitanalyzer/eb");
   evtTree          = (TTree*) inf->Get("hiEvtAnalyzer/HiTree");
@@ -465,6 +513,18 @@ HiForest::HiForest(const char *infName, const char* name, collisionType cMode, b
   hasAk4CaloJetTree  = (ak4CaloJetTree      != 0);
   hasAk5CaloJetTree  = (ak5CaloJetTree      != 0);
   hasAk6CaloJetTree  = (ak6CaloJetTree      != 0);
+
+  hasAkVs2PFJetTree  = (akVs2PFJetTree      != 0);
+  hasAkVs3PFJetTree  = (akVs3PFJetTree      != 0);
+  hasAkVs4PFJetTree  = (akVs4PFJetTree      != 0);
+  hasAkVs5PFJetTree  = (akVs5PFJetTree      != 0);
+  hasAkVs6PFJetTree  = (akVs6PFJetTree      != 0);
+
+  hasAkVs2CaloJetTree  = (akVs2CaloJetTree      != 0);
+  hasAkVs3CaloJetTree  = (akVs3CaloJetTree      != 0);
+  hasAkVs4CaloJetTree  = (akVs4CaloJetTree      != 0);
+  hasAkVs5CaloJetTree  = (akVs5CaloJetTree      != 0);
+  hasAkVs6CaloJetTree  = (akVs6CaloJetTree      != 0);
 
 
   hasTrackTree     = (trackTree    		!= 0);
@@ -527,6 +587,18 @@ void HiForest::GetEntry(int i)
   if (hasAk4CaloJetTree) ak4CaloJetTree ->GetEntry(i);
   if (hasAk5CaloJetTree) ak5CaloJetTree ->GetEntry(i);
   if (hasAk6CaloJetTree) ak6CaloJetTree ->GetEntry(i);
+
+  if (hasAkVs2PFJetTree) akVs2PFJetTree ->GetEntry(i);
+  if (hasAkVs3PFJetTree) akVs3PFJetTree ->GetEntry(i);
+  if (hasAkVs4PFJetTree) akVs4PFJetTree ->GetEntry(i);
+  if (hasAkVs5PFJetTree) akVs5PFJetTree ->GetEntry(i);
+  if (hasAkVs6PFJetTree) akVs6PFJetTree ->GetEntry(i);
+
+  if (hasAkVs2CaloJetTree) akVs2CaloJetTree ->GetEntry(i);
+  if (hasAkVs3CaloJetTree) akVs3CaloJetTree ->GetEntry(i);
+  if (hasAkVs4CaloJetTree) akVs4CaloJetTree ->GetEntry(i);
+  if (hasAkVs5CaloJetTree) akVs5CaloJetTree ->GetEntry(i);
+  if (hasAkVs6CaloJetTree) akVs6CaloJetTree ->GetEntry(i);
 
   if (hasTrackTree)    trackTree    ->GetEntry(i);
   if (hasPixTrackTree) pixtrackTree ->GetEntry(i);
@@ -710,6 +782,66 @@ void HiForest::InitTree()
      setupJetTree(ak6CaloJetTree,ak6Calo);
    }
 
+   if (hasAkVs2PFJetTree) {
+     akVs2PFJetTree->SetName("akVs2PF");
+     if (tree == 0) tree = akVs2PFJetTree; else tree->AddFriend(akVs2PFJetTree);
+     setupJetTree(akVs2PFJetTree,akVs2PF);
+   }
+
+   if (hasAkVs3PFJetTree) {
+     akVs3PFJetTree->SetName("akVs3PF");
+     if (tree == 0) tree = akVs3PFJetTree; else tree->AddFriend(akVs3PFJetTree);
+     setupJetTree(akVs3PFJetTree,akVs3PF);
+   }
+
+   if (hasAkVs4PFJetTree) {
+     akVs4PFJetTree->SetName("akVs4PF");
+     if (tree == 0) tree = akVs4PFJetTree; else tree->AddFriend(akVs4PFJetTree);
+     setupJetTree(akVs4PFJetTree,akVs4PF);
+   }
+
+   if (hasAkVs5PFJetTree) {
+     akVs5PFJetTree->SetName("akVs5PF");
+     if (tree == 0) tree = akVs5PFJetTree; else tree->AddFriend(akVs5PFJetTree);
+     setupJetTree(akVs5PFJetTree,akVs5PF);
+   }
+
+   if (hasAkVs6PFJetTree) {
+     akVs6PFJetTree->SetName("akVs6PF");
+     if (tree == 0) tree = akVs6PFJetTree; else tree->AddFriend(akVs6PFJetTree);
+     setupJetTree(akVs6PFJetTree,akVs6PF);
+   }
+
+   if (hasAkVs2CaloJetTree) {
+     akVs2CaloJetTree->SetName("akVs2Calo");
+     if (tree == 0) tree = akVs2CaloJetTree; else tree->AddFriend(akVs2CaloJetTree);
+     setupJetTree(akVs2CaloJetTree,akVs2Calo);
+   }
+
+   if (hasAkVs3CaloJetTree) {
+     akVs3CaloJetTree->SetName("akVs3Calo");
+     if (tree == 0) tree = akVs3CaloJetTree; else tree->AddFriend(akVs3CaloJetTree);
+     setupJetTree(akVs3CaloJetTree,akVs3Calo);
+   }
+
+   if (hasAkVs4CaloJetTree) {
+     akVs4CaloJetTree->SetName("akVs4Calo");
+     if (tree == 0) tree = akVs4CaloJetTree; else tree->AddFriend(akVs4CaloJetTree);
+     setupJetTree(akVs4CaloJetTree,akVs4Calo);
+   }
+
+   if (hasAkVs5CaloJetTree) {
+     akVs5CaloJetTree->SetName("akVs5Calo");
+     if (tree == 0) tree = akVs5CaloJetTree; else tree->AddFriend(akVs5CaloJetTree);
+     setupJetTree(akVs5CaloJetTree,akVs5Calo);
+   }
+
+   if (hasAkVs6CaloJetTree) {
+     akVs6CaloJetTree->SetName("akVs6Calo");
+     if (tree == 0) tree = akVs6CaloJetTree; else tree->AddFriend(akVs6CaloJetTree);
+     setupJetTree(akVs6CaloJetTree,akVs6Calo);
+   }
+
    if (hasTrackTree) {
       trackTree->SetName("track");
       if (tree == 0) tree = trackTree; else tree->AddFriend(trackTree);
@@ -891,6 +1023,18 @@ void HiForest::PrintStatus()
   if (hasAk5CaloJetTree) CheckTree(ak5CaloJetTree, "Ak5CaloJetTree");
   if (hasAk6CaloJetTree) CheckTree(ak6CaloJetTree, "Ak6CaloJetTree");
 
+  if (hasAkVs2PFJetTree) CheckTree(akVs2PFJetTree, "AkVs2PFJetTree");
+  if (hasAkVs3PFJetTree) CheckTree(akVs3PFJetTree, "AkVs3PFJetTree");
+  if (hasAkVs4PFJetTree) CheckTree(akVs4PFJetTree, "AkVs4PFJetTree");
+  if (hasAkVs5PFJetTree) CheckTree(akVs5PFJetTree, "AkVs5PFJetTree");
+  if (hasAkVs6PFJetTree) CheckTree(akVs6PFJetTree, "AkVs6PFJetTree");
+
+  if (hasAkVs2CaloJetTree) CheckTree(akVs2CaloJetTree, "AkVs2CaloJetTree");
+  if (hasAkVs3CaloJetTree) CheckTree(akVs3CaloJetTree, "AkVs3CaloJetTree");
+  if (hasAkVs4CaloJetTree) CheckTree(akVs4CaloJetTree, "AkVs4CaloJetTree");
+  if (hasAkVs5CaloJetTree) CheckTree(akVs5CaloJetTree, "AkVs5CaloJetTree");
+  if (hasAkVs6CaloJetTree) CheckTree(akVs6CaloJetTree, "AkVs6CaloJetTree");
+
   if (hasTrackTree)    CheckTree(trackTree,    "TrackTree");
   if (hasPixTrackTree) CheckTree(pixtrackTree, "PixTrackTree");
   if (hasPhotonTree)   CheckTree(photonTree,   "PhotonTree");
@@ -927,6 +1071,18 @@ void HiForest::SetOutputFile(const char *name)
   if (hasAkPu4CaloJetTree) AddCloneTree(akPu4CaloJetTree, "akPu4CaloJetAnalyzer", "t");
   if (hasAkPu5CaloJetTree) AddCloneTree(akPu5CaloJetTree, "akPu5CaloJetAnalyzer", "t");
   if (hasAkPu6CaloJetTree) AddCloneTree(akPu6CaloJetTree, "akPu6CaloJetAnalyzer", "t");
+
+  if (hasAkVs2PFJetTree) AddCloneTree(akVs2PFJetTree, "akVs2PFJetAnalyzer", "t");
+  if (hasAkVs3PFJetTree) AddCloneTree(akVs3PFJetTree, "akVs3PFJetAnalyzer", "t");
+  if (hasAkVs4PFJetTree) AddCloneTree(akVs4PFJetTree, "akVs4PFJetAnalyzer", "t");
+  if (hasAkVs5PFJetTree) AddCloneTree(akVs5PFJetTree, "akVs5PFJetAnalyzer", "t");
+  if (hasAkVs6PFJetTree) AddCloneTree(akVs6PFJetTree, "akVs6PFJetAnalyzer", "t");
+
+  if (hasAkVs2CaloJetTree) AddCloneTree(akVs2CaloJetTree, "akVs2CaloJetAnalyzer", "t");
+  if (hasAkVs3CaloJetTree) AddCloneTree(akVs3CaloJetTree, "akVs3CaloJetAnalyzer", "t");
+  if (hasAkVs4CaloJetTree) AddCloneTree(akVs4CaloJetTree, "akVs4CaloJetAnalyzer", "t");
+  if (hasAkVs5CaloJetTree) AddCloneTree(akVs5CaloJetTree, "akVs5CaloJetAnalyzer", "t");
+  if (hasAkVs6CaloJetTree) AddCloneTree(akVs6CaloJetTree, "akVs6CaloJetAnalyzer", "t");
 
   if (hasTrackTree)    AddCloneTree(trackTree,    "ppTrack",           "trackTree");
   if (hasPixTrackTree) AddCloneTree(pixtrackTree, "anaPixTrack",        "trackTree");
@@ -1049,6 +1205,18 @@ void HiForest::LoadNoTrees()
   hasAk5CaloJetTree = false;
   hasAk6CaloJetTree = false;
 
+  hasAkVs2PFJetTree = false;
+  hasAkVs3PFJetTree = false;
+  hasAkVs4PFJetTree = false;
+  hasAkVs5PFJetTree = false;
+  hasAkVs6PFJetTree = false;
+
+  hasAkVs2CaloJetTree = false;
+  hasAkVs3CaloJetTree = false;
+  hasAkVs4CaloJetTree = false;
+  hasAkVs5CaloJetTree = false;
+  hasAkVs6CaloJetTree = false;
+
   hasHltTree = false;
   hasTrackTree = false;
   hasPixTrackTree = false;
@@ -1094,6 +1262,17 @@ hasPhotonTree        = (photonTree       	!= 0);
   hasAk5CaloJetTree  = (ak5CaloJetTree      != 0);
   hasAk6CaloJetTree  = (ak6CaloJetTree      != 0);
 
+  hasAkVs2PFJetTree  = (akVs2PFJetTree      != 0);
+  hasAkVs3PFJetTree  = (akVs3PFJetTree      != 0);
+  hasAkVs4PFJetTree  = (akVs4PFJetTree      != 0);
+  hasAkVs5PFJetTree  = (akVs5PFJetTree      != 0);
+  hasAkVs6PFJetTree  = (akVs6PFJetTree      != 0);
+
+  hasAkVs2CaloJetTree  = (akVs2CaloJetTree      != 0);
+  hasAkVs3CaloJetTree  = (akVs3CaloJetTree      != 0);
+  hasAkVs4CaloJetTree  = (akVs4CaloJetTree      != 0);
+  hasAkVs5CaloJetTree  = (akVs5CaloJetTree      != 0);
+  hasAkVs6CaloJetTree  = (akVs6CaloJetTree      != 0);
 
   hasTrackTree     = (trackTree    		!= 0);
   hasHltTree       = (hltTree    		!= 0);
