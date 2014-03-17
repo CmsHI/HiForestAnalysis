@@ -429,8 +429,9 @@ HiForest::HiForest(const char *infName, const char* name, collisionType cMode, b
   hltTree          = (TTree*) inf->Get("hltanalysis/HltTree");
   skimTree         = (TTree*) inf->Get("skimanalysis/HltTree");
   photonTree       = (TTree*) inf->Get("multiPhotonAnalyzer/photon");
-  if (collisionMode == cPbPb || collisionMode == cPP) trackTree        = (TTree*) inf->Get("anaTrack/trackTree");
-  if (collisionMode == cPPb) trackTree        = (TTree*) inf->Get("ppTrack/trackTree");
+  trackTree        = (TTree*) inf->Get("anaTrack/trackTree");
+  if( trackTree == 0 ) trackTree        = (TTree*) inf->Get("ppTrack/trackTree");
+  
   towerTree        = (TTree*) inf->Get("rechitanalyzer/tower");
   icPu5jetTree     = (TTree*) inf->Get("icPu5JetAnalyzer/t");
 
