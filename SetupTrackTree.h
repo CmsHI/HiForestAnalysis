@@ -59,10 +59,17 @@ public :
    Float_t         trkDzError1[maxTracks];   //[nTrk]
    Bool_t          trkFake[maxTracks];   //[nTrk]
    Float_t         trkAlgo[maxTracks];   //[nTrk]
+   Float_t         trkStatus[maxTracks];   //[nTrk]
    Int_t           pfType[maxTracks];   //[nTrk]
    Float_t         pfCandPt[maxTracks];   //[nTrk]
    Float_t         pfSumEcal[maxTracks];   //[nTrk]
    Float_t         pfSumHcal[maxTracks];   //[nTrk]
+
+   Int_t           nParticle;
+   Float_t         pPt[maxTracks];
+   Float_t         pPhi[maxTracks];
+   Float_t         pEta[maxTracks];
+
 
    // List of branches
    TBranch        *b_nEv;   //!
@@ -104,11 +111,16 @@ public :
    TBranch        *b_trkDzError1;   //!
    TBranch        *b_trkFake;   //!
    TBranch        *b_trkAlgo;   //!
+   TBranch        *b_trkStatus;   //!
    TBranch        *b_pfType;   //!
    TBranch        *b_pfCandPt;   //!
    TBranch        *b_pfSumEcal;   //!
    TBranch        *b_pfSumHcal;   //!
 
+   TBranch        *b_nParticle;
+   TBranch        *b_pPt;
+   TBranch        *b_pPhi;
+   TBranch        *b_pEta;
 };
 
 
@@ -154,10 +166,17 @@ void setupTrackTree(TTree *t,Tracks &tTracks,bool doCheck = 1)
    t->SetBranchAddress("trkDzError1", tTracks.trkDzError1, &tTracks.b_trkDzError1);
    t->SetBranchAddress("trkFake", tTracks.trkFake, &tTracks.b_trkFake);
    t->SetBranchAddress("trkAlgo", tTracks.trkAlgo, &tTracks.b_trkAlgo);
+   t->SetBranchAddress("trkStatus", tTracks.trkStatus, &tTracks.b_trkStatus);
    t->SetBranchAddress("pfType", tTracks.pfType, &tTracks.b_pfType);
    t->SetBranchAddress("pfCandPt", tTracks.pfCandPt, &tTracks.b_pfCandPt);
    t->SetBranchAddress("pfSumEcal", tTracks.pfSumEcal, &tTracks.b_pfSumEcal);
    t->SetBranchAddress("pfSumHcal", tTracks.pfSumHcal, &tTracks.b_pfSumHcal);
+
+   t->SetBranchAddress("nParticle", &tTracks.nParticle, &tTracks.b_nParticle);
+   t->SetBranchAddress("pPt", tTracks.pPt, &tTracks.b_pPt);
+   t->SetBranchAddress("pPhi", tTracks.pPhi, &tTracks.b_pPhi);
+   t->SetBranchAddress("pEta", tTracks.pEta, &tTracks.b_pEta);
+
    if (doCheck) {
       if (t->GetMaximum("nv")>4) cout <<"FATAL ERROR: Arrary size of nv too small!!!  "<<t->GetMaximum("nv")<<endl;
       if (t->GetMaximum("nVtx")>2) cout <<"FATAL ERROR: Arrary size of nVtx too small!!!  "<<t->GetMaximum("nVtx")<<endl;

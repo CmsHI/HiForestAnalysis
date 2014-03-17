@@ -21,10 +21,10 @@ public :
 
    // Declaration of leaf types
    Int_t           nPFpart;
-   Int_t           pfId[10412];   //[nPFpart]
-   Float_t         pfPt[10412];   //[nPFpart]
-   Float_t         pfEta[10412];   //[nPFpart]
-   Float_t         pfPhi[10412];   //[nPFpart]
+   Int_t           pfId[20000];   //[nPFpart]
+   Float_t         pfPt[20000];   //[nPFpart]
+   Float_t         pfEta[20000];   //[nPFpart]
+   Float_t         pfPhi[20000];   //[nPFpart]
 
    // List of branches
    TBranch        *b_nPFpart;   //!
@@ -45,7 +45,7 @@ void setupPFTree(TTree *t,PFs &tPFs,bool doCheck = 1)
    if (t->GetBranch("pfEta")) t->SetBranchAddress("pfEta", tPFs.pfEta, &tPFs.b_pfEta);
    if (t->GetBranch("pfPhi")) t->SetBranchAddress("pfPhi", tPFs.pfPhi, &tPFs.b_pfPhi);
    if (doCheck) {
-      if (t->GetMaximum("nPFpart")>10412) { cout <<"FATAL ERROR: Arrary size of nPFpart too small!!!  "<<t->GetMaximum("nPFpart")<<endl; exit(0);
+      if (t->GetMaximum("nPFpart")>20000) { cout <<"FATAL ERROR: Arrary size of nPFpart too small!!!  "<<t->GetMaximum("nPFpart")<<endl; exit(0);
  }   }
 }
 
