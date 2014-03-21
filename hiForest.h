@@ -135,17 +135,17 @@ class HiForest : public TNamed
   // Trees
   TTree *photonTree;				// Photon Tree, see branches in SetupPhotonTree.h
   TTree *icPu5jetTree;				// Jet Tree with icPu5 algorithm, see branches in SetupJetTree.h
-  TTree *akPu2jetTree;				// Jet Tree with akPu2PF algorithm, see branches in SetupJetTree.h
-  TTree *akPu3jetTree;				// Jet Tree with akPu3PF algorithm, see branches in SetupJetTree.h
-  TTree *akPu4jetTree;				// Jet Tree with akPu4PF algorithm, see branches in SetupJetTree.h
-  TTree *akPu5jetTree;                          // Jet Tree with akPu4PF algorithm, see branches in SetupJetTree.h
-  TTree *akPu6jetTree;
+  TTree *akPu2PFJetTree;				// Jet Tree with akPu2PF algorithm, see branches in SetupJetTree.h
+  TTree *akPu3PFJetTree;				// Jet Tree with akPu3PF algorithm, see branches in SetupJetTree.h
+  TTree *akPu4PFJetTree;				// Jet Tree with akPu4PF algorithm, see branches in SetupJetTree.h
+  TTree *akPu5PFJetTree;                          // Jet Tree with akPu4PF algorithm, see branches in SetupJetTree.h
+  TTree *akPu6PFJetTree;
 
-  TTree *ak2jetTree;
-  TTree *ak3jetTree;
-  TTree *ak4jetTree;
-  TTree *ak5jetTree;
-  TTree *ak6jetTree;
+  TTree *ak2PFJetTree;
+  TTree *ak3PFJetTree;
+  TTree *ak4PFJetTree;
+  TTree *ak5PFJetTree;
+  TTree *ak6PFJetTree;
 
   TTree *akPu2CaloJetTree;			// Jet Tree with akPu2Calo algorithm, see branches in SetupJetTree.h
   TTree *akPu3CaloJetTree;			// Jet Tree with akPu3Calo algorithm, see branches in SetupJetTree.h
@@ -435,16 +435,16 @@ HiForest::HiForest(const char *infName, const char* name, collisionType cMode, b
   towerTree        = (TTree*) inf->Get("rechitanalyzer/tower");
   icPu5jetTree     = (TTree*) inf->Get("icPu5JetAnalyzer/t");
 
-  akPu2jetTree     = (TTree*) inf->Get("akPu2PFJetAnalyzer/t");
-  akPu3jetTree     = (TTree*) inf->Get("akPu3PFJetAnalyzer/t");
-  akPu4jetTree     = (TTree*) inf->Get("akPu4PFJetAnalyzer/t");
-  akPu5jetTree     = (TTree*) inf->Get("akPu5PFJetAnalyzer/t");
-  akPu6jetTree     = (TTree*) inf->Get("akPu6PFJetAnalyzer/t");
-  ak2jetTree     = (TTree*) inf->Get("ak2PFJetAnalyzer/t");
-  ak3jetTree     = (TTree*) inf->Get("ak3PFJetAnalyzer/t");
-  ak4jetTree     = (TTree*) inf->Get("ak4PFJetAnalyzer/t");
-  ak5jetTree     = (TTree*) inf->Get("ak5PFJetAnalyzer/t");
-  ak6jetTree     = (TTree*) inf->Get("ak6PFJetAnalyzer/t");
+  akPu2PFJetTree     = (TTree*) inf->Get("akPu2PFJetAnalyzer/t");
+  akPu3PFJetTree     = (TTree*) inf->Get("akPu3PFJetAnalyzer/t");
+  akPu4PFJetTree     = (TTree*) inf->Get("akPu4PFJetAnalyzer/t");
+  akPu5PFJetTree     = (TTree*) inf->Get("akPu5PFJetAnalyzer/t");
+  akPu6PFJetTree     = (TTree*) inf->Get("akPu6PFJetAnalyzer/t");
+  ak2PFJetTree     = (TTree*) inf->Get("ak2PFJetAnalyzer/t");
+  ak3PFJetTree     = (TTree*) inf->Get("ak3PFJetAnalyzer/t");
+  ak4PFJetTree     = (TTree*) inf->Get("ak4PFJetAnalyzer/t");
+  ak5PFJetTree     = (TTree*) inf->Get("ak5PFJetAnalyzer/t");
+  ak6PFJetTree     = (TTree*) inf->Get("ak6PFJetAnalyzer/t");
 
   akPu2CaloJetTree = (TTree*) inf->Get("akPu2CaloJetAnalyzer/t");
   akPu3CaloJetTree = (TTree*) inf->Get("akPu3CaloJetAnalyzer/t");
@@ -491,11 +491,11 @@ HiForest::HiForest(const char *infName, const char* name, collisionType cMode, b
 
   hasIcPu5JetTree      = (icPu5jetTree 		!= 0);
 
-  hasAkPu2JetTree      = (akPu2jetTree 		!= 0);
-  hasAkPu3JetTree      = (akPu3jetTree 		!= 0);
-  hasAkPu4JetTree      = (akPu4jetTree 		!= 0);
-  hasAkPu5JetTree      = (akPu5jetTree          != 0);
-  hasAkPu6JetTree      = (akPu6jetTree          != 0);
+  hasAkPu2JetTree      = (akPu2PFJetTree 		!= 0);
+  hasAkPu3JetTree      = (akPu3PFJetTree 		!= 0);
+  hasAkPu4JetTree      = (akPu4PFJetTree 		!= 0);
+  hasAkPu5JetTree      = (akPu5PFJetTree          != 0);
+  hasAkPu6JetTree      = (akPu6PFJetTree          != 0);
 
   hasAkPu2CaloJetTree  = (akPu2CaloJetTree 	!= 0);
   hasAkPu3CaloJetTree  = (akPu3CaloJetTree 	!= 0);
@@ -503,11 +503,11 @@ HiForest::HiForest(const char *infName, const char* name, collisionType cMode, b
   hasAkPu5CaloJetTree  = (akPu5CaloJetTree      != 0);
   hasAkPu6CaloJetTree  = (akPu6CaloJetTree      != 0);
 
-  hasAk2JetTree      = (ak2jetTree          != 0);
-  hasAk3JetTree      = (ak3jetTree          != 0);
-  hasAk4JetTree      = (ak4jetTree          != 0);
-  hasAk5JetTree      = (ak5jetTree          != 0);
-  hasAk6JetTree      = (ak6jetTree          != 0);
+  hasAk2JetTree      = (ak2PFJetTree          != 0);
+  hasAk3JetTree      = (ak3PFJetTree          != 0);
+  hasAk4JetTree      = (ak4PFJetTree          != 0);
+  hasAk5JetTree      = (ak5PFJetTree          != 0);
+  hasAk6JetTree      = (ak6PFJetTree          != 0);
 
   hasAk2CaloJetTree  = (ak2CaloJetTree      != 0);
   hasAk3CaloJetTree  = (ak3CaloJetTree      != 0);
@@ -565,11 +565,11 @@ void HiForest::GetEntry(int i)
   if (hasNoiseTree)     noiseTree->GetEntry(i);
 
   if (hasIcPu5JetTree) icPu5jetTree ->GetEntry(i);
-  if (hasAkPu2JetTree) akPu2jetTree ->GetEntry(i);
-  if (hasAkPu3JetTree) akPu3jetTree ->GetEntry(i);
-  if (hasAkPu4JetTree) akPu4jetTree ->GetEntry(i);
-  if (hasAkPu5JetTree) akPu5jetTree ->GetEntry(i);
-  if (hasAkPu6JetTree) akPu6jetTree ->GetEntry(i);
+  if (hasAkPu2JetTree) akPu2PFJetTree ->GetEntry(i);
+  if (hasAkPu3JetTree) akPu3PFJetTree ->GetEntry(i);
+  if (hasAkPu4JetTree) akPu4PFJetTree ->GetEntry(i);
+  if (hasAkPu5JetTree) akPu5PFJetTree ->GetEntry(i);
+  if (hasAkPu6JetTree) akPu6PFJetTree ->GetEntry(i);
 
   if (hasAkPu2CaloJetTree) akPu2CaloJetTree ->GetEntry(i);
   if (hasAkPu3CaloJetTree) akPu3CaloJetTree ->GetEntry(i);
@@ -577,11 +577,11 @@ void HiForest::GetEntry(int i)
   if (hasAkPu5CaloJetTree) akPu5CaloJetTree ->GetEntry(i);
   if (hasAkPu6CaloJetTree) akPu6CaloJetTree ->GetEntry(i);
 
-  if (hasAk2JetTree) ak2jetTree ->GetEntry(i);
-  if (hasAk3JetTree) ak3jetTree ->GetEntry(i);
-  if (hasAk4JetTree) ak4jetTree ->GetEntry(i);
-  if (hasAk5JetTree) ak5jetTree ->GetEntry(i);
-  if (hasAk6JetTree) ak6jetTree ->GetEntry(i);
+  if (hasAk2JetTree) ak2PFJetTree ->GetEntry(i);
+  if (hasAk3JetTree) ak3PFJetTree ->GetEntry(i);
+  if (hasAk4JetTree) ak4PFJetTree ->GetEntry(i);
+  if (hasAk5JetTree) ak5PFJetTree ->GetEntry(i);
+  if (hasAk6JetTree) ak6PFJetTree ->GetEntry(i);
 
   if (hasAk2CaloJetTree) ak2CaloJetTree ->GetEntry(i);
   if (hasAk3CaloJetTree) ak3CaloJetTree ->GetEntry(i);
@@ -660,38 +660,38 @@ void HiForest::InitTree()
    }
 
    if (hasAkPu2JetTree) {
-      akPu2jetTree->SetName("akPu2PF");
-      if (tree == 0) tree = akPu2jetTree; else tree->AddFriend(akPu2jetTree);
-      setupJetTree(akPu2jetTree,akPu2PF);
+      akPu2PFJetTree->SetName("akPu2PF");
+      if (tree == 0) tree = akPu2PFJetTree; else tree->AddFriend(akPu2PFJetTree);
+      setupJetTree(akPu2PFJetTree,akPu2PF);
    }
 
    if (hasAkPu3JetTree) {
-      akPu3jetTree->SetName("akPu3PF");
-      if (tree == 0) tree = akPu3jetTree; else tree->AddFriend(akPu3jetTree);
-      setupJetTree(akPu3jetTree,akPu3PF);
+      akPu3PFJetTree->SetName("akPu3PF");
+      if (tree == 0) tree = akPu3PFJetTree; else tree->AddFriend(akPu3PFJetTree);
+      setupJetTree(akPu3PFJetTree,akPu3PF);
    }
 
    if (hasAkPu4JetTree) {
-      akPu4jetTree->SetName("akPu4PF");
+      akPu4PFJetTree->SetName("akPu4PF");
 
-      if (tree == 0) tree = akPu4jetTree; else tree->AddFriend(akPu4jetTree);
+      if (tree == 0) tree = akPu4PFJetTree; else tree->AddFriend(akPu4PFJetTree);
 
-      setupJetTree(akPu4jetTree,akPu4PF);
+      setupJetTree(akPu4PFJetTree,akPu4PF);
    }
 
    if (hasAkPu5JetTree) {
 
-      akPu5jetTree->SetName("akPu5PF");
+      akPu5PFJetTree->SetName("akPu5PF");
 
-      if (tree == 0) tree = akPu5jetTree; else tree->AddFriend(akPu5jetTree);
+      if (tree == 0) tree = akPu5PFJetTree; else tree->AddFriend(akPu5PFJetTree);
 
-      setupJetTree(akPu5jetTree,akPu5PF);
+      setupJetTree(akPu5PFJetTree,akPu5PF);
    }
 
    if (hasAkPu6JetTree) {
-     akPu6jetTree->SetName("akPu6PF");
-     if (tree == 0) tree = akPu6jetTree; else tree->AddFriend(akPu6jetTree);
-     setupJetTree(akPu6jetTree,akPu6PF);
+     akPu6PFJetTree->SetName("akPu6PF");
+     if (tree == 0) tree = akPu6PFJetTree; else tree->AddFriend(akPu6PFJetTree);
+     setupJetTree(akPu6PFJetTree,akPu6PF);
    }
 
    if (hasAkPu2CaloJetTree) {
@@ -725,33 +725,33 @@ void HiForest::InitTree()
    }
 
    if (hasAk2JetTree) {
-     ak2jetTree->SetName("ak2PF");
-     if (tree == 0) tree = ak2jetTree; else tree->AddFriend(ak2jetTree);
-     setupJetTree(ak2jetTree,ak2PF);
+     ak2PFJetTree->SetName("ak2PF");
+     if (tree == 0) tree = ak2PFJetTree; else tree->AddFriend(ak2PFJetTree);
+     setupJetTree(ak2PFJetTree,ak2PF);
    }
 
    if (hasAk3JetTree) {
-     ak3jetTree->SetName("ak3PF");
-     if (tree == 0) tree = ak3jetTree; else tree->AddFriend(ak3jetTree);
-     setupJetTree(ak3jetTree,ak3PF);
+     ak3PFJetTree->SetName("ak3PF");
+     if (tree == 0) tree = ak3PFJetTree; else tree->AddFriend(ak3PFJetTree);
+     setupJetTree(ak3PFJetTree,ak3PF);
    }
 
    if (hasAk4JetTree) {
-     ak4jetTree->SetName("ak4PF");
-     if (tree == 0) tree = ak4jetTree; else tree->AddFriend(ak4jetTree);
-     setupJetTree(ak4jetTree,ak4PF);
+     ak4PFJetTree->SetName("ak4PF");
+     if (tree == 0) tree = ak4PFJetTree; else tree->AddFriend(ak4PFJetTree);
+     setupJetTree(ak4PFJetTree,ak4PF);
    }
 
    if (hasAk5JetTree) {
-     ak5jetTree->SetName("ak5PF");
-     if (tree == 0) tree = ak5jetTree; else tree->AddFriend(ak5jetTree);
-     setupJetTree(ak5jetTree,ak5PF);
+     ak5PFJetTree->SetName("ak5PF");
+     if (tree == 0) tree = ak5PFJetTree; else tree->AddFriend(ak5PFJetTree);
+     setupJetTree(ak5PFJetTree,ak5PF);
    }
 
    if (hasAk6JetTree) {
-     ak6jetTree->SetName("ak6PF");
-     if (tree == 0) tree = ak5jetTree; else tree->AddFriend(ak6jetTree);
-     setupJetTree(ak6jetTree,ak6PF);
+     ak6PFJetTree->SetName("ak6PF");
+     if (tree == 0) tree = ak6PFJetTree; else tree->AddFriend(ak6PFJetTree);
+     setupJetTree(ak6PFJetTree,ak6PF);
    }
    if (hasAk2CaloJetTree) {
      ak2CaloJetTree->SetName("ak2Calo");
@@ -1000,17 +1000,17 @@ void HiForest::PrintStatus()
   if (hasEvtTree)      CheckTree(evtTree,      "EvtTree");
   if (hasIcPu5JetTree) CheckTree(icPu5jetTree, "IcPu5jetTree");
 
-  if (hasAkPu2JetTree) CheckTree(akPu2jetTree, "AkPu2jetTree");
-  if (hasAkPu3JetTree) CheckTree(akPu3jetTree, "AkPu3jetTree");
-  if (hasAkPu4JetTree) CheckTree(akPu4jetTree, "AkPu4jetTree");
-  if (hasAkPu5JetTree) CheckTree(akPu5jetTree, "AkPu5jetTree");
-  if (hasAkPu6JetTree) CheckTree(akPu6jetTree, "AkPu6jetTree");
+  if (hasAkPu2JetTree) CheckTree(akPu2PFJetTree, "AkPu2PFJetTree");
+  if (hasAkPu3JetTree) CheckTree(akPu3PFJetTree, "AkPu3PFJetTree");
+  if (hasAkPu4JetTree) CheckTree(akPu4PFJetTree, "AkPu4PFJetTree");
+  if (hasAkPu5JetTree) CheckTree(akPu5PFJetTree, "AkPu5PFJetTree");
+  if (hasAkPu6JetTree) CheckTree(akPu6PFJetTree, "AkPu6PFJetTree");
 
-  if (hasAk2JetTree) CheckTree(ak2jetTree, "Ak2jetTree");
-  if (hasAk3JetTree) CheckTree(ak3jetTree, "Ak3jetTree");
-  if (hasAk4JetTree) CheckTree(ak4jetTree, "Ak4jetTree");
-  if (hasAk5JetTree) CheckTree(ak5jetTree, "Ak5jetTree");
-  if (hasAk6JetTree) CheckTree(ak6jetTree, "Ak6jetTree");
+  if (hasAk2JetTree) CheckTree(ak2PFJetTree, "Ak2PFJetTree");
+  if (hasAk3JetTree) CheckTree(ak3PFJetTree, "Ak3PFJetTree");
+  if (hasAk4JetTree) CheckTree(ak4PFJetTree, "Ak4PFJetTree");
+  if (hasAk5JetTree) CheckTree(ak5PFJetTree, "Ak5PFJetTree");
+  if (hasAk6JetTree) CheckTree(ak6PFJetTree, "Ak6PFJetTree");
 
   if (hasAkPu2CaloJetTree) CheckTree(akPu2CaloJetTree, "AkPu2CaloJetTree");
   if (hasAkPu3CaloJetTree) CheckTree(akPu3CaloJetTree, "AkPu3CaloJetTree");
@@ -1055,17 +1055,17 @@ void HiForest::SetOutputFile(const char *name)
   if (hasSkimTree)     AddCloneTree(skimTree,     "skimanalysis",       "HltTree");
   if (hasIcPu5JetTree) AddCloneTree(icPu5jetTree, "icPu5JetAnalyzer",   "t");
   if (hasAk5CaloJetTree) AddCloneTree(ak5CaloJetTree, "Ak5CaloJetAnalyzer",   "t");
-  if (hasAkPu2JetTree) AddCloneTree(akPu2jetTree, "akPu2PFJetAnalyzer", "t");
-  if (hasAkPu3JetTree) AddCloneTree(akPu3jetTree, "akPu3PFJetAnalyzer", "t");
-  if (hasAkPu4JetTree) AddCloneTree(akPu4jetTree, "akPu4PFJetAnalyzer", "t");
-  if (hasAkPu5JetTree) AddCloneTree(akPu5jetTree, "akPu5PFJetAnalyzer", "t");
-  if (hasAkPu6JetTree) AddCloneTree(akPu6jetTree, "akPu6PFJetAnalyzer", "t");
+  if (hasAkPu2JetTree) AddCloneTree(akPu2PFJetTree, "akPu2PFJetAnalyzer", "t");
+  if (hasAkPu3JetTree) AddCloneTree(akPu3PFJetTree, "akPu3PFJetAnalyzer", "t");
+  if (hasAkPu4JetTree) AddCloneTree(akPu4PFJetTree, "akPu4PFJetAnalyzer", "t");
+  if (hasAkPu5JetTree) AddCloneTree(akPu5PFJetTree, "akPu5PFJetAnalyzer", "t");
+  if (hasAkPu6JetTree) AddCloneTree(akPu6PFJetTree, "akPu6PFJetAnalyzer", "t");
 
-  if (hasAk2JetTree) AddCloneTree(ak2jetTree, "ak2PFJetAnalyzer", "t");
-  if (hasAk3JetTree) AddCloneTree(ak3jetTree, "ak3PFJetAnalyzer", "t");
-  if (hasAk4JetTree) AddCloneTree(ak4jetTree, "ak4PFJetAnalyzer", "t");
-  if (hasAk5JetTree) AddCloneTree(ak5jetTree, "ak5PFJetAnalyzer", "t");
-  if (hasAk6JetTree) AddCloneTree(ak6jetTree, "ak6PFJetAnalyzer", "t");
+  if (hasAk2JetTree) AddCloneTree(ak2PFJetTree, "ak2PFJetAnalyzer", "t");
+  if (hasAk3JetTree) AddCloneTree(ak3PFJetTree, "ak3PFJetAnalyzer", "t");
+  if (hasAk4JetTree) AddCloneTree(ak4PFJetTree, "ak4PFJetAnalyzer", "t");
+  if (hasAk5JetTree) AddCloneTree(ak5PFJetTree, "ak5PFJetAnalyzer", "t");
+  if (hasAk6JetTree) AddCloneTree(ak6PFJetTree, "ak6PFJetAnalyzer", "t");
 
   if (hasAkPu2CaloJetTree) AddCloneTree(akPu2CaloJetTree, "akPu2CaloJetAnalyzer", "t");
   if (hasAkPu3CaloJetTree) AddCloneTree(akPu3CaloJetTree, "akPu3CaloJetAnalyzer", "t");
@@ -1239,11 +1239,11 @@ hasPhotonTree        = (photonTree       	!= 0);
 
   hasIcPu5JetTree      = (icPu5jetTree 		!= 0);
 
-  hasAkPu2JetTree      = (akPu2jetTree 		!= 0);
-  hasAkPu3JetTree      = (akPu3jetTree 		!= 0);
-  hasAkPu4JetTree      = (akPu4jetTree 		!= 0);
-  hasAkPu5JetTree      = (akPu5jetTree          != 0);
-  hasAkPu6JetTree      = (akPu6jetTree          != 0);
+  hasAkPu2JetTree      = (akPu2PFJetTree 		!= 0);
+  hasAkPu3JetTree      = (akPu3PFJetTree 		!= 0);
+  hasAkPu4JetTree      = (akPu4PFJetTree 		!= 0);
+  hasAkPu5JetTree      = (akPu5PFJetTree          != 0);
+  hasAkPu6JetTree      = (akPu6PFJetTree          != 0);
 
   hasAkPu2CaloJetTree  = (akPu2CaloJetTree 	!= 0);
   hasAkPu3CaloJetTree  = (akPu3CaloJetTree 	!= 0);
@@ -1251,11 +1251,11 @@ hasPhotonTree        = (photonTree       	!= 0);
   hasAkPu5CaloJetTree  = (akPu5CaloJetTree      != 0);
   hasAkPu6CaloJetTree  = (akPu6CaloJetTree      != 0);
 
-  hasAk2JetTree      = (ak2jetTree          != 0);
-  hasAk3JetTree      = (ak3jetTree          != 0);
-  hasAk4JetTree      = (ak4jetTree          != 0);
-  hasAk5JetTree      = (ak5jetTree          != 0);
-  hasAk6JetTree      = (ak6jetTree          != 0);
+  hasAk2JetTree      = (ak2PFJetTree          != 0);
+  hasAk3JetTree      = (ak3PFJetTree          != 0);
+  hasAk4JetTree      = (ak4PFJetTree          != 0);
+  hasAk5JetTree      = (ak5PFJetTree          != 0);
+  hasAk6JetTree      = (ak6PFJetTree          != 0);
 
   hasAk2CaloJetTree  = (ak2CaloJetTree      != 0);
   hasAk3CaloJetTree  = (ak3CaloJetTree      != 0);

@@ -22,9 +22,13 @@ double angularRangeReduce(double x)
 double deltaPhi(double phi1, double phi2) {
   return angularRangeReduce(phi1 - phi2);
 }
+
+double deltaEta(double eta1, double eta2) {
+  return eta1 - eta2;
+}
  
 double deltaR2(double eta1, double phi1, double eta2, double phi2) {
-    double deta = eta1-eta2;
+    double deta = deltaEta(eta1,eta2);
     double dphi = deltaPhi(phi1,phi2);
     return (deta*deta+dphi*dphi);
 }

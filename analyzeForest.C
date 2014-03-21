@@ -20,9 +20,7 @@ static const bool centralOnly = 1;
 static const double matchR = 0.5;
 
 void analyzeForest(
-		   //		   const char* infname = "root://eoscms//eos/cms/store/group/phys_heavyions/velicanu/forest/PA2013_HiForest_PromptRecofirstPR_forestv51.root",
-		   //		   const char* infname = "/d102/yetkin/prod/clean/noDuplicate.root",
-		   const char* infname = "/d102/yjlee/hiForest2/promptskim-hihighpt-hltjet80-pt90-v20.root",
+                   const char* infname = "/data_CMS/cms/yilmaz/HiForest_HYDJET_Track8_Jet21_STARTHI53_LV1_merged_forest_0.root",
 		   const char* outname = "ntuple_data_PbPb_akPu3PF_04.root",
 		   bool MC = 0,
 		   bool PbPb = 0,
@@ -35,7 +33,7 @@ void analyzeForest(
    bool mini = 1;
 
 
-   int Nevents = 50000;
+   int Nevents = 20000;
    Nevents = -1;
 
   bool usePF = 1;

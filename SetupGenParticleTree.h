@@ -35,6 +35,7 @@ public :
    Float_t         phi[maxEntrySim];   //[mult]
    Int_t           pdg[maxEntrySim];   //[mult]
    Int_t           chg[maxEntrySim];   //[mult]
+   Int_t           sta[maxEntrySim];   //[mult]
    Int_t           sube[maxEntrySim];   //[mult]
    Float_t         vx;
    Float_t         vy;
@@ -57,6 +58,7 @@ public :
    TBranch        *b_phi;   //!
    TBranch        *b_pdg;   //!
    TBranch        *b_chg;   //!
+   TBranch        *b_sta;   //!
    TBranch        *b_sube;   //!
    TBranch        *b_vx;   //!
    TBranch        *b_vy;   //!
@@ -84,6 +86,7 @@ void setupGenParticleTree(TTree *t,GenParticles &tGenParticles,bool doCheck = 1)
    if (t->GetBranch("phi")) t->SetBranchAddress("phi", tGenParticles.phi, &tGenParticles.b_phi);
    if (t->GetBranch("pdg")) t->SetBranchAddress("pdg", tGenParticles.pdg, &tGenParticles.b_pdg);
    if (t->GetBranch("chg")) t->SetBranchAddress("chg", tGenParticles.chg, &tGenParticles.b_chg);
+   if (t->GetBranch("sta")) t->SetBranchAddress("sta", tGenParticles.sta, &tGenParticles.b_sta);
    if (t->GetBranch("sube")) t->SetBranchAddress("sube", tGenParticles.sube, &tGenParticles.b_sube);
    if (t->GetBranch("vx")) t->SetBranchAddress("vx", &tGenParticles.vx, &tGenParticles.b_vx);
    if (t->GetBranch("vy")) t->SetBranchAddress("vy", &tGenParticles.vy, &tGenParticles.b_vy);
