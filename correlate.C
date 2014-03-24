@@ -1,10 +1,12 @@
 
 
 #include "hiForest.h"
+#include "TrackCorrectorFactorized.h"
 #include "TCanvas.h"
 #include "TH2F.h"
 #include "TH1F.h"
 #include "TH2D.h"
+#include "TH3D.h"
 #include "TH1D.h"
 #include "TNtuple.h"
 #include "TMath.h"
@@ -158,6 +160,8 @@ void correlate(
      t = new HiForest(infname,"",cPPb,MC);
    }
 
+   TrackCorrector* trackCorrector = new TrackCorrectorFactorized(t,"akVs3Calo");
+
    t->hasPhotonTree *= 0;
    t->hasMetTree *= 0;
    t->hasPFTree *= 0;
@@ -245,6 +249,7 @@ void correlate(
        cout<<"Processing entry : "<<iev<<endl;
      }
      t->GetEntry(iev);
+     trackCorrector->load();
 
      if(!MC && !PbPb && !(t->skim.pPAcollisionEventSelectionPA && t->skim.pHBHENoiseFilter)) continue;
      if(!MC && PbPb && !(t->skim.pcollisionEventSelection && t->skim.pHBHENoiseFilter)) continue;
@@ -471,8 +476,10 @@ void correlate(
 	   if(t->track.trkPt[i] < trkMin) continue;	   
 	   double peta = t->track.trkEta[i];
 	   double pphi = t->track.trkPhi[i];
-	   hCorrLead->Fill(pt1,deltaEta(peta,eta1),deltaPhi(pphi,phi1),weight);
-	   hCorrSubLead->Fill(pt2,deltaEta(peta,eta2),deltaPhi(pphi,phi2),weight);
+	   double tw = 1./trackCorrector->efficiency(i);
+	   double tweight = weight*tw;
+	   hCorrLead->Fill(pt1,deltaEta(peta,eta1),deltaPhi(pphi,phi1),tweight);
+	   hCorrSubLead->Fill(pt2,deltaEta(peta,eta2),deltaPhi(pphi,phi2),tweight);
 
 	 }
        }
