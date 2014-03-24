@@ -19,8 +19,6 @@
 #include "SetupGenpTree.h"
 #include "SetupPFTree.h"
 #include "SetupGenParticleTree.h"
-#include "TrackingCorrectionsv6.h"
-#include "TrackingParam.h"
 #include <TTree.h>
 #include <TFile.h>
 #include <TString.h>
@@ -28,6 +26,8 @@
 #include <TCut.h>
 
 #include "DummyJetCorrector.h"
+
+const long MAXMEM = 16000000000;
 
 // ==========================================================
 // Main class which can be used to read the hiForest trees
@@ -118,17 +118,9 @@ class HiForest : public TNamed
   int getMatchedCaloTowerAllowReuse(int j);
   int getMatchedHBHEAllowReuse(int j);
   void matchTrackCalo(bool allEvents = 1);
-  double getTrackCorrectionPara(int j);
-  double getTrackCorrection(int j);
   bool selectTrack(int j);
-  
-  //==================================================================================================================================
-  // Get track-jet correlated variables. Not needed if correlatePF is run.
-  //==================================================================================================================================
-  void correlateTracks(TTree* jetTree, Jets& jets, bool allEvents = 1, bool smeared = 0);
-  //void correlatePF(TTree* jetTree, Jets& jets, bool allEvents = 1){return;}
 
-  // TFile
+    // TFile
   TFile *inf; 					// Input file 
   TFile *outf;                                  // Output file if we want to export the forest
 
@@ -309,8 +301,6 @@ class HiForest : public TNamed
   collisionType collisionMode;
   bool mc;
   bool doJetCorrection;
-  bool doTrackCorrections;
-  bool doTrackingSeparateLeadingSubleading;
 
   // Extra variables
   Float_t* towerEt;
@@ -378,13 +368,8 @@ class HiForest : public TNamed
 
   vector<JetCorrectorParameters> vpar_HI310x;
   FactorizedJetCorrector *_JEC_HI310X;
+  TF1* fEnergyScale[2][10];  // [a][b],  a =0 for unconverted,  a=1 for converted.   b: 1,2,3 is centrality bin. b=0 is empty
 
-//  TrackingParam trackCorrFromParam("TrkCorr_3DHistos_pThat80_Inclusive.root","CentralityWeights.root","PtResidualWeights.root");
-  TrackingParam *trackCorrFromParam;
-
-  vector<TrackingCorrections*> trackCorrections;
-  TF1* fEnergyScale[2][10];  // [a][b],  a =0 for unconverted,  a=1 for converted.   b: 1,2,3 is centrality bin. b=0 is empty                                                                                       
-  
  private:
   
   
@@ -406,7 +391,6 @@ HiForest::HiForest(const char *infName, const char* name, collisionType cMode, b
   inf = TFile::Open(infName);
 
   cone = 0.3;
-  doTrackCorrections = 0;
   
   minJetPtForTrkCor = 40;
   leadingJetPtForTrkCor = -100;
@@ -903,53 +887,6 @@ void HiForest::InitTree()
 
    // Print the status of thre forest
    PrintStatus();
-
-   // Setup Track Corrections 	 
-   if(doTrackCorrections){
-
-      trackCorrFromParam = new TrackingParam();
-
-      if (collisionMode==cPbPb) {
-         trackCorrections.push_back(new TrackingCorrections("Forest2STAv14","Forest2_MergedGeneral_jetfine"));
-      } else {
-         trackCorrections.push_back(new TrackingCorrections("Forest2STApp","Forest2_MergedGeneral_jetfine"));
-      }
-//       trackCorrections.push_back(new TrackingCorrections("Forest2STAv12","Forest2_MergedGeneral_j1"));
-//       trackCorrections.push_back(new TrackingCorrections("Forest2STAv12","Forest2_MergedGeneral_j2"));
-
-      for(unsigned int i = 0; i < trackCorrections.size(); ++i){
-         if (collisionMode==cPbPb) {
-           trackCorrections[i]->AddSample("trkcorr/IterTrkCorrv14XSec/IterTrkCorrv14XSec_hy18dj80to100_akPu3PF_100_-1_-1000_genJetMode0.root",80);
-           trackCorrections[i]->AddSample("trkcorr/IterTrkCorrv14XSec/IterTrkCorrv14XSec_hy18dj100to170_akPu3PF_100_-1_-1000_genJetMode0.root",100);
-           trackCorrections[i]->AddSample("trkcorr/IterTrkCorrv14XSec/IterTrkCorrv14XSec_hy18dj170to200_akPu3PF_100_-1_-1000_genJetMode0.root",170);
-           trackCorrections[i]->AddSample("trkcorr/IterTrkCorrv14XSec/IterTrkCorrv14XSec_hy18dj200to250_akPu3PF_100_-1_-1000_genJetMode0.root",200);
-           trackCorrections[i]->AddSample("trkcorr/IterTrkCorrv14XSec/IterTrkCorrv14XSec_hy18dj250to300_akPu3PF_100_-1_-1000_genJetMode0.root",250);
-           trackCorrections[i]->AddSample("trkcorr/IterTrkCorrv14XSec/IterTrkCorrv14XSec_hy18dj300to9999_akPu3PF_100_-1_-1000_genJetMode0.root",300);
-           // v12: frozen for preapproval
-//            trackCorrections[i]->AddSample("trkcorr/IterTrkCorrv12XSec/IterTrkCorrv12XSec_hy18dj100_akPu3PF_100_40_2749_genJetMode0.root",100);
-//            trackCorrections[i]->AddNormFile("trkcorr/IterTrkCorrv12XSec/IterTrkCorrv12XSec_hy18dj100_akPu3PF_-1_-1_-1000_genJetMode0.root");
-//            trackCorrections[i]->AddSample("trkcorr/IterTrkCorrv12XSec/IterTrkCorrv12XSec_hy18dj200_akPu3PF_100_40_2749_genJetMode0.root",200);
-//            trackCorrections[i]->AddNormFile("trkcorr/IterTrkCorrv12XSec/IterTrkCorrv12XSec_hy18dj200_akPu3PF_-1_-1_-1000_genJetMode0.root");
-         } else {
-           trackCorrections[i]->AddSample("trkcorr/IterTrkCorrv14XSec_pp/IterTrkCorrv14XSec_pp_sigdj80to120_akPu3PF_100_-1_-1000_genJetMode0.root",80);
-           trackCorrections[i]->AddSample("trkcorr/IterTrkCorrv14XSec_pp/IterTrkCorrv14XSec_pp_sigdj120to170_akPu3PF_100_-1_-1000_genJetMode0.root",120);
-           trackCorrections[i]->AddSample("trkcorr/IterTrkCorrv14XSec_pp/IterTrkCorrv14XSec_pp_sigdj170to200_akPu3PF_100_-1_-1000_genJetMode0.root",170);
-           trackCorrections[i]->AddSample("trkcorr/IterTrkCorrv14XSec_pp/IterTrkCorrv14XSec_pp_sigdj200to250_akPu3PF_100_-1_-1000_genJetMode0.root",200);
-           trackCorrections[i]->AddSample("trkcorr/IterTrkCorrv14XSec_pp/IterTrkCorrv14XSec_pp_sigdj250to9999_akPu3PF_100_-1_-1000_genJetMode0.root",250);
-         }
-         trackCorrections[i]->weightSamples_ = true;
-         trackCorrections[i]->smoothLevel_ = 0;
-         trackCorrections[i]->trkPhiMode_ = false;
-         trackCorrections[i]->ppMode_ = (collisionMode==cPP);
-         trackCorrections[i]->Init();
-      }
-      minJetPtForTrkCor = 40;
-      initialized = 1;
-      if (doTrackingSeparateLeadingSubleading&&trackCorrections.size()<3) {
-         cout << "Fatal Error: Not enough correction tables to do separate leading/subleading jet tracking correction" << endl;
-         exit(1);
-      }
-   }
 }
 
 void HiForest::CheckTree(TTree *t,const char *title)

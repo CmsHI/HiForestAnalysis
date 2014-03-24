@@ -20,6 +20,7 @@ static const double matchR = 0.5;
 void correlate(
 		   const char* infname = "/data_CMS/cms/yilmaz/HiForest_HYDJET_Track8_Jet21_STARTHI53_LV1_merged_forest_0.root",
 		   const char* outname = "histograms_01.root",
+		   string mixname = "",
 		   bool MC = 1,
 		   bool PbPb = 1,
 		   double jetEtaMax = 1.6,
@@ -27,6 +28,8 @@ void correlate(
 		   ){
 
    cout<<"Begin"<<endl;
+   bool MIX = 1;
+   if(mixname == "") MIX = 0;
 
    bool mini = 1;
 
@@ -53,7 +56,7 @@ void correlate(
 
   double trkMin = 0.5;
 
-  double leadPtMin = 120;
+  double leadPtMin = 50;
   double subleadPtMin = 50;
   double dphiMin = 2.*pi/3.;
 
@@ -95,17 +98,31 @@ void correlate(
   TNtuple *nt;
   nt = new TNtuple("nt","nt","x");
 
-  TH3D* hAxisLead = new TH3D("hAxisLead","",500,0,500,160,-1.6,1.6,200,-pi,pi);
-  TH3D* hAxisSubLead = new TH3D("hAxisSubLead","",500,0,500,160,-1.6,1.6,200,-pi,pi);
+  TH3D *hAxisLead, *hAxisSubLead, *hCorrLead, *hCorrSubLead, *hGenParticleLead, *hGenParticleSubLead;
+  TH1D *hPtLead, *hPtSubLead; 
 
-  TH3D* hCorrLead = new TH3D("hCorrLead","",500,0,500,160,-1.6,1.6,200,-pi,pi);
-  TH3D* hCorrSubLead = new TH3D("hCorrSubLead","",500,0,500,160,-1.6,1.6,200,-pi,pi);
+  if(MIX){
+     TFile* mixfile = new TFile(mixname.data());
+     hAxisLead = (TH3D*)mixfile->Get("hAxisLead");
+     hAxisSubLead = (TH3D*)mixfile->Get("hAxisSubLead");
+     hAxisLead->SetDirectory(outf);
+     hAxisSubLead->SetDirectory(outf);
+     hAxisLead->Write();
+     hAxisSubLead->Write();
 
-  TH3D* hGenParticleLead = new TH3D("hGenParticleLead","",500,0,500,160,-1.6,1.6,200,-pi,pi);
-  TH3D* hGenParticleSubLead = new TH3D("hGenParticleSubLead","",500,0,500,160,-1.6,1.6,200,-pi,pi);
-
-  TH1D* hPtLead = new TH1D("hPtLead","",500,0,500);
-  TH1D* hPtSubLead = new TH1D("hPtSubLead","",500,0,500);
+  }else{
+     hAxisLead = new TH3D("hAxisLead","",500,0,500,160,-1.6,1.6,200,-pi,pi);
+     hAxisSubLead = new TH3D("hAxisSubLead","",500,0,500,160,-1.6,1.6,200,-pi,pi);
+  }
+  
+ hCorrLead = new TH3D("hCorrLead","",500,0,500,160,-1.6,1.6,200,-pi,pi);
+ hCorrSubLead = new TH3D("hCorrSubLead","",500,0,500,160,-1.6,1.6,200,-pi,pi);
+ 
+ hGenParticleLead = new TH3D("hGenParticleLead","",500,0,500,160,-1.6,1.6,200,-pi,pi);
+ hGenParticleSubLead = new TH3D("hGenParticleSubLead","",500,0,500,160,-1.6,1.6,200,-pi,pi);
+ 
+ hPtLead = new TH1D("hPtLead","",500,0,500);
+ hPtSubLead = new TH1D("hPtSubLead","",500,0,500);
 
   bool pp = 0;
 
@@ -301,8 +318,15 @@ void correlate(
      psiP = t->evt.hiEvtPlanes[iPlane+1];
 
      v2 = 0;
+     double weight = 1;
 
-     vecs.clear();
+     if(MIX){
+
+	hAxisLead->GetRandom3(pt1,eta1,phi1);
+        hAxisSubLead->GetRandom3(pt2,eta2,phi2);
+
+     }else{
+	vecs.clear();
 
      for(int j = 0; j < jets1->nref; ++j){
        if(jets1->rawpt[j] < 15) continue;
@@ -333,12 +357,6 @@ void correlate(
      cout<<"Got some jets "<<vecs.size()<<endl;
      if(vecs.size() > 0) cout<<"pt1 : "<<jets1->jtpt[jtLead]<<endl;
      if(vecs.size() > 1) cout<<"pt2 : "<<jets1->jtpt[jtSubLead]<<endl;
-
-     if(!MC && (vecs.size() < 1 || jets1->jtpt[jtLead] < leadPtMin)) continue;
-     if(vecs.size() < 2 || jets1->jtpt[jtSubLead] < subleadPtMin) continue;
-     if(fabs(deltaPhi(phi1,phi2)) < dphiMin) continue;
-     
-     cout<<"Got dijets"<<endl;
 
      int evt = t->hlt.Event;
      int run = t->hlt.Run;
@@ -386,6 +404,11 @@ void correlate(
 	if(MC) refpt3 = jets1->refpt[jtThird];
 
      }
+
+     if(pt1 < leadPtMin) continue;
+     if(pt2 < subleadPtMin) continue;
+     if(!MIX && fabs(deltaPhi(phi1,phi2)) < dphiMin) continue;
+     cout<<"Got dijets"<<endl;
      
      if(MC){
 	vecs.clear();
@@ -420,12 +443,10 @@ void correlate(
 	}
 
      }
-
+     }
      double dijetEta = (eta1+eta2)/2;
 
      cout<<"Filling jets"<<endl;
-
-     double weight = 1;
      hPtLead->Fill(pt1,weight);
      hPtSubLead->Fill(pt2,weight);
 
