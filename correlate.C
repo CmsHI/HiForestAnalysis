@@ -19,6 +19,35 @@ using namespace std;
 static const bool centralOnly = 1;
 static const double matchR = 0.5;
 
+static const double pi = TMath::Pi();
+
+//static const int NvtxBins = 8;
+//static const double vtxBins[] = {-15.,-10.,-5.,-2.,0.,2.,5.,10.,15.};
+static const int NvtxBins = 6;
+static const double vtxBins[] = {-10.,-5.,-2.,0.,2.,5.,10.};
+
+static const int NcBins = 4;
+static const double cBins[] = {0,20,60,100,200};
+
+static const int NpsiBins = 5;
+static const double psiBins[] = {0.*pi,0.1*pi,0.2*pi,0.3*pi,0.4*pi,0.5*pi};
+
+
+int findBin(double vtx, double cbin, double psi){
+
+   int i = 0;
+   int ivtx = 0;
+   int ic = 0;
+   int ip = 0;
+
+   while(vtx > vtxBins[ivtx+1]) ivtx++;
+   while(cbin > cBins[ic+1]) ic++;
+   while(psi > psiBins[ip+1]) ip++;
+
+   i = ivtx + NvtxBins*(ic +NcBins*ip);
+   return i;
+}
+
 void correlate(
 		   const char* infname = "/data_CMS/cms/yilmaz/HiForest_HYDJET_Track8_Jet21_STARTHI53_LV1_merged_forest_0.root",
 		   const char* outname = "histograms_01.root",
@@ -33,8 +62,6 @@ void correlate(
    bool MIX = 1;
    if(mixname == "") MIX = 0;
 
-   bool mini = 1;
-
    int Nevents = 1000;
 
   bool usePF = 1;
@@ -45,16 +72,9 @@ void correlate(
   bool doFlow = 0;
   bool doInclusiveJets = 1;
   bool doTracks = 1;
-  bool doGenParticles = 1;
+  bool doGenParticles = MC;
 
   bool fillTracks = 0;
-
-  if(mini){
-    fillTracks = 0;
-    doTracks = 0;
-  }
-
-  double pi = TMath::Pi();
 
   double trkMin = 0.5;
 
@@ -82,9 +102,6 @@ void correlate(
 
   TRandom* engin = new TRandom();
 
-  //  double fitMin[10] = {100,80,60,50,100};
-  //  double fitMax[10] = {250,200,150,100,250};
-
   double fitMin[10] = {100,90,80,70,100};
   double fitMax[10] = {300,300,300,300,300};
 
@@ -100,31 +117,45 @@ void correlate(
   TNtuple *nt;
   nt = new TNtuple("nt","nt","x");
 
-  TH3D *hAxisLead, *hAxisSubLead, *hCorrLead, *hCorrSubLead, *hGenParticleLead, *hGenParticleSubLead;
-  TH1D *hPtLead, *hPtSubLead; 
+  int Nbins = NvtxBins*NcBins*NpsiBins;
 
+  TH3D *hAxisLead[1000], *hAxisSubLead[1000], 
+     *hCorrLead[1000], *hCorrSubLead[1000], 
+     *hGenParticleLead[1000], *hGenParticleSubLead[1000];
+  TH1D *hPtLead[1000], *hPtSubLead[1000], *hPtInclusive[1000], *hAnalysisBin;
+  
   if(MIX){
      TFile* mixfile = new TFile(mixname.data());
-     hAxisLead = (TH3D*)mixfile->Get("hAxisLead");
-     hAxisSubLead = (TH3D*)mixfile->Get("hAxisSubLead");
-     hAxisLead->SetDirectory(outf);
-     hAxisSubLead->SetDirectory(outf);
-     hAxisLead->Write();
-     hAxisSubLead->Write();
-
+     for(int i = 0; i < Nbins; ++i){
+	hAxisLead[i] = (TH3D*)mixfile->Get(Form("hAxisLead_%d",i));
+	hAxisSubLead[i] = (TH3D*)mixfile->Get(Form("hAxisSubLead_%d",i));
+	hAxisLead[i]->SetDirectory(outf);
+	hAxisSubLead[i]->SetDirectory(outf);
+	outf->cd();
+	hAxisLead[i]->Write();
+	hAxisSubLead[i]->Write();
+     }
   }else{
-     hAxisLead = new TH3D("hAxisLead","",500,0,500,160,-1.6,1.6,200,-pi,pi);
-     hAxisSubLead = new TH3D("hAxisSubLead","",500,0,500,160,-1.6,1.6,200,-pi,pi);
+     for(int i = 0; i < Nbins; ++i){
+	hAxisLead[i] = new TH3D(Form("hAxisLead_%d",i),"",250,0,500,32,-1.6,1.6,50,-pi,pi);
+	hAxisSubLead[i] = new TH3D(Form("hAxisSubLead_%d",i),"",250,0,500,32,-1.6,1.6,50,-pi,pi);
+     }
   }
-  
- hCorrLead = new TH3D("hCorrLead","",500,0,500,160,-1.6,1.6,200,-pi,pi);
- hCorrSubLead = new TH3D("hCorrSubLead","",500,0,500,160,-1.6,1.6,200,-pi,pi);
- 
- hGenParticleLead = new TH3D("hGenParticleLead","",500,0,500,160,-1.6,1.6,200,-pi,pi);
- hGenParticleSubLead = new TH3D("hGenParticleSubLead","",500,0,500,160,-1.6,1.6,200,-pi,pi);
- 
- hPtLead = new TH1D("hPtLead","",500,0,500);
- hPtSubLead = new TH1D("hPtSubLead","",500,0,500);
+
+  for(int i = 0; i < Nbins; ++i){
+
+     hCorrLead[i] = new TH3D(Form("hCorrLead_%d",i),"",250,0,500,32,-1.6,1.6,50,-pi+pi/2.,pi+pi/2.);
+     hCorrSubLead[i] = new TH3D(Form("hCorrSubLead_%d",i),"",250,0,500,32,-1.6,1.6,50,-pi+pi/2.,pi+pi/2.);
+     
+     hGenParticleLead[i] = new TH3D(Form("hGenParticleLead_%d",i),"",250,0,500,32,-1.6,1.6,50,-pi+pi/2.,pi+pi/2.);
+     hGenParticleSubLead[i] = new TH3D(Form("hGenParticleSubLead_%d",i),"",250,0,500,32,-1.6,1.6,50,-pi+pi/2.,pi+pi/2.);
+     
+     hPtLead[i] = new TH1D(Form("hPtLead_%d",i),"",250,0,500);
+     hPtSubLead[i] = new TH1D(Form("hPtSubLead_%d",i),"",250,0,500);     
+     hPtInclusive[i] = new TH1D(Form("hPtInclusive_%d",i),"",250,0,500);
+  }
+
+  hAnalysisBin = new TH1D(Form("hAnalysisBin"),"",Nbins,0,Nbins);
 
   bool pp = 0;
 
@@ -142,10 +173,8 @@ void correlate(
    double zBins[21];
    double ptBins[101];
 
-   cout<<"BINS : "<<endl;
    for(int i = 0; i < NxsiBin+1; ++i){
      double xsi = -1+(10./NxsiBin)*(NxsiBin-i-1);
-     cout<<"xsi : "<<xsi<<endl;
      zBins[i] = exp(-xsi);
    }
 
@@ -197,9 +226,6 @@ void correlate(
    t->hasGenParticleTree *= MC;
 
    t->InitTree();
-
-   cout<<"a"<<endl;
-
 
    if(Nevents > 0){
       t->nEntries = Nevents;
@@ -325,10 +351,17 @@ void correlate(
      v2 = 0;
      double weight = 1;
 
+     int cbin = t->evt.hiBin;
+
+     if(cbin >= 180 || fabs(vz) > 10 || fabs(psi) > pi) continue;
+
+     int analysisBin = findBin(vz,cbin,psi);
+     hAnalysisBin->Fill(analysisBin);
+
      if(MIX){
 
-	hAxisLead->GetRandom3(pt1,eta1,phi1);
-        hAxisSubLead->GetRandom3(pt2,eta2,phi2);
+	hAxisLead[analysisBin]->GetRandom3(pt1,eta1,phi1);
+        hAxisSubLead[analysisBin]->GetRandom3(pt2,eta2,phi2);
 
      }else{
 	vecs.clear();
@@ -337,6 +370,8 @@ void correlate(
        if(jets1->rawpt[j] < 15) continue;
 
        if( fabs(jets1->jteta[j]) > jetEtaMax ) continue;
+
+       hPtInclusive[analysisBin]->Fill(jets1->jtpt[j],weight);
 
        JetIndex entry;
        entry.pt = jets1->jtpt[j];
@@ -452,11 +487,11 @@ void correlate(
      double dijetEta = (eta1+eta2)/2;
 
      cout<<"Filling jets"<<endl;
-     hPtLead->Fill(pt1,weight);
-     hPtSubLead->Fill(pt2,weight);
+     hPtLead[analysisBin]->Fill(pt1,weight);
+     hPtSubLead[analysisBin]->Fill(pt2,weight);
 
-     hAxisLead->Fill(pt1,eta1,phi1,weight);
-     hAxisSubLead->Fill(pt2,eta2,phi2,weight);
+     hAxisLead[analysisBin]->Fill(pt1,eta1,phi1,weight);
+     hAxisSubLead[analysisBin]->Fill(pt2,eta2,phi2,weight);
 
      if(doGenParticles){
        
@@ -464,8 +499,8 @@ void correlate(
 	 if(t->genparticle.chg[i] == 0 || t->genparticle.sta[i] != 1) continue;
 	 double peta = t->genparticle.eta[i];
          double pphi = t->genparticle.phi[i];
-	 hGenParticleLead->Fill(pt1,deltaEta(peta,eta1),deltaPhi(pphi,phi1),weight); 
-         hGenParticleSubLead->Fill(pt2,deltaEta(peta,eta2),deltaPhi(pphi,phi2),weight);
+	 hGenParticleLead[analysisBin]->Fill(pt1,deltaEta(peta,eta1),deltaPhi(pphi,phi1,pi/2.),weight); 
+         hGenParticleSubLead[analysisBin]->Fill(pt2,deltaEta(peta,eta2),deltaPhi(pphi,phi2,pi/2.),weight);
        }
      }
        
@@ -476,11 +511,10 @@ void correlate(
 	   if(t->track.trkPt[i] < trkMin) continue;	   
 	   double peta = t->track.trkEta[i];
 	   double pphi = t->track.trkPhi[i];
-	   double tw = 1./trackCorrector->efficiency(i);
+	   double tw = (1.-trackCorrector->fake(i))/trackCorrector->efficiency(i);
 	   double tweight = weight*tw;
-	   hCorrLead->Fill(pt1,deltaEta(peta,eta1),deltaPhi(pphi,phi1),tweight);
-	   hCorrSubLead->Fill(pt2,deltaEta(peta,eta2),deltaPhi(pphi,phi2),tweight);
-
+	   hCorrLead[analysisBin]->Fill(pt1,deltaEta(peta,eta1),deltaPhi(pphi,phi1,pi/2.),tweight);
+	   hCorrSubLead[analysisBin]->Fill(pt2,deltaEta(peta,eta2),deltaPhi(pphi,phi2,pi/2.),tweight);
 	 }
        }
      

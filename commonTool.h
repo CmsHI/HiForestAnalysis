@@ -19,8 +19,8 @@ double angularRangeReduce(double x)
   return ret;
 }
 
-double deltaPhi(double phi1, double phi2) {
-  return angularRangeReduce(phi1 - phi2);
+double deltaPhi(double phi1, double phi2, double shift = 0) {
+   return angularRangeReduce(phi1 - phi2 - shift) + shift;
 }
 
 double deltaEta(double eta1, double eta2) {
