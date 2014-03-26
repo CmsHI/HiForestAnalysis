@@ -345,6 +345,7 @@ void correlate(
 
 	hAxisLead[analysisBin]->GetRandom3(pt1,eta1,phi1);
         hAxisSubLead[analysisBin]->GetRandom3(pt2,eta2,phi2);
+	hAnalysisBin->Fill(analysisBin);
 
      }else{
 	vecs.clear();

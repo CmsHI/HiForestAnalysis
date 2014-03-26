@@ -50,8 +50,8 @@ void plotCorrelations(){
 
    int Nbins = NvtxBins*NcBins*NpsiBins;
 
-   TFile* sigfile = new TFile("./signal_0.root");
-   TFile* mixfile = new TFile("./mixed_0.root");
+   TFile* sigfile = new TFile("./signal.root");
+   TFile* mixfile = new TFile("./mixed.root");
    TFile* outf = new TFile("results.root","recreate");
 
    TH3D *hAxis[1000],
@@ -97,10 +97,26 @@ void plotCorrelations(){
    hAnalysisBin = (TH1D*)sigfile->Get(Form("hAnalysisBin"));
    hAnalysisBinBkg = (TH1D*)mixfile->Get(Form("hAnalysisBin"));
 
+   hAnalysisBin->Scale(hAnalysisBin->Integral());
+   hAnalysisBinBkg->Scale(hAnalysisBinBkg->Integral());
+
    hAnalysisW = (TH1D*)hAnalysisBin->Clone("hAnalysisW");
+   hAnalysisW->Divide(hAnalysisBinBkg);
 
    TH1* h = combine(hSub,hAnalysisW);
+   TH1* h1 = combine(hSig,hAnalysisW);
+   TH1* h2 = combine(hBkg,hAnalysisW);
 
-   h->Draw("surf2");
+   TCanvas* c1 = new TCanvas("c1","",600,600);
+   h->Draw("surf1");
+
+   TCanvas* c2 = new TCanvas("c2","",600,600);
+   h1->Draw("surf1");
+
+   TCanvas* c3 = new TCanvas("c3","",600,600);
+   h2->Draw("surf1");
+
+
+
 
 }
