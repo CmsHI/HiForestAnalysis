@@ -32,6 +32,10 @@ static const double cBins[] = {0,20,60,100,200};
 static const int NpsiBins = 5;
 static const double psiBins[] = {0.*pi,0.1*pi,0.2*pi,0.3*pi,0.4*pi,0.5*pi};
 
+static const int NajBins = 5;
+static const double ajMin[] = {0., 0.,    0.11, 0.22, 0.33,1};
+static const double ajMax[] = {1., 0.11, 0.22, 0.33, 1};
+
 
 int findBin(double vtx, double cbin, double psi){
 
@@ -52,24 +56,19 @@ void correlate(
 		   const char* infname = "/data_CMS/cms/yilmaz/HiForest_HYDJET_Track8_Jet21_STARTHI53_LV1_merged_forest_0.root",
 		   const char* outname = "histograms_01.root",
 		   string mixname = "",
+		   int firstEvent = 0,
+		   int Nevents = -1,
 		   bool MC = 1,
-		   bool PbPb = 1,
-		   double jetEtaMax = 1.6,
-		   int centIndex = 0, int etaBin = 0, int leadJetPtBin = 0, int trackPtBin = 0
+		   bool PbPb = 1
 		   ){
 
    cout<<"Begin"<<endl;
    bool MIX = 1;
    if(mixname == "") MIX = 0;
 
-   int Nevents = 1000;
-
   bool usePF = 1;
   int R = 3;
 
-  double etaCOM = -0.465;
-
-  bool doFlow = 0;
   bool doInclusiveJets = 1;
   bool doTracks = 1;
   bool doGenParticles = MC;
@@ -78,39 +77,22 @@ void correlate(
 
   double trkMin = 0.5;
 
-  double leadPtMin = 50;
+  double leadPtMin = 120;
   double subleadPtMin = 50;
   double dphiMin = 2.*pi/3.;
 
-  int frame = 1; // Dijet frame for z
+  double jetEtaMax = 2.;
+  double dijetEtaMax = 1.;
+  double detaMax = 2.5;
 
-  int analysisId = 0;
+  int NetaBins = 10;
+  int NphiBins = 40;
+  int NdetaBins = 50;
 
-  double ptSubLeadMin = 30;
-  double ptLeadMin = 120;
-
-  double etLeadMin[10] = {100, 100,120,150,180,200  };
-  double etLeadMax[10] = {1000,120,150,180,200,1000 };
-
-  double tkMin[10] = {4.,  4.,5.,7.,10., 20.};
-  double tkMax[10] = {100.,5.,7.,10.,20.,1000.};
-
-  TF1* gaus = new TF1("gaus","gaus",-5,5);
-  gaus->SetParameter(0,1);
-  gaus->SetParameter(1,0);
-  gaus->SetParameter(2,1);
-
-  TRandom* engin = new TRandom();
-
-  double fitMin[10] = {100,90,80,70,100};
-  double fitMax[10] = {300,300,300,300,300};
+  int NptBins = 100;
 
   TH1::SetDefaultSumw2();
   TH2::SetDefaultSumw2();
-  cout<<"x"<<endl;
-
-  string name[10] = {"c0to10","c10to20","c20to30","c30to50","c50to100","c0to30","c30to100","c0to100"};
-  cout<<"x"<<endl;
 
   TFile* outf = new TFile(outname,"recreate");
   
@@ -137,22 +119,24 @@ void correlate(
      }
   }else{
      for(int i = 0; i < Nbins; ++i){
-	hAxisLead[i] = new TH3D(Form("hAxisLead_%d",i),"",250,0,500,32,-1.6,1.6,50,-pi,pi);
-	hAxisSubLead[i] = new TH3D(Form("hAxisSubLead_%d",i),"",250,0,500,32,-1.6,1.6,50,-pi,pi);
+	hAxisLead[i] = new TH3D(Form("hAxisLead_%d",i),"",NptBins,0,500,NetaBins,-dijetEtaMax,dijetEtaMax,NphiBins,-pi,pi);
+	hAxisSubLead[i] = new TH3D(Form("hAxisSubLead_%d",i),"",NptBins,0,500,NetaBins,-dijetEtaMax,dijetEtaMax,NphiBins,-pi,pi);
      }
   }
 
   for(int i = 0; i < Nbins; ++i){
 
-     hCorrLead[i] = new TH3D(Form("hCorrLead_%d",i),"",250,0,500,32,-1.6,1.6,50,-pi+pi/2.,pi+pi/2.);
-     hCorrSubLead[i] = new TH3D(Form("hCorrSubLead_%d",i),"",250,0,500,32,-1.6,1.6,50,-pi+pi/2.,pi+pi/2.);
+     hCorrLead[i] = new TH3D(Form("hCorrLead_%d",i),"",NptBins,0,500,NdetaBins,-detaMax,detaMax,50,-pi+pi/2.,pi+pi/2.);
+     hCorrSubLead[i] = new TH3D(Form("hCorrSubLead_%d",i),"",NptBins,0,500,NdetaBins,-detaMax,detaMax,50,-pi+pi/2.,pi+pi/2.);
+
+     if(doGenParticles){
+	hGenParticleLead[i] = new TH3D(Form("hGenParticleLead_%d",i),"",NptBins,0,500,NdetaBins,-detaMax,detaMax,50,-pi+pi/2.,pi+pi/2.);
+	hGenParticleSubLead[i] = new TH3D(Form("hGenParticleSubLead_%d",i),"",NptBins,0,500,NdetaBins,-detaMax,detaMax,50,-pi+pi/2.,pi+pi/2.);
+     }
      
-     hGenParticleLead[i] = new TH3D(Form("hGenParticleLead_%d",i),"",250,0,500,32,-1.6,1.6,50,-pi+pi/2.,pi+pi/2.);
-     hGenParticleSubLead[i] = new TH3D(Form("hGenParticleSubLead_%d",i),"",250,0,500,32,-1.6,1.6,50,-pi+pi/2.,pi+pi/2.);
-     
-     hPtLead[i] = new TH1D(Form("hPtLead_%d",i),"",250,0,500);
-     hPtSubLead[i] = new TH1D(Form("hPtSubLead_%d",i),"",250,0,500);     
-     hPtInclusive[i] = new TH1D(Form("hPtInclusive_%d",i),"",250,0,500);
+     hPtLead[i] = new TH1D(Form("hPtLead_%d",i),"",NptBins,0,500);
+     hPtSubLead[i] = new TH1D(Form("hPtSubLead_%d",i),"",NptBins,0,500);     
+     hPtInclusive[i] = new TH1D(Form("hPtInclusive_%d",i),"",NptBins,0,500);
   }
 
   hAnalysisBin = new TH1D(Form("hAnalysisBin"),"",Nbins,0,Nbins);
@@ -227,7 +211,7 @@ void correlate(
 
    t->InitTree();
 
-   if(Nevents > 0){
+   if(Nevents > 0 && Nevents < t->nEntries){
       t->nEntries = Nevents;
    }else{
       Nevents = t->nEntries;
@@ -270,7 +254,7 @@ void correlate(
 
    cout<<"a"<<endl;
 
-   for(int iev = 0; iev < Nevents; ++iev){
+   for(int iev = firstEvent; iev < Nevents; ++iev){
      if(iev%1000==0){ 
        cout<<"Processing entry : "<<iev<<endl;
      }
@@ -286,7 +270,7 @@ void correlate(
 
      if(!MC && noise >= 2) continue;
 
-     cout<<"passed event selection"<<endl;
+     //     cout<<"passed event selection"<<endl;
 
      float pthat = jets1->pthat;
 
@@ -356,7 +340,6 @@ void correlate(
      if(cbin >= 180 || fabs(vz) > 10 || fabs(psi) > pi) continue;
 
      int analysisBin = findBin(vz,cbin,psi);
-     hAnalysisBin->Fill(analysisBin);
 
      if(MIX){
 
@@ -394,9 +377,9 @@ void correlate(
      if(vecs.size() > 1) jtSubLead = vecs[1].index;
      if(vecs.size() > 2) jtThird = vecs[2].index;
 
-     cout<<"Got some jets "<<vecs.size()<<endl;
-     if(vecs.size() > 0) cout<<"pt1 : "<<jets1->jtpt[jtLead]<<endl;
-     if(vecs.size() > 1) cout<<"pt2 : "<<jets1->jtpt[jtSubLead]<<endl;
+     //     cout<<"Got some jets "<<vecs.size()<<endl;
+     //     if(vecs.size() > 0) cout<<"pt1 : "<<jets1->jtpt[jtLead]<<endl;
+     //     if(vecs.size() > 1) cout<<"pt2 : "<<jets1->jtpt[jtSubLead]<<endl;
 
      int evt = t->hlt.Event;
      int run = t->hlt.Run;
@@ -429,7 +412,6 @@ void correlate(
        adphi = fabs(dphi);
 
        dr= deltaR(eta2,phi2,eta1,phi1);
-       //       correlateTracks(t->track,eta2,phi2,trkMin,ch2,trk2,ntrk2);
      }
 
      if(jtThird > -1){
@@ -448,7 +430,14 @@ void correlate(
      if(pt1 < leadPtMin) continue;
      if(pt2 < subleadPtMin) continue;
      if(!MIX && fabs(deltaPhi(phi1,phi2)) < dphiMin) continue;
-     cout<<"Got dijets"<<endl;
+     if(fabs(eta1) > dijetEtaMax) continue;
+     if(fabs(eta2) > dijetEtaMax) continue;
+
+     double aj = (pt1-pt2)/(pt1+pt2);
+     hAnalysisBin->Fill(analysisBin);
+
+
+     //     cout<<"Got dijets"<<endl;
      
      if(MC){
 	vecs.clear();
@@ -484,9 +473,8 @@ void correlate(
 
      }
      }
-     double dijetEta = (eta1+eta2)/2;
 
-     cout<<"Filling jets"<<endl;
+     //     cout<<"Filling jets"<<endl;
      hPtLead[analysisBin]->Fill(pt1,weight);
      hPtSubLead[analysisBin]->Fill(pt2,weight);
 
