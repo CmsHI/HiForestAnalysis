@@ -45,6 +45,67 @@ TH1* combine(TH1** h, TH1* hw){
 }
 
 
+void reflect(TH1* h){
+
+  TH1* h1 = (TH1*)h->Clone(Form("%s_ref1",h->GetName()));
+  TH1* h2 = (TH1*)h->Clone(Form("%s_ref2",h->GetName()));
+  TH1* h3 = (TH1*)h->Clone(Form("%s_ref3",h->GetName()));
+  h1->Reset();
+  h2->Reset();
+  h3->Reset();
+
+  int nbins = (h->GetNbinsX()+2)*(h->GetNbinsY()+2);
+
+  for(int i = 0; i < nbins; ++i){
+    int x,y,z;
+
+    h->GetBinXYZ(i,x,y,z);
+
+    double val = h->GetBinContent(i);
+    double e = h->GetBinError(i);
+    
+    double eta = h->GetYaxis()->GetBinCenter(y);
+    double phi = h->GetXaxis()->GetBinCenter(x);
+
+    if(phi > h->GetXaxis()->GetXmax()) continue;
+    if(phi < h->GetXaxis()->GetXmin()) continue;
+
+    if(eta > h->GetYaxis()->GetXmax()) continue;
+    if(eta < h->GetYaxis()->GetXmin()) continue;
+
+    int x1 = h->GetXaxis()->FindBin(phi);
+    int y1 = h->GetYaxis()->FindBin(-eta);
+    int bin1 = h->GetBin(x1,y1);
+    h1->SetBinContent(bin1,val);
+    h1->SetBinError(bin1,e);
+
+    phi = -phi;
+    
+    if(phi >= 3.*pi/2.) phi -= 2.*pi;
+    if(phi < -pi/2.) phi += 2.*pi;
+    
+    int x2 = h->GetXaxis()->FindBin(phi);
+    int y2 = h->GetYaxis()->FindBin(-eta);
+    int bin2 = h->GetBin(x2,y2);
+    h2->SetBinContent(bin2,val);
+    h2->SetBinError(bin2,e);
+
+    int x3 = h->GetXaxis()->FindBin(phi);
+    int y3 = h->GetYaxis()->FindBin(eta);
+    int bin3 = h->GetBin(x3,y3);
+    h3->SetBinContent(bin3,val);
+    h3->SetBinError(bin3,e);
+
+  }
+
+  h->Add(h1);
+  h->Add(h2);
+  h->Add(h3);
+
+  h->Scale(0.25);
+}
+
+
 
 void plotCorrelations(){
 
@@ -67,12 +128,15 @@ void plotCorrelations(){
 
    TH1 *hSig[1000], *hBkg[1000], *hSub[1000];
 
+   double xx[1000];
+
    for(int i = 0; i < Nbins; ++i){
       hCorr[i] = (TH3D*)sigfile->Get(Form("hCorrLead_%d",i));
       hPt[i] = (TH1D*)sigfile->Get(Form("hPtLead_%d",i));
 
       hCorrBkg[i] = (TH3D*)mixfile->Get(Form("hCorrLead_%d",i));
       hPtBkg[i] = (TH1D*)mixfile->Get(Form("hPtLead_%d",i));
+      xx[i] = hPtBkg[i]->Integral();
 
       hPtWeight[i] = (TH1D*)hPt[i]->Clone(Form("hPtWeight_%d",i));
       hPtWeight[i]->Divide(hPtBkg[i]);
@@ -84,8 +148,8 @@ void plotCorrelations(){
       hBkg[i] = project(hCorrBkg[i]);
       hBkg[i]->SetName(Form("hBkg_%d",i));
 
-      hSig[i]->Scale(hPt[i]->Integral());
-      hBkg[i]->Scale(hPt[i]->Integral());
+      hSig[i]->Scale(1./hPt[i]->Integral());
+      hBkg[i]->Scale(1./hPt[i]->Integral());
 
       hSub[i] = (TH1*)hSig[i]->Clone(Form("hSub_%d",i));
 
@@ -97,6 +161,10 @@ void plotCorrelations(){
    hAnalysisBin = (TH1D*)sigfile->Get(Form("hAnalysisBin"));
    hAnalysisBinBkg = (TH1D*)mixfile->Get(Form("hAnalysisBin"));
 
+   for(int i = 0; i < hAnalysisBinBkg->GetNbinsX(); ++i){
+     hAnalysisBinBkg->SetBinContent(i+1,xx[i]);
+   }
+
    hAnalysisBin->Scale(hAnalysisBin->Integral());
    hAnalysisBinBkg->Scale(hAnalysisBinBkg->Integral());
 
@@ -106,6 +174,10 @@ void plotCorrelations(){
    TH1* h = combine(hSub,hAnalysisW);
    TH1* h1 = combine(hSig,hAnalysisW);
    TH1* h2 = combine(hBkg,hAnalysisW);
+
+   reflect(h);
+   reflect(h1);
+   reflect(h2);
 
    TCanvas* c1 = new TCanvas("c1","",600,600);
    h->Draw("surf1");
