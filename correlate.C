@@ -101,8 +101,8 @@ void correlate(
   double dphiMin = 2.*pi/3.;
 
   double jetEtaMax = 2.;
-  double dijetEtaMax = 1.;
-  double detaMax = 2.5;
+  double dijetEtaMax = 1.6;
+  double detaMax = 3.2;
 
   int NetaBins = 10;
   int NphiBins = 40;
@@ -529,6 +529,7 @@ void correlate(
        
 	for(int i = 0; i < t->genparticle.mult; ++i){
 	   if(t->genparticle.chg[i] == 0 || t->genparticle.sta[i] != 1) continue;
+	   if(t->genparticle.pt[i] <= trkMin) continue;
 	   double peta = t->genparticle.eta[i];
 	   double pphi = t->genparticle.phi[i];
 	   if(fabs(eta1) < dijetEtaMax){
@@ -541,7 +542,7 @@ void correlate(
      }else if(doTracks){       
 	for(int i = 0; i < t->track.nTrk; ++i){
 	   if(!t->selectTrack(i)) continue;
-	   if(t->track.trkPt[i] < trkMin) continue;	   
+	   if(t->track.trkPt[i] <= trkMin) continue;	   
 	   double peta = t->track.trkEta[i];
 	   double pphi = t->track.trkPhi[i];
 	   double tw = (1.-trackCorrector->fake(i))/trackCorrector->efficiency(i);
