@@ -34,8 +34,8 @@ static const double cBins[] = {0,20,60,100,200};
 static const int NpsiBins = 1;
 static const double psiBins[] = {-1.*pi,1.*pi};
 
-static const int NdijetEtaBins = 8;
-static const double dijetEtaBins[] = {-2,-1.5,-1.,-0.5,0.,0.5,1.,1.5,2.};
+static const int NdijetEtaBins = 6;
+static const double dijetEtaBins[] = {-1.6,-1.,-0.5,0.,0.5,1.,1.6};
 
 static const int NajBins = 4;
 static const double ajBins[] = {0.,    0.11, 0.22, 0.33,1};
@@ -49,10 +49,10 @@ int findBin(double vtx, double cbin200, double psi, double eta){
    int ip = 0;
    int ieta = 0;
 
-   while(vtx > vtxBins[ivtx+1]) ivtx++;
-   while(cbin200 > cBins[ic+1]) ic++;
-   while(psi > psiBins[ip+1]) ip++;
-   while(eta > dijetEtaBins[ieta+1]) ieta++;
+   while(vtx >= vtxBins[ivtx+1]) ivtx++;
+   while(cbin200 >= cBins[ic+1]) ic++;
+   while(psi >= psiBins[ip+1]) ip++;
+   while(eta >= dijetEtaBins[ieta+1]) ieta++;
 
    i = ivtx + NvtxBins*(ic + NcBins*(ip + NpsiBins*ieta));
    return i;
