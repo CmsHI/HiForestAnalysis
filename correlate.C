@@ -75,7 +75,7 @@ void correlate(
 		   int psiBin = 0,
 		   int cBin = 0,
 		   int firstEvent = 0,
-		   int Nevents = 20,
+		   int Nevents = -1,
 		   bool MC = 1,
 		   bool PbPb = 1
 		   ){
