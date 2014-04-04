@@ -34,6 +34,16 @@ TH1* plot(
 	 min = -2.5;
 	 max = 2.5;
       }
+   }else if(var == "hiBin"){
+      t = (TTree*)inf->Get("hiEvtAnalyzer/HiTree");
+      min = 0;
+      max = 200;
+      nbin = 100;
+   }else if(var == "run"){
+      t = (TTree*)inf->Get("hiEvtAnalyzer/HiTree");
+      min = 181600;
+      max = 182000;
+      nbin = 500;
    }else{
       t = (TTree*)inf->Get("anaTrack/trackTree");
       if(var == "trkEta"){
@@ -71,7 +81,11 @@ TH1* plot(
 
    t->Draw(Form("%s>>h",var.data()),evtSel&&cut,"");
 
-   h->Scale(1./t->GetEntries(evtSel));
+   if(var=="run"){
+      h->SetMinimum(0.5);
+   }else{
+      h->Scale(1./t->GetEntries(evtSel));
+   }
    //   h->Scale(1./1000.);
 
    return h;
@@ -95,8 +109,11 @@ TH1D* validate(string var = "", TCut evtSel = "", TCut cut = ""){
    h1->Draw("same");
 
    TH1D* hr = (TH1D*)h1->Clone("hr");
-   hr->Divide(h0);
-
+   if(var == "run"){
+      hr->Add(h0,-1);
+   }else{
+      hr->Divide(h0);
+   }
    return hr;
 }
 
@@ -114,8 +131,32 @@ void quickValidate(){
    c1->Divide(2,1);
 
    string var = "";
-
    cut = "";
+
+
+   var = "run";
+   c1->cd(1)->SetLogy(1);
+   hr = validate(var,evtSel,cut);
+   c1->cd(2);
+   //   hr->SetMaximum(3);
+   //   hr->SetMinimum(0);
+   hr->Draw();
+   c1->Print(Form("figure_%s_%s.png",var.data(),(const char*)trigger));
+
+   return;
+
+   var = "hiBin";
+   c1->cd(1)->SetLogy(1);
+   hr = validate(var,evtSel,cut);
+   c1->cd(2);
+   hr->SetMaximum(3);
+   hr->SetMinimum(0);
+   hr->Draw();
+   c1->Print(Form("figure_%s_%s.png",var.data(),(const char*)trigger));
+
+
+   return;
+
 
    var = "vz[1]";
    c1->cd(1)->SetLogy(0);
