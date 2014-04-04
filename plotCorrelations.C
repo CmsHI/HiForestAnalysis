@@ -5,7 +5,7 @@ TH1* project(TH3* h, double xmin = -1, double xmax = -1, string proj = "yz"){
 
    TH1* hp = (TH1*)h->Project3D(proj.data());
 
-      return hp;
+   return hp;
 }
 
 
@@ -107,7 +107,7 @@ void reflect(TH1* h){
 
 
 
-void plotCorrelations(){
+void plotCorrelations(int ajBin = 0){
 
    int Nbins = NvtxBins*NcBins*NpsiBins;
 
@@ -131,16 +131,16 @@ void plotCorrelations(){
    double xx[1000];
 
    for(int i = 0; i < Nbins; ++i){
-      hCorr[i] = (TH3D*)sigfile->Get(Form("hCorrLead_%d",i));
-      hPt[i] = (TH1D*)sigfile->Get(Form("hPtLead_%d",i));
-
-      hCorrBkg[i] = (TH3D*)mixfile->Get(Form("hCorrLead_%d",i));
-      hPtBkg[i] = (TH1D*)mixfile->Get(Form("hPtLead_%d",i));
-      xx[i] = hPtBkg[i]->Integral();
-
-      hPtWeight[i] = (TH1D*)hPt[i]->Clone(Form("hPtWeight_%d",i));
-      hPtWeight[i]->Divide(hPtBkg[i]);
-
+     hCorr[i] = (TH3D*)sigfile->Get(Form("hCorrLead_%d_%d",i,ajBin));
+     hPt[i] = (TH1D*)sigfile->Get(Form("hPtLead_%d_%d",i,ajBin));
+     
+     hCorrBkg[i] = (TH3D*)mixfile->Get(Form("hCorrLead_%d_%d",i,ajBin));
+     hPtBkg[i] = (TH1D*)mixfile->Get(Form("hPtLead_%d_%d",i,ajBin));
+     xx[i] = hPtBkg[i]->Integral();
+     
+     hPtWeight[i] = (TH1D*)hPt[i]->Clone(Form("hPtWeight_%d_%d",i,ajBin));
+     hPtWeight[i]->Divide(hPtBkg[i]);
+     
       reweight(hCorrBkg[i],hPtWeight[i]);
 
       hSig[i] = project(hCorr[i]);

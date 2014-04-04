@@ -41,7 +41,7 @@ static const int NajBins = 4;
 static const double ajBins[] = {0.,    0.11, 0.22, 0.33,1};
 
 
-int findBin(double vtx, double cbin, double psi, double eta){
+int findBin(double vtx, double cbin200, double psi, double eta){
 
    int i = 0;
    int ivtx = 0;
@@ -50,7 +50,7 @@ int findBin(double vtx, double cbin, double psi, double eta){
    int ieta = 0;
 
    while(vtx > vtxBins[ivtx+1]) ivtx++;
-   while(cbin > cBins[ic+1]) ic++;
+   while(cbin200 > cBins[ic+1]) ic++;
    while(psi > psiBins[ip+1]) ip++;
    while(eta > dijetEtaBins[ieta+1]) ieta++;
 
