@@ -1,6 +1,6 @@
 #!/bin/sh
 
-for run in `seq 0 0`
+for run in `seq 0 9`
   do
   for vtx in `seq 0 5`
     do
