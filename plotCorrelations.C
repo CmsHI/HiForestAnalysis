@@ -48,10 +48,10 @@ TH1* combine(TH1** h, TH1* hw){
    for(int i = 0; i < hw->GetNbinsX(); ++i){
      findBinXYZ(i, vb, cb, pb, et);
 
-     if(cb != _cBin) continue;
-     if(vb != _vtxBin) continue;
-     if(pb != _psiBin) continue;
-     if(et != _etaBin) continue;
+     if(_cBin >=0 && cb != _cBin) continue;
+     if(_vtxBin >= 0 && vb != _vtxBin) continue;
+     if(_psiBin >= 0 && pb != _psiBin) continue;
+     if(_etaBin >= 0 && et != _etaBin) continue;
 
      double w = hw->GetBinContent(i+1);
      cout<<"weight : "<<w<<endl;
@@ -80,7 +80,7 @@ void reflect(TH1* h){
     h->GetBinXYZ(i,x,y,z);
 
     double val = h->GetBinContent(i);
-    double e = h->GetBinError(i);
+    double e = h->GetBinError(i)*2.; // sqrt(4) applied to fix quad counting
     
     double eta = h->GetYaxis()->GetBinCenter(y);
     double phi = h->GetXaxis()->GetBinCenter(x);
@@ -125,7 +125,7 @@ void reflect(TH1* h){
 
 
 
-void plotCorrelations(int ajBin = 0, int cBin = 0, int vtxBin = 1, int psiBin = 0, int etaBin = 0){
+void plotCorrelations(int ajBin = 0, int cBin = 0, int vtxBin = -1, int psiBin = -1, int etaBin = -1){
 
   _cBin = cBin;
   _vtxBin = vtxBin;
@@ -134,19 +134,33 @@ void plotCorrelations(int ajBin = 0, int cBin = 0, int vtxBin = 1, int psiBin = 
 
   int Nbins = NvtxBins*NcBins*NpsiBins*NdijetEtaBins;
 
-  TFile* sigfile = new TFile(Form("./signal_vtx%d_cent0_psi0.root",vtxBin));
-  TFile* mixfile = new TFile(Form("./mixed_vtx%d_cent0_psi0_0.root",vtxBin));
+  TFile* sigfile[10][10][10], * mixfile[10][10][10];
+
+  for(int i = 0; i < NvtxBins; ++i){
+    for(int j = 0; j < NcBins; ++j){
+      for(int k = 0; k < NpsiBins; ++k){
+	if(_cBin >=0 && j != _cBin) continue;
+	if(_vtxBin >= 0 && i != _vtxBin) continue;
+	if(_psiBin >= 0 && k != _psiBin) continue;
+
+	sigfile[i][j][k] = new TFile(Form("./signal_vtx%d_cent%d_psi%d.root",i,j,k));
+	mixfile[i][j][k] = new TFile(Form("./mixed_vtx%d_cent%d_psi%d.root",i,j,k));
+      }
+    }
+  }
+
+
    TFile* outf = new TFile("results.root","recreate");
 
    TH3D *hAxis[1000],
      *hCorr[1000];
 
-   TH1D *hPt[1000], *hAnalysisBin;
+   TH1D *hPt[1000], *hAnalysisBin = 0;
 
    TH3D *hAxisBkg[1000],
      *hCorrBkg[1000];
 
-   TH1D *hPtBkg[1000], *hPtInclusiveBkg[1000], *hAnalysisBinBkg;
+   TH1D *hPtBkg[1000], *hPtInclusiveBkg[1000], *hAnalysisBinBkg = 0;
    TH1D *hPtWeight[1000], *hAnalysisW;
 
    TH1 *hSig[1000], *hBkg[1000], *hSub[1000];
@@ -162,16 +176,16 @@ void plotCorrelations(int ajBin = 0, int cBin = 0, int vtxBin = 1, int psiBin = 
      int vb, cb, pb, et;
      findBinXYZ(i, vb, cb, pb, et);
 
-     if(cb != cBin) continue;
-     if(vb != vtxBin) continue;
-     if(pb != psiBin) continue;
-     if(et != etaBin) continue;
+     if(_cBin >=0 && cb != _cBin) continue;
+     if(_vtxBin >= 0 && vb != _vtxBin) continue;
+     if(_psiBin >= 0 && pb != _psiBin) continue;
+     if(_etaBin >= 0 && et != _etaBin) continue;
 
-     hCorr[i] = (TH3D*)sigfile->Get(Form("hCorrLead_%d_%d",i,ajBin));
-     hPt[i] = (TH1D*)sigfile->Get(Form("hPtLead_%d_%d",i,ajBin));
+     hCorr[i] = (TH3D*)sigfile[vb][cb][pb]->Get(Form("hCorrLead_%d_%d",i,ajBin));
+     hPt[i] = (TH1D*)sigfile[vb][cb][pb]->Get(Form("hPtLead_%d_%d",i,ajBin));
      
-     hCorrBkg[i] = (TH3D*)mixfile->Get(Form("hCorrLead_%d_%d",i,0));
-     hPtBkg[i] = (TH1D*)mixfile->Get(Form("hPtLead_%d_%d",i,0));
+     hCorrBkg[i] = (TH3D*)mixfile[vb][cb][pb]->Get(Form("hCorrLead_%d_%d",i,0));
+     hPtBkg[i] = (TH1D*)mixfile[vb][cb][pb]->Get(Form("hPtLead_%d_%d",i,0));
      xx[i] = hPtBkg[i]->Integral();
      cout<<" bin "<<i<<"  hPt integral "<<xx[i]<<endl;
      new TCanvas();
@@ -199,19 +213,29 @@ void plotCorrelations(int ajBin = 0, int cBin = 0, int vtxBin = 1, int psiBin = 
       hSub[i] = (TH1*)hSig[i]->Clone(Form("hSub_%d",i));
 
       hSub[i]->Add(hBkg[i],-1);
-      hSub[i]->Divide(hBkg[i]);
+      //      hSub[i]->Divide(hBkg[i]);
+   
    }
 
-
-   hAnalysisBin = (TH1D*)sigfile->Get(Form("hAnalysisBinLead_%d",ajBin));
-   hAnalysisBinBkg = (TH1D*)mixfile->Get(Form("hAnalysisBinLead_%d",0));
+   for(int i = 0; i < NvtxBins; ++i){
+     for(int j = 0; j < NcBins; ++j){
+       for(int k = 0; k < NpsiBins; ++k){
+	 if(_cBin >=0 && j != _cBin) continue;
+	 if(_vtxBin >= 0 && i != _vtxBin) continue;
+	 if(_psiBin >= 0 && k != _psiBin) continue;
+	 if(hAnalysisBin == 0){
+	   hAnalysisBin = (TH1D*)sigfile[i][j][k]->Get(Form("hAnalysisBinLead_%d",ajBin));
+	   hAnalysisBinBkg = (TH1D*)mixfile[i][j][k]->Get(Form("hAnalysisBinLead_%d",0));
+	 }else{
+	   hAnalysisBin->Add((TH1D*)sigfile[i][j][k]->Get(Form("hAnalysisBinLead_%d",ajBin)));
+           hAnalysisBinBkg->Add((TH1D*)mixfile[i][j][k]->Get(Form("hAnalysisBinLead_%d",0)));
+	 } 
+       }
+     }
+   }
 
    cout<<"hAnalysisBin"<<hAnalysisBin->Integral()<<endl;
    cout<<"hAnalysisBinBkg"<<hAnalysisBinBkg->Integral()<<endl;
-
-   //   for(int i = 0; i < hAnalysisBinBkg->GetNbinsX(); ++i){
-   //     hAnalysisBinBkg->SetBinContent(i+1,xx[i]);
-   //   }
 
    hAnalysisBin->Scale(hAnalysisBin->Integral());
    hAnalysisBinBkg->Scale(hAnalysisBinBkg->Integral());
@@ -225,7 +249,7 @@ void plotCorrelations(int ajBin = 0, int cBin = 0, int vtxBin = 1, int psiBin = 
    h1 = combine(hSig,hAnalysisW);
    h2 = combine(hBkg,hAnalysisW);
 
-   if(0){   
+   if(1){   
    reflect(h);
    reflect(h1);
    reflect(h2);
