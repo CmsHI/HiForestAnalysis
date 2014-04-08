@@ -34,11 +34,29 @@ void reweight(TH3* h, TH1* hw){
 
 TH1* combine(TH1** h, TH1* hw){
 
-   TH1* hr = (TH1*)h[0]->Clone("hResult");
+  TH1* hr = 0;
+  int ii = 0;
+  while(hr == 0){
+    if(h[ii] != 0) hr = (TH1*)h[ii]->Clone("hResult");
+    ii++;
+  }
+
    hr->Reset();
 
+   int vb, cb, pb, et;
+
    for(int i = 0; i < hw->GetNbinsX(); ++i){
-      hr->Add(h[i],hw->GetBinContent(i+1));
+     findBinXYZ(i, vb, cb, pb, et);
+
+     if(cb != _cBin) continue;
+     if(vb != _vtxBin) continue;
+     if(pb != _psiBin) continue;
+     if(et != _etaBin) continue;
+
+     double w = hw->GetBinContent(i+1);
+     cout<<"weight : "<<w<<endl;
+     hr->Add(h[i],w);
+
    }
 
    return hr;
@@ -107,22 +125,27 @@ void reflect(TH1* h){
 
 
 
-void plotCorrelations(int ajBin = 0){
+void plotCorrelations(int ajBin = 0, int cBin = 0, int vtxBin = 1, int psiBin = 0, int etaBin = 0){
 
-   int Nbins = NvtxBins*NcBins*NpsiBins;
+  _cBin = cBin;
+  _vtxBin = vtxBin;
+  _psiBin = psiBin;
+  _etaBin = etaBin;
 
-   TFile* sigfile = new TFile("./signal.root");
-   TFile* mixfile = new TFile("./mixed.root");
+  int Nbins = NvtxBins*NcBins*NpsiBins*NdijetEtaBins;
+
+  TFile* sigfile = new TFile(Form("./signal_vtx%d_cent0_psi0.root",vtxBin));
+  TFile* mixfile = new TFile(Form("./mixed_vtx%d_cent0_psi0_0.root",vtxBin));
    TFile* outf = new TFile("results.root","recreate");
 
    TH3D *hAxis[1000],
-      *hCorr[1000],
-      *hGenParticle[1000];
-   TH1D *hPt[1000], *hPtInclusive[1000], *hAnalysisBin;
+     *hCorr[1000];
+
+   TH1D *hPt[1000], *hAnalysisBin;
 
    TH3D *hAxisBkg[1000],
-      *hCorrBkg[1000],
-      *hGenParticleBkg[1000];
+     *hCorrBkg[1000];
+
    TH1D *hPtBkg[1000], *hPtInclusiveBkg[1000], *hAnalysisBinBkg;
    TH1D *hPtWeight[1000], *hAnalysisW;
 
@@ -131,13 +154,35 @@ void plotCorrelations(int ajBin = 0){
    double xx[1000];
 
    for(int i = 0; i < Nbins; ++i){
+
+     hSig[i] = 0;
+     hBkg[i] = 0;
+     hSub[i] = 0;
+
+     int vb, cb, pb, et;
+     findBinXYZ(i, vb, cb, pb, et);
+
+     if(cb != cBin) continue;
+     if(vb != vtxBin) continue;
+     if(pb != psiBin) continue;
+     if(et != etaBin) continue;
+
      hCorr[i] = (TH3D*)sigfile->Get(Form("hCorrLead_%d_%d",i,ajBin));
      hPt[i] = (TH1D*)sigfile->Get(Form("hPtLead_%d_%d",i,ajBin));
      
-     hCorrBkg[i] = (TH3D*)mixfile->Get(Form("hCorrLead_%d_%d",i,ajBin));
-     hPtBkg[i] = (TH1D*)mixfile->Get(Form("hPtLead_%d_%d",i,ajBin));
+     hCorrBkg[i] = (TH3D*)mixfile->Get(Form("hCorrLead_%d_%d",i,0));
+     hPtBkg[i] = (TH1D*)mixfile->Get(Form("hPtLead_%d_%d",i,0));
      xx[i] = hPtBkg[i]->Integral();
+     cout<<" bin "<<i<<"  hPt integral "<<xx[i]<<endl;
+     new TCanvas();
+     hPtBkg[i]->Draw();
+     new TCanvas();
      
+     hCorr[i]->Rebin3D(100,1,1);
+     hCorrBkg[i]->Rebin3D(100,1,1);
+     hPt[i]->RebinX(100);
+     hPtBkg[i]->RebinX(100);
+
      hPtWeight[i] = (TH1D*)hPt[i]->Clone(Form("hPtWeight_%d_%d",i,ajBin));
      hPtWeight[i]->Divide(hPtBkg[i]);
      
@@ -158,12 +203,15 @@ void plotCorrelations(int ajBin = 0){
    }
 
 
-   hAnalysisBin = (TH1D*)sigfile->Get(Form("hAnalysisBin"));
-   hAnalysisBinBkg = (TH1D*)mixfile->Get(Form("hAnalysisBin"));
+   hAnalysisBin = (TH1D*)sigfile->Get(Form("hAnalysisBinLead_%d",ajBin));
+   hAnalysisBinBkg = (TH1D*)mixfile->Get(Form("hAnalysisBinLead_%d",0));
 
-   for(int i = 0; i < hAnalysisBinBkg->GetNbinsX(); ++i){
-     hAnalysisBinBkg->SetBinContent(i+1,xx[i]);
-   }
+   cout<<"hAnalysisBin"<<hAnalysisBin->Integral()<<endl;
+   cout<<"hAnalysisBinBkg"<<hAnalysisBinBkg->Integral()<<endl;
+
+   //   for(int i = 0; i < hAnalysisBinBkg->GetNbinsX(); ++i){
+   //     hAnalysisBinBkg->SetBinContent(i+1,xx[i]);
+   //   }
 
    hAnalysisBin->Scale(hAnalysisBin->Integral());
    hAnalysisBinBkg->Scale(hAnalysisBinBkg->Integral());
@@ -171,13 +219,17 @@ void plotCorrelations(int ajBin = 0){
    hAnalysisW = (TH1D*)hAnalysisBin->Clone("hAnalysisW");
    hAnalysisW->Divide(hAnalysisBinBkg);
 
-   TH1* h = combine(hSub,hAnalysisW);
-   TH1* h1 = combine(hSig,hAnalysisW);
-   TH1* h2 = combine(hBkg,hAnalysisW);
+   TH1* h, *h1, *h2;
 
+   h = combine(hSub,hAnalysisW);
+   h1 = combine(hSig,hAnalysisW);
+   h2 = combine(hBkg,hAnalysisW);
+
+   if(0){   
    reflect(h);
    reflect(h1);
    reflect(h2);
+   }
 
    TCanvas* c1 = new TCanvas("c1","",600,600);
    h->Draw("surf1");

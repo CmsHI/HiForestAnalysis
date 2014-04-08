@@ -40,6 +40,7 @@ static const double dijetEtaBins[] = {-1.6,-1.,-0.5,0.,0.5,1.,1.6};
 static const int NajBins = 4;
 static const double ajBins[] = {0.,    0.11, 0.22, 0.33,1};
 
+static int _cBin = 0, _vtxBin = 0, _psiBin = 0, _etaBin = 0, _Nbins = 0;
 
 int findBin(double vtx, double cbin200, double psi, double eta){
 
