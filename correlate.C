@@ -69,7 +69,7 @@ void findBinXYZ(int i, int& vtx, int& cbin, int& psi, int& eta){
 }
 
 void correlate(
-		   const char* infname = "/data_CMS/cms/yilmaz/HiForest_HYDJET_Track8_Jet21_STARTHI53_LV1_merged_forest_0.root",
+		   const char* infname = "/export/d00/scratch/yetkin/gen/pyquen/treefile_Wide_1.root",
 		   const char* outname = "histograms_01.root",
 		   string mixname = "",
                    int vtxBin = 0,
@@ -78,17 +78,20 @@ void correlate(
 		   int firstEvent = 0,
 		   int Nevents = -1,
 		   bool MC = 1,
-		   bool PbPb = 1
+		   bool doGenParticles = 0,
+		   bool doGenJets = 0,
+		   bool pyquen = 0,
+		   string algo = "akVs3Calo"
 		   ){
 
    cout<<"Begin"<<endl;
    bool MIX = 1;
    if(mixname == "") MIX = 0;
 
+   bool PbPb = 1;
+
   bool usePF = 1;
   int R = 3;
-
-  bool doGenParticles = 0;
 
   bool doInclusiveJets = 1;
   bool doTracks = 1;
@@ -205,7 +208,7 @@ void correlate(
      t = new HiForest(infname,"",cPPb,MC);
    }
 
-   TrackCorrector* trackCorrector = new TrackCorrectorFactorized(t,"akVs3Calo");
+   TrackCorrector* trackCorrector = new TrackCorrectorFactorized(t,algo.data());
 
    t->hasPhotonTree *= 0;
    t->hasMetTree *= 0;
@@ -214,26 +217,26 @@ void correlate(
 
 
    t->hasAk2JetTree *= 0;
-   t->hasAk3JetTree *= 1;
+   t->hasAk3JetTree *= 0;
    t->hasAk4JetTree *= 0;
-   t->hasAk5JetTree *= 1;
+   t->hasAk5JetTree *= 0;
 
    t->hasAkPu2JetTree *= 0;
-   t->hasAkPu3JetTree *= 1;
+   t->hasAkPu3JetTree *= 0;
    t->hasAkPu4JetTree *= 0;
-   t->hasAkPu5JetTree *= 1;
+   t->hasAkPu5JetTree *= 0;
 
    t->hasAk2CaloJetTree *= 0;
-   t->hasAk3CaloJetTree *= 1;
+   t->hasAk3CaloJetTree *= 0;
    t->hasAk4CaloJetTree *= 0;
-   t->hasAk5CaloJetTree *= 1;
+   t->hasAk5CaloJetTree *= 0;
 
    t->hasAkPu2CaloJetTree *= 0;
-   t->hasAkPu3CaloJetTree *= 1;
+   t->hasAkPu3CaloJetTree *= 0;
    t->hasAkPu4CaloJetTree *= 0;
-   t->hasAkPu5CaloJetTree *= 1;
+   t->hasAkPu5CaloJetTree *= 0;
 
-   t->hasTrackTree *= 1;
+   t->hasTrackTree *= !doGenParticles;
    t->hasPixTrackTree *= 0;
    t->hasTowerTree *= 0;
    t->hasHbheTree *= 0;
@@ -241,7 +244,7 @@ void correlate(
    t->hasGenpTree *= 0;
    t->hasGenParticleTree *= MC;
 
-   t->InitTree();
+   //   t->InitTree();
 
    if(Nevents > 0 && Nevents < t->nEntries){
       t->nEntries = Nevents;
@@ -264,25 +267,16 @@ void correlate(
    Jets *jets0 = 0, * jets1 = 0, *jets2 = 0;
    TTree  *jetTree0 = 0, * jetTree1 = 0, *jetTree2 = 0;
 
-   if(usePF){
-     if(R == 3){
-       jets1 = &(t->akPu3PF);
-       jetTree1 = t->akPu3PFJetTree;
-     }
-     if(R == 5){
-       jets1 = &(t->akPu5PF);
-       jetTree1 = t->akPu5PFJetTree;
-     }
+   TFile* inf = new TFile(infname);
+   if(pyquen){
+      jetTree1 = (TTree*)inf->Get("ak3GenJetAnalyzer/t");
    }else{
-     if(R == 3){
-       jets1 = &(t->akPu3Calo);
-       jetTree1 = t->akPu3CaloJetTree;
-     }
-     if(R == 5){
-       jets1 = &(t->akPu5Calo);
-       jetTree1 = t->akPu5CaloJetTree;
-     }
+      jetTree1 = (TTree*)inf->Get(Form("%sJetAnalyzer/t",algo.data()));
    }
+   jets1 = new Jets();
+
+   //   jetTree1 = (TTree*)t->inf->Get("ak3GenJetAnalyzer/t");
+   setupJetTree(jetTree1,*jets1,0);
 
    cout<<"Starting events"<<endl;
 
@@ -291,6 +285,8 @@ void correlate(
        cout<<"Processing entry : "<<iev<<endl;
      }
      t->GetEntry(iev);
+     jetTree1->GetEntry(iev);
+
      trackCorrector->load();
 
      if(!MC && !PbPb && !(t->skim.pPAcollisionEventSelectionPA && t->skim.pHBHENoiseFilter)) continue;
@@ -360,6 +356,9 @@ void correlate(
      double hfs = 0, hfb = 0;
      int nls = 0, nlb = 0, nlscom = 0, nlbcom = 0;
 
+     int evt = t->hlt.Event;
+     int run = t->hlt.Run;
+
      psi = t->evt.hiEvtPlanes[iPlane];
      psiM = t->evt.hiEvtPlanes[iPlane+2];
      psiP = t->evt.hiEvtPlanes[iPlane+1];
@@ -369,12 +368,17 @@ void correlate(
 
      int cbin200 = t->evt.hiBin;
 
-     if(cbin200 < cBins[cBin] || cbin200 >= cBins[cBin+1]) continue;
-     if(vz < vtxBins[vtxBin] || vz >= vtxBins[vtxBin+1]) continue;
-     if(psi < psiBins[psiBin] || psi >= psiBins[psiBin+1]) continue;
-
-     if(cbin200 >= 180 || fabs(vz) > 10 || fabs(psi) > pi) continue;
-
+     if(!pyquen){
+	if(cbin200 < cBins[cBin] || cbin200 >= cBins[cBin+1]) continue;
+	if(vz < vtxBins[vtxBin] || vz >= vtxBins[vtxBin+1]) continue;
+	if(psi < psiBins[psiBin] || psi >= psiBins[psiBin+1]) continue;
+	if(cbin200 >= 180 || fabs(vz) > 10 || fabs(psi) > pi) continue;
+     }else{
+	cbin200 = 0;
+	vz = -7.;
+	psi = 0;
+     }
+     
      int analysisBinLead = findBin(vz,cbin200,psi,-99);
      int analysisBinSubLead = findBin(vz,cbin200,psi,-99);
 
@@ -385,10 +389,54 @@ void correlate(
         hAxisSubLead[analysisBinSubLead][0]->GetRandom3(pt2,eta2,phi2);
 
      }else{
+
 	vecs.clear();
 
+	if(doGenJets){
+
+	   for(int j = 0; j < jets1->ngen; ++j){
+	      JetIndex entry;
+	      if(fabs(jets1->geneta[j]) > 2) continue;
+	      entry.pt = jets1->genpt[j];
+	      entry.index = j;
+	      vecs.push_back(entry);
+
+	      if(jets1->genpt[j] > 10)ngen10++;
+	      if(jets1->genpt[j] > 20)ngen20++;
+	      if(jets1->genpt[j] > 30)ngen30++;
+	      if(jets1->genpt[j] > 50)ngen50++;
+
+	   }
+
+	   sort(vecs.begin(),vecs.end(),comparePt);
+
+	   int ig1 = -1, ig2 = -1, ig3 = -1;
+	   if(vecs.size() > 0){
+	      ig1 = jets1->genmatchindex[vecs[0].index];
+	      pt1 = jets1->genpt[vecs[0].index];
+	      eta1 = jets1->geneta[vecs[0].index];
+	      phi1 = jets1->genphi[vecs[0].index];
+	   }
+	   if(vecs.size() > 1){
+	      ig2 = jets1->genmatchindex[vecs[1].index];
+	      pt2 = jets1->genpt[vecs[1].index];
+	      eta2 = jets1->geneta[vecs[1].index];
+	      phi2 = jets1->genphi[vecs[1].index];
+
+	   }
+	   if(vecs.size() > 2){
+	      ig3 = jets1->genmatchindex[vecs[2].index];
+	      pt3 = jets1->genpt[vecs[2].index];
+	      eta3 = jets1->geneta[vecs[2].index];
+	      phi3 = jets1->genphi[vecs[2].index];
+	   }
+
+	}else{
+
+
+
      for(int j = 0; j < jets1->nref; ++j){
-       if(jets1->rawpt[j] < 15) continue;
+	if(!pyquen && jets1->rawpt[j] < 15) continue;
 
        if( fabs(jets1->jteta[j]) > jetEtaMax ) continue;
 
@@ -416,12 +464,9 @@ void correlate(
      if(vecs.size() > 1) jtSubLead = vecs[1].index;
      if(vecs.size() > 2) jtThird = vecs[2].index;
 
-     //     cout<<"Got some jets "<<vecs.size()<<endl;
-     //     if(vecs.size() > 0) cout<<"pt1 : "<<jets1->jtpt[jtLead]<<endl;
-     //     if(vecs.size() > 1) cout<<"pt2 : "<<jets1->jtpt[jtSubLead]<<endl;
-
-     int evt = t->hlt.Event;
-     int run = t->hlt.Run;
+     cout<<"Got some jets "<<vecs.size()<<endl;
+     if(vecs.size() > 0) cout<<"pt1 : "<<jets1->jtpt[jtLead]<<endl;
+     if(vecs.size() > 1) cout<<"pt2 : "<<jets1->jtpt[jtSubLead]<<endl;
 
      if(jtLead > -1){
        pt1 = jets1->jtpt[jtLead];
@@ -465,6 +510,7 @@ void correlate(
 	if(MC) refpt3 = jets1->refpt[jtThird];
 
      }
+	}
 
      if(pt1 < leadPtMin) continue;
      if(pt2 < subleadPtMin) continue;
@@ -472,9 +518,9 @@ void correlate(
 
      while(aj > ajBins[ajBin+1]) ajBin++;
 
-     //     cout<<"Got dijets"<<endl;
+     cout<<"Got dijets"<<endl;
      
-     if(MC){
+     if(doGenJets){
 	vecs.clear();
 	for(int j = 0; j < jets1->ngen; ++j){	   
 	   JetIndex entry;
@@ -495,23 +541,38 @@ void correlate(
 	int ig1 = -1, ig2 = -1, ig3 = -1;     
 	if(vecs.size() > 0){
 	   ig1 = jets1->genmatchindex[vecs[0].index];
-	   genpt1 = jets1->genpt[vecs[0].index];
+	   pt1 = jets1->genpt[vecs[0].index];
+           eta1 = jets1->geneta[vecs[0].index];
+           phi1 = jets1->genphi[vecs[0].index];
 	}
 	if(vecs.size() > 1){
 	   ig2 = jets1->genmatchindex[vecs[1].index];
-	   genpt2 = jets1->genpt[vecs[1].index];
+	   pt2 = jets1->genpt[vecs[1].index];
+	   eta2 = jets1->geneta[vecs[1].index];
+           phi2 = jets1->genphi[vecs[1].index];
+
 	}
 	if(vecs.size() > 2){
 	   ig3 = jets1->genmatchindex[vecs[2].index];
-	   genpt3 = jets1->genpt[vecs[2].index];
+	   pt3 = jets1->genpt[vecs[2].index];
+	   eta3 = jets1->geneta[vecs[2].index];
+           phi3 = jets1->genphi[vecs[2].index];
 	}
-
+	
      }
      }
    
      //     cout<<"Filling jets"<<endl;
      analysisBinLead = findBin(vz,cbin200,psi,eta1);
      analysisBinSubLead = findBin(vz,cbin200,psi,eta2);
+
+     //     cout<<"bin "<<analysisBinLead<<endl;
+
+     if(pyquen){
+        analysisBinLead = findBin(-14.,0,0,eta1);
+        analysisBinSubLead = findBin(-14.,0,0,eta2);
+     }
+     //     cout<<"sub bin "<<analysisBinSubLead<<endl;
 
      if(fabs(eta1) < dijetEtaMax){
 	hAnalysisBinLead[ajBin]->Fill(analysisBinLead,weight);
@@ -526,7 +587,7 @@ void correlate(
      }
 
      if(doGenParticles){
-       
+	//	cout<<"genparts"<<endl;       
 	for(int i = 0; i < t->genparticle.mult; ++i){
 	   if(t->genparticle.chg[i] == 0 || t->genparticle.sta[i] != 1) continue;
 	   if(t->genparticle.pt[i] <= trkPtMin) continue;
@@ -542,6 +603,8 @@ void correlate(
 	   }
 	}
      }else if(doTracks){       
+	//        cout<<"tracks"<<endl;
+
 	for(int i = 0; i < t->track.nTrk; ++i){
 	   if(!t->selectTrack(i)) continue;
 	   if(t->track.trkPt[i] <= trkPtMin) continue;	   
