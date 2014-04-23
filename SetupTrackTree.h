@@ -178,8 +178,8 @@ void setupTrackTree(TTree *t,Tracks &tTracks,bool doCheck = 1)
    t->SetBranchAddress("pEta", tTracks.pEta, &tTracks.b_pEta);
 
    if (doCheck) {
-      if (t->GetMaximum("nv")>4) cout <<"FATAL ERROR: Arrary size of nv too small!!!  "<<t->GetMaximum("nv")<<endl;
-      if (t->GetMaximum("nVtx")>2) cout <<"FATAL ERROR: Arrary size of nVtx too small!!!  "<<t->GetMaximum("nVtx")<<endl;
-      if (t->GetMaximum("nTrk")>maxTracks) cout <<"FATAL ERROR: Arrary size of nTrk too small!!!  "<<t->GetMaximum("nTrk")<<endl;
+      if (t->GetMaximum("nv")>4) { cout <<"FATAL ERROR: Arrary size of nv too small!!!  "<<t->GetMaximum("nv")<<endl; exit(1); }
+      if (t->GetMaximum("nVtx")>2) {  cout <<"FATAL ERROR: Arrary size of nVtx too small!!!  "<<t->GetMaximum("nVtx")<<endl; exit(1); }
+      if (t->GetMaximum("nTrk")>maxTracks) { cout <<"FATAL ERROR: Arrary size of nTrk too small!!!  "<<t->GetMaximum("nTrk")<<endl; exit(1); }
    }
 }
