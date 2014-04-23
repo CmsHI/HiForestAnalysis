@@ -34,13 +34,13 @@ public :
    Int_t           nDaugher[4];   //[nv]
    Int_t           nVtx;
    Int_t           maxVtx;
-   Int_t           nTrkVtx[2];   //[nVtx]
-   Float_t         xVtx[2];   //[nVtx]
-   Float_t         yVtx[2];   //[nVtx]
-   Float_t         zVtx[2];   //[nVtx]
-   Float_t         xVtxErr[2];   //[nVtx]
-   Float_t         yVtxErr[2];   //[nVtx]
-   Float_t         zVtxErr[2];   //[nVtx]
+   Int_t           nTrkVtx[100];   //[nVtx]
+   Float_t         xVtx[100];   //[nVtx]
+   Float_t         yVtx[100];   //[nVtx]
+   Float_t         zVtx[100];   //[nVtx]
+   Float_t         xVtxErr[100];   //[nVtx]
+   Float_t         yVtxErr[100];   //[nVtx]
+   Float_t         zVtxErr[100];   //[nVtx]
    Int_t           nTrk;
    Float_t         trkPt[maxTracks];   //[nTrk]
    Float_t         trkPtError[maxTracks];   //[nTrk]
@@ -179,7 +179,7 @@ void setupTrackTree(TTree *t,Tracks &tTracks,bool doCheck = 1)
 
    if (doCheck) {
       if (t->GetMaximum("nv")>4) { cout <<"FATAL ERROR: Arrary size of nv too small!!!  "<<t->GetMaximum("nv")<<endl; exit(1); }
-      if (t->GetMaximum("nVtx")>2) {  cout <<"FATAL ERROR: Arrary size of nVtx too small!!!  "<<t->GetMaximum("nVtx")<<endl; exit(1); }
+      if (t->GetMaximum("nVtx")>100) {  cout <<"FATAL ERROR: Arrary size of nVtx too small!!!  "<<t->GetMaximum("nVtx")<<endl; exit(1); }
       if (t->GetMaximum("nTrk")>maxTracks) { cout <<"FATAL ERROR: Arrary size of nTrk too small!!!  "<<t->GetMaximum("nTrk")<<endl; exit(1); }
    }
 }
