@@ -186,6 +186,10 @@ void plotCorrelations(int ajBin = 0, int cBin = 0, int vtxBin = -1, int psiBin =
      
      hCorrBkg[i] = (TH3D*)mixfile[vb][cb][pb]->Get(Form("hCorrLead_%d_%d",i,0));
      hPtBkg[i] = (TH1D*)mixfile[vb][cb][pb]->Get(Form("hPtLead_%d_%d",i,0));
+
+     hCorr[i]->Rebin3D(1,2,2);
+     hCorrBkg[i]->Rebin3D(1,2,2);
+
      xx[i] = hPtBkg[i]->Integral();
      cout<<" bin "<<i<<"  hPt integral "<<xx[i]<<endl;
      new TCanvas();
@@ -249,7 +253,7 @@ void plotCorrelations(int ajBin = 0, int cBin = 0, int vtxBin = -1, int psiBin =
    h1 = combine(hSig,hAnalysisW);
    h2 = combine(hBkg,hAnalysisW);
 
-   if(1){   
+   if(0){   
    reflect(h);
    reflect(h1);
    reflect(h2);
