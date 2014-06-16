@@ -5,3 +5,4 @@
 #define maxHits 6000
 #define maxJets 504
 #define maxGenJets 100
+#define maxPF 20000

@@ -21,10 +21,13 @@ public :
 
    // Declaration of leaf types
    Int_t           nPFpart;
-   Int_t           pfId[20000];   //[nPFpart]
-   Float_t         pfPt[20000];   //[nPFpart]
-   Float_t         pfEta[20000];   //[nPFpart]
-   Float_t         pfPhi[20000];   //[nPFpart]
+   Int_t           pfId[maxPF];   //[nPFpart]
+   Float_t         pfPt[maxPF];   //[nPFpart]
+   Float_t         pfEta[maxPF];   //[nPFpart]
+   Float_t         pfPhi[maxPF];   //[nPFpart]
+   Float_t         vn[5][15];    
+   Float_t         psin[5][15];    
+   Float_t         sumpt[15];    
 
    // List of branches
    TBranch        *b_nPFpart;   //!
@@ -32,7 +35,9 @@ public :
    TBranch        *b_pfPt;   //!
    TBranch        *b_pfEta;   //!
    TBranch        *b_pfPhi;   //!
-
+   TBranch        *b_vn;
+   TBranch        *b_psin;
+   TBranch        *b_sumpt;
 };
 
 
@@ -44,8 +49,11 @@ void setupPFTree(TTree *t,PFs &tPFs,bool doCheck = 1)
    if (t->GetBranch("pfPt")) t->SetBranchAddress("pfPt", tPFs.pfPt, &tPFs.b_pfPt);
    if (t->GetBranch("pfEta")) t->SetBranchAddress("pfEta", tPFs.pfEta, &tPFs.b_pfEta);
    if (t->GetBranch("pfPhi")) t->SetBranchAddress("pfPhi", tPFs.pfPhi, &tPFs.b_pfPhi);
+   if (t->GetBranch("vn")) t->SetBranchAddress("vn", tPFs.vn, &tPFs.b_vn);
+   if (t->GetBranch("psin")) t->SetBranchAddress("psin", tPFs.psin, &tPFs.b_psin);
+   if (t->GetBranch("sumpt")) t->SetBranchAddress("sumpt", tPFs.sumpt, &tPFs.b_sumpt);
    if (doCheck) {
-      if (t->GetMaximum("nPFpart")>20000) { cout <<"FATAL ERROR: Arrary size of nPFpart too small!!!  "<<t->GetMaximum("nPFpart")<<endl; exit(0);
+      if (t->GetMaximum("nPFpart")>maxPF) { cout <<"FATAL ERROR: Arrary size of nPFpart too small!!!  "<<t->GetMaximum("nPFpart")<<endl; exit(0);
  }   }
 }
 
