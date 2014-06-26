@@ -23,6 +23,7 @@ public :
    Int_t           nPFpart;
    Int_t           pfId[maxPF];   //[nPFpart]
    Float_t         pfPt[maxPF];   //[nPFpart]
+   Float_t         pfVsPt[maxPF];   //[nPFpart]
    Float_t         pfEta[maxPF];   //[nPFpart]
    Float_t         pfPhi[maxPF];   //[nPFpart]
    Float_t         vn[5][15];    
@@ -33,6 +34,7 @@ public :
    TBranch        *b_nPFpart;   //!
    TBranch        *b_pfId;   //!
    TBranch        *b_pfPt;   //!
+   TBranch        *b_pfVsPt;   //!
    TBranch        *b_pfEta;   //!
    TBranch        *b_pfPhi;   //!
    TBranch        *b_vn;
@@ -47,6 +49,7 @@ void setupPFTree(TTree *t,PFs &tPFs,bool doCheck = 1)
    if (t->GetBranch("nPFpart")) t->SetBranchAddress("nPFpart", &tPFs.nPFpart, &tPFs.b_nPFpart);
    if (t->GetBranch("pfId")) t->SetBranchAddress("pfId", tPFs.pfId, &tPFs.b_pfId);
    if (t->GetBranch("pfPt")) t->SetBranchAddress("pfPt", tPFs.pfPt, &tPFs.b_pfPt);
+   if (t->GetBranch("pfVsPt")) t->SetBranchAddress("pfVsPt", tPFs.pfVsPt, &tPFs.b_pfVsPt);
    if (t->GetBranch("pfEta")) t->SetBranchAddress("pfEta", tPFs.pfEta, &tPFs.b_pfEta);
    if (t->GetBranch("pfPhi")) t->SetBranchAddress("pfPhi", tPFs.pfPhi, &tPFs.b_pfPhi);
    if (t->GetBranch("vn")) t->SetBranchAddress("vn", tPFs.vn, &tPFs.b_vn);
