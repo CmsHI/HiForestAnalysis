@@ -895,7 +895,7 @@ void HiForest::InitTree()
    }
 
    if (hasGenParticleTree) {
-      genParticleTree->SetName("genParticle");
+      genParticleTree->SetName("genparticle");
       if (tree == 0) tree = genParticleTree; else tree->AddFriend(genParticleTree);
       setupGenParticleTree(genParticleTree,genparticle);
    }
