@@ -133,11 +133,11 @@ float HiForest::getCorrEt(int j)
      else
        isConv = 1;
      
-     if ( evt.hiBin < 4 ) 
+     if ( evt.hiBin < 4 *5) 
        icent = 1;
-     else if ( evt.hiBin < 12 ) 
+     else if ( evt.hiBin < 12 *5) 
        icent = 2;
-     else if ( evt.hiBin < 40 )
+     else if ( evt.hiBin < 40 *5)
        icent = 3;
      else
        return -90;
