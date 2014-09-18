@@ -182,6 +182,11 @@ public :
    Float_t         t24[126];   //[nPhotons]
    Float_t         t34[126];   //[nPhotons]
    Float_t         t44[126];   //[nPhotons]
+   Float_t         towerVsSubIso1[126];   //[nPhotons]
+   Float_t         towerVsSubIso2[126];   //[nPhotons]
+   Float_t         towerVsSubIso3[126];   //[nPhotons]
+   Float_t         towerVsSubIso4[126];   //[nPhotons]
+   Float_t         towerVsSubIso5[126];   //[nPhotons]
    Int_t           isGenMatched[126];   //[nPhotons]
    Int_t           genMatchedCollId[126];   //[nPhotons]
    Float_t         genMatchedPt[126];   //[nPhotons]
@@ -373,6 +378,11 @@ public :
    TBranch        *b_t24;   //!
    TBranch        *b_t34;   //!
    TBranch        *b_t44;   //!
+   TBranch        *b_towerVsSubIso1;   //!
+   TBranch        *b_towerVsSubIso2;   //!
+   TBranch        *b_towerVsSubIso3;   //!
+   TBranch        *b_towerVsSubIso4;   //!
+   TBranch        *b_towerVsSubIso5;   //!
    TBranch        *b_isGenMatched;   //!
    TBranch        *b_genMatchedCollId;   //!
    TBranch        *b_genMatchedPt;   //!
@@ -569,6 +579,14 @@ void setupPhotonTree(TTree *t,Photons &tPhotons,bool doCheck = 1)
    if (t->GetBranch("t24")) t->SetBranchAddress("t24", tPhotons.t24, &tPhotons.b_t24);
    if (t->GetBranch("t34")) t->SetBranchAddress("t34", tPhotons.t34, &tPhotons.b_t34);
    if (t->GetBranch("t44")) t->SetBranchAddress("t44", tPhotons.t44, &tPhotons.b_t44);
+   if (t->GetBranch("towerVsSubIso1")) t->SetBranchAddress("towerVsSubIso1", tPhotons.towerVsSubIso1, &tPhotons.b_towerVsSubIso1);
+   if (t->GetBranch("towerVsSubIso2")) t->SetBranchAddress("towerVsSubIso2", tPhotons.towerVsSubIso2, &tPhotons.b_towerVsSubIso2);
+   if (t->GetBranch("towerVsSubIso3")) t->SetBranchAddress("towerVsSubIso3", tPhotons.towerVsSubIso3, &tPhotons.b_towerVsSubIso3);
+   if (t->GetBranch("towerVsSubIso4")) t->SetBranchAddress("towerVsSubIso4", tPhotons.towerVsSubIso4, &tPhotons.b_towerVsSubIso4);
+   if (t->GetBranch("towerVsSubIso5")) t->SetBranchAddress("towerVsSubIso5", tPhotons.towerVsSubIso5, &tPhotons.b_towerVsSubIso5);
+
+
+
    if (t->GetBranch("isGenMatched")) t->SetBranchAddress("isGenMatched", tPhotons.isGenMatched, &tPhotons.b_isGenMatched);
    if (t->GetBranch("genMatchedCollId")) t->SetBranchAddress("genMatchedCollId", tPhotons.genMatchedCollId, &tPhotons.b_genMatchedCollId);
    if (t->GetBranch("genMatchedPt")) t->SetBranchAddress("genMatchedPt", tPhotons.genMatchedPt, &tPhotons.b_genMatchedPt);
