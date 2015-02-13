@@ -50,7 +50,7 @@ enum collisionType { cPbPb, cPP, cPPb };
 class HiForest : public TNamed
 {
 
-  public: 
+  public:
    HiForest(const char *file, const char *name="forest", collisionType cMode = cPbPb, bool ismc = 0);
   ~HiForest();
 
@@ -60,13 +60,13 @@ class HiForest : public TNamed
   void CheckTree(TTree *t,const char *title);			// Check the status of a tree
   void CheckArraySizes();					// Check if array size is large enough
   void GetEntry(int i);
-  int  GetEntries();  						// Get the number of entries 
+  int  GetEntries();  						// Get the number of entries
   void GetEnergyScaleTable(char *fileNameTable);                // Get photon energy scale table
   void InitTree();						// Initialize track correction
   void PrintStatus();						// Print the status of the hiForest
   void SetOutputFile(const char *name);               		// Set output file name for skim
   void AddCloneTree(TTree* t, const char *dirName, const char *treeName);   // Add a clone tree to the clone forest
-  void FillOutput();						// Fill output forest  
+  void FillOutput();						// Fill output forest
   void LoadNoTrees();
   void ResetBooleans();
 
@@ -121,7 +121,7 @@ class HiForest : public TNamed
   double getTrackCorrectionPara(int j);
   double getTrackCorrection(int j);
   bool selectTrack(int j);
-  
+
   //==================================================================================================================================
   // Get track-jet correlated variables. Not needed if correlatePF is run.
   //==================================================================================================================================
@@ -129,7 +129,7 @@ class HiForest : public TNamed
   //void correlatePF(TTree* jetTree, Jets& jets, bool allEvents = 1){return;}
 
   // TFile
-  TFile *inf; 					// Input file 
+  TFile *inf; 					// Input file
   TFile *outf;                                  // Output file if we want to export the forest
 
   // Trees
@@ -186,7 +186,7 @@ class HiForest : public TNamed
   TTree *pfTree;                                // PF candidate Tree, see branches in SetupPFTree.h
   TTree *genpTree;                              // Gen photon of the signal event Tree
   TTree *genParticleTree;                       // Stable Gen particles
-  
+
   TTree *tree;					// Pointer to the available tree, all trees in the forest are friended to each other
 
   vector<TTree*> jetTrees;
@@ -249,7 +249,7 @@ class HiForest : public TNamed
   PFs pf;
   Genps genp;
   GenParticles genparticle;
-    
+
   // Booleans
   bool hasPhotonTree;
   bool hasEvtTree;
@@ -383,12 +383,12 @@ class HiForest : public TNamed
   TrackingParam *trackCorrFromParam;
 
   vector<TrackingCorrections*> trackCorrections;
-  TF1* fEnergyScale[2][10];  // [a][b],  a =0 for unconverted,  a=1 for converted.   b: 1,2,3 is centrality bin. b=0 is empty                                                                                       
-  
+  TF1* fEnergyScale[2][10];  // [a][b],  a =0 for unconverted,  a=1 for converted.   b: 1,2,3 is centrality bin. b=0 is empty
+
  private:
-  
-  
-  
+
+
+
 };
 
 HiForest::HiForest(const char *infName, const char* name, collisionType cMode, bool ismc):
@@ -407,7 +407,7 @@ HiForest::HiForest(const char *infName, const char* name, collisionType cMode, b
 
   cone = 0.3;
   doTrackCorrections = 0;
-  
+
   minJetPtForTrkCor = 40;
   leadingJetPtForTrkCor = -100;
   subleadingJetPtForTrkCor = -100;
@@ -421,9 +421,9 @@ HiForest::HiForest(const char *infName, const char* name, collisionType cMode, b
 
   // Print out collision mode:
   cout <<"Collision Mode:";
-  if (collisionMode == cPP) cout <<" P+P"<<endl;  
-  if (collisionMode == cPPb) cout <<" P+Pb"<<endl;  
-  if (collisionMode == cPbPb) cout <<" Pb+Pb"<<endl;  
+  if (collisionMode == cPP) cout <<" P+P"<<endl;
+  if (collisionMode == cPPb) cout <<" P+Pb"<<endl;
+  if (collisionMode == cPbPb) cout <<" Pb+Pb"<<endl;
 
   // Load trees. Hard coded for the moment
   hltTree          = (TTree*) inf->Get("hltanalysis/HltTree");
@@ -431,7 +431,7 @@ HiForest::HiForest(const char *infName, const char* name, collisionType cMode, b
   photonTree       = (TTree*) inf->Get("multiPhotonAnalyzer/photon");
   trackTree        = (TTree*) inf->Get("anaTrack/trackTree");
   if( trackTree == 0 ) trackTree        = (TTree*) inf->Get("ppTrack/trackTree");
-  
+
   towerTree        = (TTree*) inf->Get("rechitanalyzer/tower");
   icPu5jetTree     = (TTree*) inf->Get("icPu5JetAnalyzer/t");
 
@@ -478,7 +478,7 @@ HiForest::HiForest(const char *infName, const char* name, collisionType cMode, b
 
   pfTree           = (TTree*) inf->Get("pfcandAnalyzer/pfTree");
   genpTree         = (TTree*) inf->Get("genpana/photon");
-  
+
   // doesn't load genParticle by default
   genParticleTree  = (TTree*) inf->Get("HiGenParticleAna/hi");
 
@@ -537,7 +537,7 @@ HiForest::HiForest(const char *infName, const char* name, collisionType cMode, b
   hasGenpTree	   = (genpTree     		!=0);
   hasGenParticleTree = (genParticleTree   	!=0);
   setupOutput = false;
-  InitTree();
+  //InitTree();
 }
 
 HiForest::~HiForest()
@@ -904,7 +904,7 @@ void HiForest::InitTree()
    // Print the status of thre forest
    PrintStatus();
 
-   // Setup Track Corrections 	 
+   // Setup Track Corrections
    if(doTrackCorrections){
 
       trackCorrFromParam = new TrackingParam();
@@ -1094,6 +1094,10 @@ void HiForest::SetOutputFile(const char *name)
   if (hasTowerTree)    AddCloneTree(towerTree,    "rechitanalyzer",              "tower");
   if (hasHbheTree)     AddCloneTree(hbheTree,     "rechitanalyzer",               "hbhe");
   if (hasEbTree)       AddCloneTree(ebTree,       "rechitanalyzer",               "eb");
+
+  if (hasGenpTree)      AddCloneTree(genpTree,   "genpana" , "photon");
+  if (hasGenParticleTree)      AddCloneTree(genParticleTree,   "HiGenParticleAna" , "hi");
+
   setupOutput = true;
 }
 
@@ -1108,7 +1112,7 @@ void HiForest::AddCloneTree(TTree* t, const char *dirName, const char *treeName)
   TTree *tClone = t->CloneTree(0);
   tClone->SetMaxTreeSize(4000000000);
   tClone->SetName(treeName);
-  
+
   cloneForest.push_back(tClone);
 }
 
@@ -1118,7 +1122,7 @@ void HiForest::FillOutput()
      for (unsigned int i=0; i<cloneForest.size(); i++)
      {
        cloneForest[i]->Fill();
-     } 
+     }
   } else {
        cout <<"ERROR: Specify an output file by hiForest.SetOutputFile(filename)!"<<endl;
   }
@@ -1128,12 +1132,12 @@ void HiForest::FillOutput()
 
 bool HiForest::selectEvent(){
   /*
-   bool select = skim.phbheReflagNewTimeEnv 
-      && 
-      skim.phcalTimingFilter 
-      && 
-      skim.pHBHENoiseFilter 
-      && 
+   bool select = skim.phbheReflagNewTimeEnv
+      &&
+      skim.phcalTimingFilter
+      &&
+      skim.pHBHENoiseFilter
+      &&
       skim.phiEcalRecHitSpikeFilter;
   */
 
