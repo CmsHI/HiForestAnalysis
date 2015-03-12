@@ -51,7 +51,7 @@ class HiForest : public TNamed
 {
 
   public:
-   HiForest(const char *file, const char *name="forest", collisionType cMode = cPbPb, bool ismc = 0);
+   HiForest(const char *file, const char *name="forest", collisionType cMode = cPbPb, bool ismc = 0, string whichjet = "");
   ~HiForest();
 
   //==================================================================================================================================
@@ -237,6 +237,7 @@ class HiForest : public TNamed
   Jets akVs4Calo;
   Jets akVs5Calo;
   Jets akVs6Calo;
+  Jets myjet;
 
   Photons photon;
   Tracks track;
@@ -386,12 +387,12 @@ class HiForest : public TNamed
   TF1* fEnergyScale[2][10];  // [a][b],  a =0 for unconverted,  a=1 for converted.   b: 1,2,3 is centrality bin. b=0 is empty
 
  private:
-
+  string whichjet;
 
 
 };
 
-HiForest::HiForest(const char *infName, const char* name, collisionType cMode, bool ismc):
+HiForest::HiForest(const char *infName, const char* name, collisionType cMode, bool ismc, string jetname):
    tree(0),
    fGauss(0),
    verbose(0),
@@ -400,6 +401,7 @@ HiForest::HiForest(const char *infName, const char* name, collisionType cMode, b
    nEntries(0),
    currentEvent(0)
 {
+  whichjet = jetname;
    tree = new TTree("tree","");
   SetName(name);
   // Input file
@@ -900,6 +902,38 @@ void HiForest::InitTree()
       setupGenParticleTree(genParticleTree,genparticle);
    }
    tree->SetMarkerStyle(20);
+   
+   //! Dynamic jet collection 
+  if (whichjet.compare("akPu3Calo")==0)  
+   {
+     cout<<whichjet<<endl;
+      setupJetTree(akPu3CaloJetTree,myjet);
+   }
+   if (whichjet.compare("akPu3PF")==0)    
+   {
+     cout<<whichjet<<endl;
+     setupJetTree(akPu3PFJetTree,myjet);
+   }
+   if (whichjet.compare("akVs3Calo")==0)  
+   {
+     cout<<whichjet<<endl;
+     setupJetTree(akVs3CaloJetTree,myjet);
+   }
+   if (whichjet.compare("akVs3PF")==0)    
+   {
+     cout<<whichjet<<endl;
+     setupJetTree(akVs3PFJetTree,myjet);
+   }
+   if (whichjet.compare("ak3Calo")==0)    
+   {
+     cout<<whichjet<<endl;
+     setupJetTree(ak3CaloJetTree,myjet);
+   }
+   if (whichjet.compare("ak3PF")==0)    
+   {
+     cout<<whichjet<<endl;
+     setupJetTree(ak3PFJetTree,myjet);
+   }
 
    // Print the status of thre forest
    PrintStatus();
