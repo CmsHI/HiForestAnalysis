@@ -1,5 +1,3 @@
-
-
 #include "hiForest.h"
 #include "TCanvas.h"
 #include "TH2F.h"
@@ -278,7 +276,7 @@ void analyzeForest(
 
      if(R == 3){
        jets1 = &(t->akPu3PF);
-       jetTree1 = t->akPu3jetTree;
+       jetTree1 = t->akPu3PFJetTree;
        jets2 = &(t->akPu3Calo);
        jets0 = &(t->ak3PF);
 
@@ -286,7 +284,7 @@ void analyzeForest(
      }
      if(R == 5){
        jets1 = &(t->akPu5PF);
-       jetTree1 = t->akPu5jetTree;
+       jetTree1 = t->akPu5PFJetTree;
        jets2 = &(t->akPu5Calo);
        jets0 = &(t->ak5PF);
 
@@ -297,12 +295,12 @@ void analyzeForest(
 
      if(R == 3){
        jets1 = &(t->akPu3PF);
-       jetTree1 = t->akPu3jetTree;
+       jetTree1 = t->akPu3PFJetTree;
        jets2 = &(t->ak3PF);
      }
      if(R == 5){
        jets1 = &(t->akPu5PF);
-       jetTree1 = t->akPu5jetTree;
+       jetTree1 = t->akPu5PFJetTree;
        jets2 = &(t->ak5PF);
      }
    }
@@ -399,7 +397,7 @@ void analyzeForest(
      double hfp = t->evt.hiHFplusEta4;
      double hfm = t->evt.hiHFminusEta4;
      double zdc = t->evt.hiZDCplus;
-     double vz = t->track.zVtx[t->track.maxVtx];
+     double vz = t->track.zVtx[t->track.maxMultVtx];
 
      double ntrk = t->evt.hiNtracks;
      double npix = t->evt.hiNpix;
@@ -668,15 +666,14 @@ void analyzeForest(
 
 
        float trkentry[] = {
-	 evt,run,t->evt.hiBin,hfp,hfm,zdc,vz,jet80,ntrk,npix,psi,noise,pthat,
-	 nside,nps,npb,npscom,npbcom,hfs,hfb,nls,nlb,nlscom,nlbcom,
-	  pt1,eta1,phi1,pt2,eta2,phi2,pt3,eta3,phi3,dphijet,
-	 trkMax1,trkMax2,trkMax3,
-	  t->track.trkPt[i],t->track.trkEta[i],t->track.trkPhi[i],
-	  tdr1,tdr2,
-	  bkg1a,bkg1b,bkg1c,bkg2a,bkg2b,bkg2c,
-	  
-	  z1[frame],z2[frame],
+	 (float)evt,(float)run,(float)t->evt.hiBin,(float)hfp,(float)hfm,(float)zdc,(float)vz,(float)jet80,(float)ntrk,(float)npix,(float)psi,(float)noise,(float)pthat,(float)
+	 nside,(float)nps,(float)npb,(float)npscom,(float)npbcom,(float)hfs,(float)hfb,(float)nls,(float)nlb,(float)nlscom,(float)nlbcom,(float)
+	  pt1,(float)eta1,(float)phi1,(float)pt2,(float)eta2,(float)phi2,(float)pt3,(float)eta3,(float)phi3,(float)dphijet,(float)
+	 trkMax1,(float)trkMax2,(float)trkMax3,(float)
+	  t->track.trkPt[i],(float)t->track.trkEta[i],(float)t->track.trkPhi[i],(float)
+	  tdr1,(float)tdr2,(float)
+	  bkg1a,(float)bkg1b,(float)bkg1c,(float)bkg2a,(float)bkg2b,(float)bkg2c,(float)
+	 z1[frame],z2[frame],
 	  z1a[frame],z2a[frame],
 	  z1b[frame],z2b[frame],
 	  z1c[frame],z2c[frame],	  
@@ -688,21 +685,21 @@ void analyzeForest(
      }
      }
      
-     float evtentry[] = {evt,run,t->evt.hiBin,hfp,hfm,zdc,vz,jet80,ntrk,npix,psi,noise,pthat,nside,nps,npb,npscom,npbcom,hfs,hfb,nls,nlb,nlscom,nlbcom};     
-     float dijetentry[] = {pt1,eta1,phi1,pt2,eta2,phi2,pt3,eta3,phi3,dphijet,
-                           trkMax1,trkMax2,trkMax3,
-			   njt10,njt20,njt30,njt40,njt50,njt100,
-			   ngen10,ngen20,ngen30,ngen50,
-			   trkSum1,trkSum2,trkSum3,
-			   pu1,pu2,pu3,
-			   puc1,puc2,puc3,
-			   raw1,raw2,raw3,
-			   had1,had2,had3,
-			   matchPt1,matchPt2,matchPt3
+     float evtentry[] = {(float)evt,(float)run,(float)t->evt.hiBin,(float)hfp,(float)hfm,(float)zdc,(float)vz,(float)jet80,(float)ntrk,(float)npix,(float)psi,(float)noise,(float)pthat,(float)nside,(float)nps,(float)npb,(float)npscom,(float)npbcom,(float)hfs,(float)hfb,(float)nls,(float)nlb,(float)nlscom,(float)nlbcom};     
+     float dijetentry[] = {(float)pt1,(float)eta1,(float)phi1,(float)pt2,(float)eta2,(float)phi2,(float)pt3,(float)eta3,(float)phi3,(float)dphijet,
+			   (float)trkMax1,(float)trkMax2,(float)trkMax3,
+			   (float)njt10,(float)njt20,(float)njt30,(float)njt40,(float)njt50,(float)njt100,
+			   (float)ngen10,(float)ngen20,(float)ngen30,(float)ngen50,
+			   (float)trkSum1,(float)trkSum2,(float)trkSum3,
+			   (float)pu1,(float)pu2,(float)pu3,
+			   (float)puc1,(float)puc2,(float)puc3,
+			   (float)raw1,(float)raw2,(float)raw3,
+			   (float)had1,(float)had2,(float)had3,
+			   (float)matchPt1,(float)matchPt2,(float)matchPt3
      };
 
-     float matchedentry[] = {refpt1,refpt2,refpt3,genpt1,genpt2,genpt3,dijetType};
-     float flowentryA[] = {v2,v2s,psi,psiS,v2p,v2ps,psiP,psiPS,v2m,v2ms,psiM,psiMS,v2pm,v2mp,v2pp,v2mm};
+     float matchedentry[] = {(float)refpt1,(float)refpt2,(float)refpt3,(float)genpt1,(float)genpt2,(float)genpt3,(float)dijetType};
+     float flowentryA[] = {(float)v2,(float)v2s,(float)psi,(float)psiS,(float)v2p,(float)v2ps,(float)psiP,(float)psiPS,(float)v2m,(float)v2ms,(float)psiM,(float)psiMS,(float)v2pm,(float)v2mp,(float)v2pp,(float)v2mm};
 
      ntevt->Fill(evtentry);
      ntdijet->Fill(dijetentry);
@@ -741,12 +738,12 @@ void analyzeForest(
        geneta = jets1->refeta[jj];
        genphi = jets1->refphi[jj];
 
-       float jentry[] = {evt,run,t->evt.hiBin,hfp,hfm,zdc,vz,jet80,ntrk,npix,psi,noise,pthat,
-			 nside,nps,npb,npscom,npbcom,hfs,hfb,nls,nlb,nlscom,nlbcom,
-			 pt1,eta1,phi1,pt2,eta2,phi2,pt3,eta3,phi3,dphijet,
-			 trkMax1,trkMax2,trkMax3,
-			 pt,eta,phi,
-			 genpt,geneta,genphi,dijetType 
+       float jentry[] = {(float)evt,(float)run,(float)t->evt.hiBin,(float)hfp,(float)hfm,(float)zdc,(float)vz,(float)jet80,(float)ntrk,(float)npix,(float)psi,(float)noise,(float)pthat,
+			 (float)nside,(float)nps,(float)npb,(float)npscom,(float)npbcom,(float)hfs,(float)hfb,(float)nls,(float)nlb,(float)nlscom,(float)nlbcom,
+			 (float)pt1,(float)eta1,(float)phi1,(float)pt2,(float)eta2,(float)phi2,(float)pt3,(float)eta3,(float)phi3,(float)dphijet,
+			 (float)trkMax1,(float)trkMax2,(float)trkMax3,
+			 (float)pt,(float)eta,(float)phi,(float)
+			 genpt,(float)geneta,(float)genphi,(float)dijetType 
        };
 
        ntjet->Fill(jentry);
