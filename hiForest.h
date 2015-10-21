@@ -297,7 +297,7 @@ class HiForest : public TNamed
 
   bool hasHltTree;
   bool hasTrackTree;
-  bool hasPixTrackTree;
+  //bool hasPixTrackTree;
   bool hasSkimTree;
   bool hasTowerTree;
   bool hasHbheTree;
@@ -539,7 +539,9 @@ HiForest::HiForest(const char *infName, const char* name, collisionType cMode, b
   hasGenpTree	   = (genpTree     		!=0);
   hasGenParticleTree = (genParticleTree   	!=0);
   setupOutput = false;
-  //InitTree();
+
+  cout <<"HiForest defined. Need to do InitTree() to load the trees."<<endl.
+//  InitTree();
 }
 
 HiForest::~HiForest()
@@ -604,7 +606,7 @@ void HiForest::GetEntry(int i)
   if (hasAkVs6CaloJetTree) akVs6CaloJetTree ->GetEntry(i);
 
   if (hasTrackTree)    trackTree    ->GetEntry(i);
-  if (hasPixTrackTree) pixtrackTree ->GetEntry(i);
+//  if (hasPixTrackTree) pixtrackTree ->GetEntry(i);
   if (hasTowerTree)    towerTree    ->GetEntry(i);
   if (hasHbheTree)     hbheTree     ->GetEntry(i);
   if (hasEbTree)       ebTree     ->GetEntry(i);
@@ -623,7 +625,6 @@ int HiForest::GetEntries()
 
 void HiForest::InitTree()
 {
-
    // Setup branches. See also Setup*.h
    if (hasPhotonTree) {
       photonTree->SetName("photon");
@@ -725,7 +726,6 @@ void HiForest::InitTree()
      if (tree == 0) tree = akPu6CaloJetTree; else tree->AddFriend(akPu6CaloJetTree);
      setupJetTree(akPu6CaloJetTree,akPu6Calo);
    }
-
    if (hasAk2JetTree) {
      ak2PFJetTree->SetName("ak2PF");
      if (tree == 0) tree = ak2PFJetTree; else tree->AddFriend(ak2PFJetTree);
@@ -845,19 +845,20 @@ void HiForest::InitTree()
      setupJetTree(akVs6CaloJetTree,akVs6Calo);
    }
 
+
    if (hasTrackTree) {
-      trackTree->SetName("track");
+      trackTree->SetName("track");  
       if (tree == 0) tree = trackTree; else tree->AddFriend(trackTree);
       trackTree->SetAlias("mergedGeneral","(trkAlgo<4||(highPurity))");
       trackTree->SetAlias("mergedSelected","(trkAlgo<4||(highPurity&&trkAlgo==4)))");
       setupTrackTree(trackTree,track);
    }
 
-   if (hasPixTrackTree) {
-      pixtrackTree->SetName("pixtrack");
-      if (tree == 0) tree = pixtrackTree; else tree->AddFriend(pixtrackTree);
-      setupTrackTree(pixtrackTree,pixtrack);
-   }
+//   if (hasPixTrackTree) {
+//      pixtrackTree->SetName("pixtrack");
+//      if (tree == 0) tree = pixtrackTree; else tree->AddFriend(pixtrackTree);
+//      setupTrackTree(pixtrackTree,pixtrack);
+//   }
 
    if (hasSkimTree) {
       skimTree->SetName("skim");
@@ -906,7 +907,7 @@ void HiForest::InitTree()
    //! Dynamic jet collection 
   if (whichjet.compare("akPu3Calo")==0)  
    {
-     cout<<whichjet<<endl;
+      cout<<whichjet<<endl;
       setupJetTree(akPu3CaloJetTree,myjet);
    }
    if (whichjet.compare("akPu3PF")==0)    
@@ -1071,7 +1072,7 @@ void HiForest::PrintStatus()
   if (hasAkVs6CaloJetTree) CheckTree(akVs6CaloJetTree, "AkVs6CaloJetTree");
 
   if (hasTrackTree)    CheckTree(trackTree,    "TrackTree");
-  if (hasPixTrackTree) CheckTree(pixtrackTree, "PixTrackTree");
+ // if (hasPixTrackTree) CheckTree(pixtrackTree, "PixTrackTree");
   if (hasPhotonTree)   CheckTree(photonTree,   "PhotonTree");
   if (hasPFTree)       CheckTree(pfTree,   "PFTree");
   if (hasMetTree)      CheckTree(metTree,   "MetTree");
@@ -1120,7 +1121,7 @@ void HiForest::SetOutputFile(const char *name)
   if (hasAkVs6CaloJetTree) AddCloneTree(akVs6CaloJetTree, "akVs6CaloJetAnalyzer", "t");
 
   if (hasTrackTree)    AddCloneTree(trackTree,    "ppTrack",           "trackTree");
-  if (hasPixTrackTree) AddCloneTree(pixtrackTree, "anaPixTrack",        "trackTree");
+//  if (hasPixTrackTree) AddCloneTree(pixtrackTree, "anaPixTrack",        "trackTree");
   if (hasPhotonTree)   AddCloneTree(photonTree,   "multiPhotonAnalyzer",            "photon");
   if (hasPFTree)   AddCloneTree(pfTree,   "pfcandAnalyzer",            "pfTree");
   if (hasEvtTree)      AddCloneTree(evtTree,      "hiEvtAnalyzer",            "HiTree");
