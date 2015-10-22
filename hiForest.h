@@ -1259,7 +1259,7 @@ void HiForest::LoadNoTrees()
 
   hasHltTree = false;
   hasTrackTree = false;
-  hasPixTrackTree = false;
+//  hasPixTrackTree = false;
   hasSkimTree = false;
   hasTowerTree = false;
   hasHbheTree = false;
