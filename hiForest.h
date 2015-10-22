@@ -540,7 +540,7 @@ HiForest::HiForest(const char *infName, const char* name, collisionType cMode, b
   hasGenParticleTree = (genParticleTree   	!=0);
   setupOutput = false;
 
-  cout <<"HiForest defined. Need to do InitTree() to load the trees."<<endl.
+  cout <<"HiForest defined. Need to do InitTree() to load the trees."<<endl;
 //  InitTree();
 }
 
