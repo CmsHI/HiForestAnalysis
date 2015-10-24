@@ -430,7 +430,7 @@ HiForest::HiForest(const char *infName, const char* name, collisionType cMode, b
   // Load trees. Hard coded for the moment
   hltTree          = (TTree*) inf->Get("hltanalysis/HltTree");
   skimTree         = (TTree*) inf->Get("skimanalysis/HltTree");
-  photonTree       = (TTree*) inf->Get("multiPhotonAnalyzer/photon");
+  photonTree       = (TTree*) inf->Get("ggHiNtuplizer/EventTree");
   trackTree        = (TTree*) inf->Get("anaTrack/trackTree");
   if( trackTree == 0 ) trackTree        = (TTree*) inf->Get("ppTrack/trackTree");
 
