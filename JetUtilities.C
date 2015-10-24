@@ -522,23 +522,23 @@ void HiForest::fakeRejection(TTree *jetTree, Jets &jets, bool allEvents)
 			}
 			jets.fr01Chg[j] = std::max(jets.fr01Chg[j], sum);
 			sum = 0;
-			for (int k = 0; k < photon.nPhotons; k++) {
+			for (int k = 0; k < photon.nPho; k++) {
 				const float dpseudorapidity =
-					photon.eta[k] - jets.jteta[j];
+					photon.phoEta->at(k) - jets.jteta[j];
 				const float dazimuth =
-					deltaPhi(photon.phi[k], jets.jtphi[j]);
+					deltaPhi(photon.phoPhi->at(k), jets.jtphi[j]);
 				const float angular_weight =
 					exp(-50.0F * (dpseudorapidity * dpseudorapidity +
 								  dazimuth * dazimuth));
 				const float weighted_perp =
-					angular_weight * photon.pt[k] * photon.pt[k];
+					angular_weight * photon.phoEt->at(k) * photon.phoEt->at(k);
 				const float weighted_perp_square =
-					weighted_perp * photon.pt[k];
+					weighted_perp * photon.phoEt->at(k);
 
 				sum += weighted_perp_square;
 				if (weighted_perp >= max_weighted_perp) {
-					pseudorapidity_adapt = photon.eta[k];
-					azimuth_adapt = photon.phi[k];
+					pseudorapidity_adapt = photon.phoEta->at(k);
+					azimuth_adapt = photon.phoPhi->at(k);
 					max_weighted_perp = weighted_perp;
 				}
 			}
@@ -562,23 +562,23 @@ void HiForest::fakeRejection(TTree *jetTree, Jets &jets, bool allEvents)
 			}
 			jets.fr01Chg[j] = std::max(jets.fr01Chg[j], sum);
 			sum = 0;
-			for (int k = 0; k < photon.nPhotons; k++) {
+			for (int k = 0; k < photon.nPho; k++) {
 				const float dpseudorapidity =
-					photon.eta[k] - jets.jteta[j];
+					photon.phoEta->at(k) - jets.jteta[j];
 				const float dazimuth =
-					deltaPhi(photon.phi[k], jets.jtphi[j]);
+					deltaPhi(photon.phoPhi->at(k), jets.jtphi[j]);
 				const float angular_weight =
 					exp(-50.0F * (dpseudorapidity * dpseudorapidity +
 								  dazimuth * dazimuth));
 				const float weighted_perp =
-					angular_weight * photon.pt[k] * photon.pt[k];
+					angular_weight * photon.phoEt->at(k) * photon.phoEt->at(k);
 				const float weighted_perp_square =
-					weighted_perp * photon.pt[k];
+					weighted_perp * photon.phoEt->at(k);
 
 				sum += weighted_perp_square;
 				if (weighted_perp >= max_weighted_perp) {
-					pseudorapidity_adapt = photon.eta[k];
-					azimuth_adapt = photon.phi[k];
+					pseudorapidity_adapt = photon.phoEta->at(k);
+					azimuth_adapt = photon.phoPhi->at(k);
 					max_weighted_perp = weighted_perp;
 				}
 			}
