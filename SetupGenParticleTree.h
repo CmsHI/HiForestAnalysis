@@ -1,8 +1,8 @@
 //////////////////////////////////////////////////////////
 // This class has been automatically generated on
-// Wed Jul 18 23:43:21 2012 by ROOT version 5.27/06b
+// Sat Oct 24 21:28:54 2015 by ROOT version 6.02/10
 // from TTree hi/Tree of Hi gen Event
-// found on file: /d102/yjlee/hiForest2MC/lowPtSimTrack/mergedFile100.root
+// found on file: ../../HiForest2015/Pyquen_Unquenched_AllQCDPhoton30_PhotonFilter20GeV_eta24_TuneZ2_PbPb_5020GeV_0.root
 //////////////////////////////////////////////////////////
 #include "commonSetup.h"
 #include <iostream>
@@ -11,8 +11,6 @@
 #include <TFile.h>
 #include <TTree.h>
 #include <TBranch.h>
-
-using namespace std;
 
 class GenParticles {
 public :
@@ -30,13 +28,17 @@ public :
    Int_t           n[3];
    Float_t         ptav[3];
    Int_t           mult;
-   Float_t         pt[maxEntrySim];   //[mult]
-   Float_t         eta[maxEntrySim];   //[mult]
-   Float_t         phi[maxEntrySim];   //[mult]
-   Int_t           pdg[maxEntrySim];   //[mult]
-   Int_t           chg[maxEntrySim];   //[mult]
-   Int_t           sta[maxEntrySim];   //[mult]
-   Int_t           sube[maxEntrySim];   //[mult]
+   vector<float>   *pt;
+   vector<float>   *eta;
+   vector<float>   *phi;
+   vector<int>     *pdg;
+   vector<int>     *chg;
+   vector<int>     *matchingID;
+   vector<int>     *nMothers;
+   vector<vector<int> > *motherIdx;
+   vector<int>     *nDaughters;
+   vector<vector<int> > *daughterIdx;
+   vector<int>     *sube;
    Float_t         vx;
    Float_t         vy;
    Float_t         vz;
@@ -58,7 +60,11 @@ public :
    TBranch        *b_phi;   //!
    TBranch        *b_pdg;   //!
    TBranch        *b_chg;   //!
-   TBranch        *b_sta;   //!
+   TBranch        *b_matchingID;   //!
+   TBranch        *b_nMothers;   //!
+   TBranch        *b_motherIdx;   //!
+   TBranch        *b_nDaughters;   //!
+   TBranch        *b_daughterIdx;   //!
    TBranch        *b_sube;   //!
    TBranch        *b_vx;   //!
    TBranch        *b_vy;   //!
@@ -70,30 +76,47 @@ public :
 
 void setupGenParticleTree(TTree *t,GenParticles &tGenParticles,bool doCheck = 1)
 {
+   // Set object pointer
+/*
+   pt = 0;
+   eta = 0;
+   phi = 0;
+   pdg = 0;
+   chg = 0;
+   matchingID = 0;
+   nMothers = 0;
+   motherIdx = 0;
+   nDaughters = 0;
+   daughterIdx = 0;
+   sube = 0;
+   */
    // Set branch addresses and branch pointers
-   if (t->GetBranch("event")) t->SetBranchAddress("event", &tGenParticles.event, &tGenParticles.b_event);
-   if (t->GetBranch("b")) t->SetBranchAddress("b", &tGenParticles.b, &tGenParticles.b_b);
-   if (t->GetBranch("npart")) t->SetBranchAddress("npart", &tGenParticles.npart, &tGenParticles.b_npart);
-   if (t->GetBranch("ncoll")) t->SetBranchAddress("ncoll", &tGenParticles.ncoll, &tGenParticles.b_ncoll);
-   if (t->GetBranch("nhard")) t->SetBranchAddress("nhard", &tGenParticles.nhard, &tGenParticles.b_nhard);
-   if (t->GetBranch("phi0")) t->SetBranchAddress("phi0", &tGenParticles.phi0, &tGenParticles.b_phi0);
-   if (t->GetBranch("scale")) t->SetBranchAddress("scale", &tGenParticles.scale, &tGenParticles.b_scale);
-   if (t->GetBranch("n")) t->SetBranchAddress("n", tGenParticles.n, &tGenParticles.b_n);
-   if (t->GetBranch("ptav")) t->SetBranchAddress("ptav", tGenParticles.ptav, &tGenParticles.b_ptav);
-   if (t->GetBranch("mult")) t->SetBranchAddress("mult", &tGenParticles.mult, &tGenParticles.b_mult);
-   if (t->GetBranch("pt")) t->SetBranchAddress("pt", tGenParticles.pt, &tGenParticles.b_pt);
-   if (t->GetBranch("eta")) t->SetBranchAddress("eta", tGenParticles.eta, &tGenParticles.b_eta);
-   if (t->GetBranch("phi")) t->SetBranchAddress("phi", tGenParticles.phi, &tGenParticles.b_phi);
-   if (t->GetBranch("pdg")) t->SetBranchAddress("pdg", tGenParticles.pdg, &tGenParticles.b_pdg);
-   if (t->GetBranch("chg")) t->SetBranchAddress("chg", tGenParticles.chg, &tGenParticles.b_chg);
-   if (t->GetBranch("sta")) t->SetBranchAddress("sta", tGenParticles.sta, &tGenParticles.b_sta);
-   if (t->GetBranch("sube")) t->SetBranchAddress("sube", tGenParticles.sube, &tGenParticles.b_sube);
-   if (t->GetBranch("vx")) t->SetBranchAddress("vx", &tGenParticles.vx, &tGenParticles.b_vx);
-   if (t->GetBranch("vy")) t->SetBranchAddress("vy", &tGenParticles.vy, &tGenParticles.b_vy);
-   if (t->GetBranch("vz")) t->SetBranchAddress("vz", &tGenParticles.vz, &tGenParticles.b_vz);
-   if (t->GetBranch("vr")) t->SetBranchAddress("vr", &tGenParticles.vr, &tGenParticles.b_vr);
+   t->SetBranchAddress("event", &tGenParticles.event, &tGenParticles.b_event);
+   t->SetBranchAddress("b", &tGenParticles.b, &tGenParticles.b_b);
+   t->SetBranchAddress("npart", &tGenParticles.npart, &tGenParticles.b_npart);
+   t->SetBranchAddress("ncoll", &tGenParticles.ncoll, &tGenParticles.b_ncoll);
+   t->SetBranchAddress("nhard", &tGenParticles.nhard, &tGenParticles.b_nhard);
+   t->SetBranchAddress("phi0", &tGenParticles.phi0, &tGenParticles.b_phi0);
+   t->SetBranchAddress("scale", &tGenParticles.scale, &tGenParticles.b_scale);
+   t->SetBranchAddress("n", tGenParticles.n, &tGenParticles.b_n);
+   t->SetBranchAddress("ptav", tGenParticles.ptav, &tGenParticles.b_ptav);
+   t->SetBranchAddress("mult", &tGenParticles.mult, &tGenParticles.b_mult);
+   t->SetBranchAddress("pt", &tGenParticles.pt, &tGenParticles.b_pt);
+   t->SetBranchAddress("eta", &tGenParticles.eta, &tGenParticles.b_eta);
+   t->SetBranchAddress("phi", &tGenParticles.phi, &tGenParticles.b_phi);
+   t->SetBranchAddress("pdg", &tGenParticles.pdg, &tGenParticles.b_pdg);
+   t->SetBranchAddress("chg", &tGenParticles.chg, &tGenParticles.b_chg);
+   t->SetBranchAddress("matchingID", &tGenParticles.matchingID, &tGenParticles.b_matchingID);
+   t->SetBranchAddress("nMothers", &tGenParticles.nMothers, &tGenParticles.b_nMothers);
+   t->SetBranchAddress("motherIdx", &tGenParticles.motherIdx, &tGenParticles.b_motherIdx);
+   t->SetBranchAddress("nDaughters", &tGenParticles.nDaughters, &tGenParticles.b_nDaughters);
+   t->SetBranchAddress("daughterIdx", &tGenParticles.daughterIdx, &tGenParticles.b_daughterIdx);
+   t->SetBranchAddress("sube", &tGenParticles.sube, &tGenParticles.b_sube);
+   t->SetBranchAddress("vx", &tGenParticles.vx, &tGenParticles.b_vx);
+   t->SetBranchAddress("vy", &tGenParticles.vy, &tGenParticles.b_vy);
+   t->SetBranchAddress("vz", &tGenParticles.vz, &tGenParticles.b_vz);
+   t->SetBranchAddress("vr", &tGenParticles.vr, &tGenParticles.b_vr);
    if (doCheck) {
-      if (t->GetMaximum("mult")>maxEntrySim) { cout <<"FATAL ERROR: Arrary size of mult too small!!!  "<<t->GetMaximum("mult")<<endl; exit(0);
- }   }
+   }
 }
 
