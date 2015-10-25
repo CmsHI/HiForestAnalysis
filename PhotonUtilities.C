@@ -153,6 +153,7 @@ float HiForest::getCorrEt(int j)
 
 void HiForest::MatchGenPhoton()
 {
+    if (verbose) cout <<"doing MatchGenPhoton"<<endl;
     int nGEN  = photon.mcEt->size();
     int nRECO = photon.phoEt->size();
     
@@ -171,16 +172,17 @@ void HiForest::MatchGenPhoton()
       int matched=-1;
       for (int i=0;i< nGEN;i++) {
         if (photon.mcStatus->at(i)!=1 || (photon.mcPID->at(i))!=22) continue;
-	if (photon.phoEt->at(i)<currentMaxEt) continue;
+	if (photon.mcPt->at(i)<currentMaxEt) continue;
 	if (deltaR(photon.mcEta->at(i), photon.mcPhi->at(i), photon.phoEta->at(j), photon.phoPhi->at(j))>delta) continue;
 	gpTemp=true;
 	matched=i;
-	currentMaxEt=photon.phoEt->at(i);
+	currentMaxEt=photon.mcPt->at(i);
       }
       photon.isGenMatched->push_back(gpTemp);
       photon.genMatchedIdx->push_back(matched);
     }  
-
+    
+//   cout <<"done"<<endl;
 }
 
 
