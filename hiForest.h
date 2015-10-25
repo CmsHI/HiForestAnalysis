@@ -70,7 +70,6 @@ class HiForest : public TNamed
   void LoadNoTrees();
   void ResetBooleans();
 
-
   void Draw(Option_t* option){
     return tree->Draw(option);
   }
@@ -96,6 +95,7 @@ class HiForest : public TNamed
   bool isDirectPhoton(int i);
   bool isFragPhoton(int i);
   float getCorrEt(int j);                                       // Get Corrected photon Et
+  void MatchGenPhoton();					// match reco photons to gen (produce matched)
 
   //==================================================================================================================================
   // Jet utility functions
@@ -560,7 +560,10 @@ void HiForest::GetEntry(int i)
 
    currentEvent = i;
   // get the entry of the available trees
-  if (hasPhotonTree)   photonTree   ->GetEntry(i);
+  if (hasPhotonTree)   {
+     photonTree   ->GetEntry(i);
+     MatchGenPhoton();
+  }
   if (hasPFTree)       pfTree   ->GetEntry(i);
   if (hasEvtTree)      evtTree   ->GetEntry(i);
   if (hasMetTree)      metTree   ->GetEntry(i);
