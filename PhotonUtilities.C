@@ -81,46 +81,35 @@ bool HiForest::isIsolatedPhoton(int j)
 
 bool HiForest::isMCSignal(int j)
 {
-/*
-//Yen-Jie: Matching broken (no gen-reco matching in ggNtuple 
+//Yen-Jie: Matching broken (no gen-reco matching in ggNtuple , use HiForest::MatchGenPhoton()
 
-  if ( photon.pho_isGenMatched->at(j) != 1) 
+  if ( photon.isGenMatched->at(j) != 1) 
     return 0;
-  if ( fabs(photon.pho_genMomId->at(j)) > 22)
+  if ( fabs(photon.mcMomPID->at(photon.genMatchedIdx->at(j))) > 22)
     return 0;
-  if ( photon.pho_genCalIsoDR04->at(j) > 5)
+  if ( fabs(photon.mcCalIsoDR04->at(photon.genMatchedIdx->at(j))) > 5)
     return 0;
   return 1;
-*/ 
-  cout <<"Yen-Jie: Matching broken (no gen-reco matching in ggNtuple"<<endl;
-  return 0;
 }
 
 bool HiForest::isDirectPhoton(int j)
 {
-/*
-  if ( photon.pho_isGenMatched->at(j) != 1)
+
+  if ( photon.isGenMatched->at(j) != 1)
     return 0;
-  if ( photon.pho_genMomId->at(j) !=22)
+  if ( fabs(photon.mcMomPID->at(photon.genMatchedIdx->at(j))) != 22)
     return 0;
   
   return 1;
-*/ 
-  cout <<"Yen-Jie: Matching broken (no gen-reco matching in ggNtuple"<<endl;
-  return 0;
 }
 
 bool HiForest::isFragPhoton(int j)
 {
-/*
-  if ( photon.pho_isGenMatched->at(j) != 1)
+  if ( photon.isGenMatched->at(j) != 1)
     return 0;
-  if ( fabs(photon.pho_genMomId->at(j)) >= 22)
+  if ( fabs(photon.mcMomPID->at(photon.genMatchedIdx->at(j))) >= 22)
     return 0;
   return 1;
-*/ 
-  cout <<"Yen-Jie: Matching broken (no gen-reco matching in ggNtuple"<<endl;
-  return 0;
 }
 
 
@@ -162,5 +151,36 @@ float HiForest::getCorrEt(int j)
    return -1;
 }
 
+void HiForest::MatchGenPhoton()
+{
+    int nGEN  = photon.mcEt->size();
+    int nRECO = photon.phoEt->size();
+    
+    float delta(0.15);
+    
+    if (photon.isGenMatched==0) photon.isGenMatched = new vector<bool>;
+    if (photon.genMatchedIdx==0) photon.genMatchedIdx = new vector<int>;
+
+    photon.isGenMatched->clear();
+    photon.genMatchedIdx->clear();
+    
+    
+    for (int j=0; j< nRECO;j++) {
+      float currentMaxEt(-1);
+      bool gpTemp(false);
+      int matched=-1;
+      for (int i=0;i< nGEN;i++) {
+        if (photon.mcStatus->at(i)!=1 || (photon.mcPID->at(i))!=22) continue;
+	if (photon.phoEt->at(i)<currentMaxEt) continue;
+	if (deltaR(photon.mcEta->at(i), photon.mcPhi->at(i), photon.phoEta->at(j), photon.phoPhi->at(j))>delta) continue;
+	gpTemp=true;
+	matched=i;
+	currentMaxEt=photon.phoEt->at(i);
+      }
+      photon.isGenMatched->push_back(gpTemp);
+      photon.genMatchedIdx->push_back(matched);
+    }  
+
+}
 
 
