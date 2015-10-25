@@ -14,7 +14,18 @@
 
 class GenParticles {
 public :
-   GenParticles(){};
+   GenParticles(){   pt = 0;
+   eta = 0;
+   phi = 0;
+   pdg = 0;
+   chg = 0;
+   matchingID = 0;
+   nMothers = 0;
+   motherIdx = 0;
+   nDaughters = 0;
+   daughterIdx = 0;
+   sube = 0;
+};
    ~GenParticles(){};
 
    // Declaration of leaf types
@@ -77,19 +88,8 @@ public :
 void setupGenParticleTree(TTree *t,GenParticles &tGenParticles,bool doCheck = 1)
 {
    // Set object pointer
-/*
-   pt = 0;
-   eta = 0;
-   phi = 0;
-   pdg = 0;
-   chg = 0;
-   matchingID = 0;
-   nMothers = 0;
-   motherIdx = 0;
-   nDaughters = 0;
-   daughterIdx = 0;
-   sube = 0;
-   */
+
+
    // Set branch addresses and branch pointers
    t->SetBranchAddress("event", &tGenParticles.event, &tGenParticles.b_event);
    t->SetBranchAddress("b", &tGenParticles.b, &tGenParticles.b_b);
