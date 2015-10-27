@@ -36,6 +36,7 @@
 //
 // ==========================================================
 
+
 namespace names{
   enum Algo{
   };
@@ -628,53 +629,62 @@ int HiForest::GetEntries()
 
 void HiForest::InitTree()
 {
+   tree=0;
    // Setup branches. See also Setup*.h
    if (hasPhotonTree) {
       photonTree->SetName("photon");
       photonTree->SetAlias("swiss","1-(eRight+eLeft+eTop+eBottom)/eMax");
-      if (tree == 0) tree = photonTree; else tree->AddFriend(photonTree);
+      tree = photonTree; 
       setupPhotonTree(photonTree,photon);
+      if (verbose) cout <<"Initialize photon tree"<<endl;
    }
    if (hasPFTree) {
       pfTree->SetName("pf");
       if (tree == 0) tree = pfTree; else tree->AddFriend(pfTree);
       setupPFTree(pfTree,pf);
+      if (verbose) cout <<"Initialize PF tree"<<endl;
    }
 
    if (hasEvtTree) {
       evtTree->SetName("evtTree");
       if (tree == 0) tree = evtTree; else tree->AddFriend(evtTree);
       setupEvtTree(evtTree,evt);
+      if (verbose) cout <<"Initialize evt tree"<<endl;
    }
 
    if (hasMetTree) {
       metTree->SetName("met");
       if (tree == 0) tree = metTree; else tree->AddFriend(metTree);
       setupMetTree(metTree,met);
+      if (verbose) cout <<"Initialize met tree"<<endl;
    }
 
    if (hasHltTree) {
       hltTree->SetName("hltTree");
       if (tree == 0) tree = hltTree; else tree->AddFriend(hltTree);
       setupHltTree(hltTree,hlt);
+      if (verbose) cout <<"Initialize hlt tree"<<endl;
    }
 
    if (hasIcPu5JetTree) {
       icPu5jetTree->SetName("icPu5");
       if (tree == 0) tree = icPu5jetTree; else tree->AddFriend(icPu5jetTree);
       setupJetTree(icPu5jetTree,icPu5);
+      if (verbose) cout <<"Initialize icPu5 tree"<<endl;
    }
 
    if (hasAkPu2JetTree) {
       akPu2PFJetTree->SetName("akPu2PF");
       if (tree == 0) tree = akPu2PFJetTree; else tree->AddFriend(akPu2PFJetTree);
       setupJetTree(akPu2PFJetTree,akPu2PF);
+      if (verbose) cout <<"Initialize akPu2PF tree"<<endl;
    }
 
    if (hasAkPu3JetTree) {
       akPu3PFJetTree->SetName("akPu3PF");
       if (tree == 0) tree = akPu3PFJetTree; else tree->AddFriend(akPu3PFJetTree);
       setupJetTree(akPu3PFJetTree,akPu3PF);
+      if (verbose) cout <<"Initialize akPu3PF tree"<<endl;
    }
 
    if (hasAkPu4JetTree) {
@@ -683,169 +693,196 @@ void HiForest::InitTree()
       if (tree == 0) tree = akPu4PFJetTree; else tree->AddFriend(akPu4PFJetTree);
 
       setupJetTree(akPu4PFJetTree,akPu4PF);
+      if (verbose) cout <<"Initialize akPu4PF tree"<<endl;
    }
 
    if (hasAkPu5JetTree) {
 
       akPu5PFJetTree->SetName("akPu5PF");
-
       if (tree == 0) tree = akPu5PFJetTree; else tree->AddFriend(akPu5PFJetTree);
-
       setupJetTree(akPu5PFJetTree,akPu5PF);
+      if (verbose) cout <<"Initialize akPu5PF tree"<<endl;
    }
 
    if (hasAkPu6JetTree) {
      akPu6PFJetTree->SetName("akPu6PF");
      if (tree == 0) tree = akPu6PFJetTree; else tree->AddFriend(akPu6PFJetTree);
      setupJetTree(akPu6PFJetTree,akPu6PF);
+     if (verbose) cout <<"Initialize akPu6PF tree"<<endl;
    }
 
    if (hasAkPu2CaloJetTree) {
       akPu2CaloJetTree->SetName("akPu2Calo");
       if (tree == 0) tree = akPu2CaloJetTree; else tree->AddFriend(akPu2CaloJetTree);
       setupJetTree(akPu2CaloJetTree,akPu2Calo);
+      if (verbose) cout <<"Initialize akPu2Calo tree"<<endl;
    }
 
    if (hasAkPu3CaloJetTree) {
       akPu3CaloJetTree->SetName("akPu3Calo");
       if (tree == 0) tree = akPu3CaloJetTree; else tree->AddFriend(akPu3CaloJetTree);
       setupJetTree(akPu3CaloJetTree,akPu3Calo);
+      if (verbose) cout <<"Initialize akPu3Calo tree"<<endl;
    }
 
    if (hasAkPu4CaloJetTree) {
       akPu4CaloJetTree->SetName("akPu4Calo");
       if (tree == 0) tree = akPu4CaloJetTree; else tree->AddFriend(akPu4CaloJetTree);
       setupJetTree(akPu4CaloJetTree,akPu4Calo);
+      if (verbose) cout <<"Initialize akPu4Calo tree"<<endl;
    }
 
    if (hasAkPu5CaloJetTree) {
      akPu5CaloJetTree->SetName("akPu5Calo");
      if (tree == 0) tree = akPu5CaloJetTree; else tree->AddFriend(akPu5CaloJetTree);
      setupJetTree(akPu5CaloJetTree,akPu5Calo);
+      if (verbose) cout <<"Initialize akPu5Calo tree"<<endl;
    }
 
    if (hasAkPu6CaloJetTree) {
      akPu6CaloJetTree->SetName("akPu6Calo");
      if (tree == 0) tree = akPu6CaloJetTree; else tree->AddFriend(akPu6CaloJetTree);
      setupJetTree(akPu6CaloJetTree,akPu6Calo);
+      if (verbose) cout <<"Initialize akPu6Calo tree"<<endl;
    }
+
    if (hasAk2JetTree) {
      ak2PFJetTree->SetName("ak2PF");
      if (tree == 0) tree = ak2PFJetTree; else tree->AddFriend(ak2PFJetTree);
      setupJetTree(ak2PFJetTree,ak2PF);
+     if (verbose) cout <<"Initialize ak2PF tree"<<endl;
    }
 
    if (hasAk3JetTree) {
      ak3PFJetTree->SetName("ak3PF");
      if (tree == 0) tree = ak3PFJetTree; else tree->AddFriend(ak3PFJetTree);
      setupJetTree(ak3PFJetTree,ak3PF);
+     if (verbose) cout <<"Initialize ak3PF tree"<<endl;
    }
 
    if (hasAk4JetTree) {
      ak4PFJetTree->SetName("ak4PF");
      if (tree == 0) tree = ak4PFJetTree; else tree->AddFriend(ak4PFJetTree);
      setupJetTree(ak4PFJetTree,ak4PF);
+     if (verbose) cout <<"Initialize ak4PF tree"<<endl;
    }
 
    if (hasAk5JetTree) {
      ak5PFJetTree->SetName("ak5PF");
      if (tree == 0) tree = ak5PFJetTree; else tree->AddFriend(ak5PFJetTree);
      setupJetTree(ak5PFJetTree,ak5PF);
+     if (verbose) cout <<"Initialize ak5PF tree"<<endl;
    }
 
    if (hasAk6JetTree) {
      ak6PFJetTree->SetName("ak6PF");
      if (tree == 0) tree = ak6PFJetTree; else tree->AddFriend(ak6PFJetTree);
      setupJetTree(ak6PFJetTree,ak6PF);
+     if (verbose) cout <<"Initialize ak6PF tree"<<endl;
    }
    if (hasAk2CaloJetTree) {
      ak2CaloJetTree->SetName("ak2Calo");
      if (tree == 0) tree = ak2CaloJetTree; else tree->AddFriend(ak2CaloJetTree);
      setupJetTree(ak2CaloJetTree,ak2Calo);
+     if (verbose) cout <<"Initialize ak2Calo tree"<<endl;
    }
 
    if (hasAk3CaloJetTree) {
      ak3CaloJetTree->SetName("ak3Calo");
      if (tree == 0) tree = ak3CaloJetTree; else tree->AddFriend(ak3CaloJetTree);
      setupJetTree(ak3CaloJetTree,ak3Calo);
+     if (verbose) cout <<"Initialize ak3Calo tree"<<endl;
    }
 
    if (hasAk4CaloJetTree) {
      ak4CaloJetTree->SetName("ak4Calo");
      if (tree == 0) tree = ak4CaloJetTree; else tree->AddFriend(ak4CaloJetTree);
      setupJetTree(ak4CaloJetTree,ak4Calo);
+     if (verbose) cout <<"Initialize ak4Calo tree"<<endl;
    }
 
    if (hasAk5CaloJetTree) {
      ak5CaloJetTree->SetName("ak5Calo");
      if (tree == 0) tree = ak5CaloJetTree; else tree->AddFriend(ak5CaloJetTree);
      setupJetTree(ak5CaloJetTree,ak5Calo);
+     if (verbose) cout <<"Initialize ak5Calo tree"<<endl;
    }
 
    if (hasAk6CaloJetTree) {
      ak6CaloJetTree->SetName("ak6Calo");
      if (tree == 0) tree = ak6CaloJetTree; else tree->AddFriend(ak6CaloJetTree);
      setupJetTree(ak6CaloJetTree,ak6Calo);
+     if (verbose) cout <<"Initialize ak6Calo tree"<<endl;
    }
 
    if (hasAkVs2PFJetTree) {
      akVs2PFJetTree->SetName("akVs2PF");
      if (tree == 0) tree = akVs2PFJetTree; else tree->AddFriend(akVs2PFJetTree);
      setupJetTree(akVs2PFJetTree,akVs2PF);
+     if (verbose) cout <<"Initialize akVs2PF tree"<<endl;
    }
 
    if (hasAkVs3PFJetTree) {
      akVs3PFJetTree->SetName("akVs3PF");
      if (tree == 0) tree = akVs3PFJetTree; else tree->AddFriend(akVs3PFJetTree);
      setupJetTree(akVs3PFJetTree,akVs3PF);
+     if (verbose) cout <<"Initialize akVs3PF tree"<<endl;
    }
 
    if (hasAkVs4PFJetTree) {
      akVs4PFJetTree->SetName("akVs4PF");
      if (tree == 0) tree = akVs4PFJetTree; else tree->AddFriend(akVs4PFJetTree);
      setupJetTree(akVs4PFJetTree,akVs4PF);
+     if (verbose) cout <<"Initialize akVs4PF tree"<<endl;
    }
 
    if (hasAkVs5PFJetTree) {
      akVs5PFJetTree->SetName("akVs5PF");
      if (tree == 0) tree = akVs5PFJetTree; else tree->AddFriend(akVs5PFJetTree);
      setupJetTree(akVs5PFJetTree,akVs5PF);
+     if (verbose) cout <<"Initialize akVs5PF tree"<<endl;
    }
 
    if (hasAkVs6PFJetTree) {
      akVs6PFJetTree->SetName("akVs6PF");
      if (tree == 0) tree = akVs6PFJetTree; else tree->AddFriend(akVs6PFJetTree);
      setupJetTree(akVs6PFJetTree,akVs6PF);
+     if (verbose) cout <<"Initialize akVs6PF tree"<<endl;
    }
 
    if (hasAkVs2CaloJetTree) {
      akVs2CaloJetTree->SetName("akVs2Calo");
      if (tree == 0) tree = akVs2CaloJetTree; else tree->AddFriend(akVs2CaloJetTree);
      setupJetTree(akVs2CaloJetTree,akVs2Calo);
+     if (verbose) cout <<"Initialize akVs2Calo tree"<<endl;
    }
 
    if (hasAkVs3CaloJetTree) {
      akVs3CaloJetTree->SetName("akVs3Calo");
      if (tree == 0) tree = akVs3CaloJetTree; else tree->AddFriend(akVs3CaloJetTree);
      setupJetTree(akVs3CaloJetTree,akVs3Calo);
+     if (verbose) cout <<"Initialize akVs3Calo tree"<<endl;
    }
 
    if (hasAkVs4CaloJetTree) {
      akVs4CaloJetTree->SetName("akVs4Calo");
      if (tree == 0) tree = akVs4CaloJetTree; else tree->AddFriend(akVs4CaloJetTree);
      setupJetTree(akVs4CaloJetTree,akVs4Calo);
+     if (verbose) cout <<"Initialize akVs4Calo tree"<<endl;
    }
 
    if (hasAkVs5CaloJetTree) {
      akVs5CaloJetTree->SetName("akVs5Calo");
      if (tree == 0) tree = akVs5CaloJetTree; else tree->AddFriend(akVs5CaloJetTree);
      setupJetTree(akVs5CaloJetTree,akVs5Calo);
+     if (verbose) cout <<"Initialize akVs5Calo tree"<<endl;
    }
 
    if (hasAkVs6CaloJetTree) {
      akVs6CaloJetTree->SetName("akVs6Calo");
      if (tree == 0) tree = akVs6CaloJetTree; else tree->AddFriend(akVs6CaloJetTree);
      setupJetTree(akVs6CaloJetTree,akVs6Calo);
+     if (verbose) cout <<"Initialize akVs6Calo tree"<<endl;
    }
 
 
@@ -855,6 +892,7 @@ void HiForest::InitTree()
       trackTree->SetAlias("mergedGeneral","(trkAlgo<4||(highPurity))");
       trackTree->SetAlias("mergedSelected","(trkAlgo<4||(highPurity&&trkAlgo==4)))");
       setupTrackTree(trackTree,track);
+     if (verbose) cout <<"Initialize track tree"<<endl;
    }
 
 //   if (hasPixTrackTree) {
@@ -867,6 +905,7 @@ void HiForest::InitTree()
       skimTree->SetName("skim");
       if (tree == 0) tree = skimTree; else tree->AddFriend(skimTree);
       setupSkimTree(skimTree,skim);
+     if (verbose) cout <<"Initialize skim tree"<<endl;
    }
 
    if (hasNoiseTree) {
@@ -874,36 +913,42 @@ void HiForest::InitTree()
 
      if (tree == 0) tree = noiseTree; else tree->AddFriend(noiseTree);
      setupNoiseTree(noiseTree,hcalNoise);
+     if (verbose) cout <<"Initialize noise tree"<<endl;
    }
 
    if (hasTowerTree) {
       towerTree->SetName("tower");
       if (tree == 0) tree = towerTree; else tree->AddFriend(towerTree);
       setupHitTree(towerTree,tower);
+     if (verbose) cout <<"Initialize tower tree"<<endl;
    }
 
    if (hasHbheTree) {
       hbheTree->SetName("hbhe");
       if (tree == 0) tree = hbheTree; else tree->AddFriend(hbheTree);
       setupHitTree(hbheTree,hbhe);
+     if (verbose) cout <<"Initialize hbhe tree"<<endl;
    }
 
    if (hasEbTree) {
       ebTree->SetName("eb");
       if (tree == 0) tree = ebTree; else tree->AddFriend(ebTree);
       setupHitTree(ebTree,eb);
+     if (verbose) cout <<"Initialize eb tree"<<endl;
    }
 
    if (hasGenpTree) {
       genpTree->SetName("genp");
       if (tree == 0) tree = genpTree; else tree->AddFriend(genpTree);
       setupGenpTree(genpTree,genp);
+     if (verbose) cout <<"Initialize genp tree"<<endl;
    }
 
    if (hasGenParticleTree) {
       genParticleTree->SetName("genparticle");
       if (tree == 0) tree = genParticleTree; else tree->AddFriend(genParticleTree);
       setupGenParticleTree(genParticleTree,genparticle);
+     if (verbose) cout <<"Initialize genparticle tree"<<endl;
    }
    tree->SetMarkerStyle(20);
    
