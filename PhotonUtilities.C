@@ -159,8 +159,8 @@ void HiForest::MatchGenPhoton()
     
     float delta(0.15);
     
-    if (photon.isGenMatched==0) photon.isGenMatched = new vector<bool>;
-    if (photon.genMatchedIdx==0) photon.genMatchedIdx = new vector<int>;
+    if (photon.isGenMatched==0) photon.isGenMatched = new vector<bool>(1000);
+    if (photon.genMatchedIdx==0) photon.genMatchedIdx = new vector<int>(1000);
 
     photon.isGenMatched->clear();
     photon.genMatchedIdx->clear();
