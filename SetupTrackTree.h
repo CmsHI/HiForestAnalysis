@@ -3,6 +3,9 @@
 // Wed Jan 23 16:17:05 2013 by ROOT version 5.32/00
 // from TTree trackTree/v1
 // found on file: root://eoscms//eos/cms/store/caf/user/velicanu/PA2013_merged/pPb_hiForest2_monster_logerrevent_HI2013_express_v1_210634_210635_v14.root
+//
+// A few data types changed on 11/8/2015 to match changes with RUN2 forest production (A. Baty)
+// trkNHit, trkNlayer, trkNdof, trkAlgo, trkNVtx, mtrkNdof
 //////////////////////////////////////////////////////////
 #include "commonSetup.h"
 #include <iostream>
@@ -50,18 +53,18 @@ public :
    Float_t         zVtxSim[1039];   //[nVtxSim]
    Float_t         trkPt[maxTracks];   //[nTrk]
    Float_t         trkPtError[maxTracks];   //[nTrk]
-   Int_t           trkNHit[maxTracks];   //[nTrk]
-   Int_t           trkNlayer[maxTracks];   //[nTrk]
+   unsigned char           trkNHit[maxTracks];   //[nTrk]
+   unsigned char           trkNlayer[maxTracks];   //[nTrk]
    Float_t         trkEta[maxTracks];   //[nTrk]
    Float_t         trkPhi[maxTracks];   //[nTrk]
    Int_t           trkCharge[maxTracks];   //[nTrk]
-   Int_t           trkNVtx[maxTracks];   //[nTrk]
+   unsigned char           trkNVtx[maxTracks];   //[nTrk]
    Int_t           nTrkTimesnVtx;
    Bool_t          trkAssocVtx[maxTracks*4];   //[nTrkTimesnVtx]
    Bool_t          highPurity[maxTracks];   //[nTrk]
    Bool_t          highPuritySetWithPV[maxTracks];   //[nTrk]
    Float_t         trkChi2[maxTracks];   //[nTrk]
-   Float_t         trkNdof[maxTracks];   //[nTrk]
+   unsigned char         trkNdof[maxTracks];   //[nTrk]
    Float_t         trkDxy1[maxTracks];   //[nTrk]
    Float_t         trkDxyError1[maxTracks];   //[nTrk]
    Float_t         trkDz1[maxTracks];   //[nTrk]
@@ -71,7 +74,7 @@ public :
    Float_t         trkDz2[maxTracks];   //[nTrk]
    Float_t         trkDxyError2[maxTracks];   //[nTrk]
    Bool_t          trkFake[maxTracks];   //[nTrk]
-   Float_t         trkAlgo[maxTracks];   //[nTrk]
+   unsigned char         trkAlgo[maxTracks];   //[nTrk]
    Int_t           pfType[maxTracks];   //[nTrk]
    Float_t         pfCandPt[maxTracks];   //[nTrk]
    Float_t         pfSumEcal[maxTracks];   //[nTrk]
@@ -97,7 +100,7 @@ public :
    Int_t           mtrkNlayer3D[maxTracks];   //[nParticle]
    Int_t           mtrkQual[maxTracks];   //[nParticle]
    Float_t         mtrkChi2[maxTracks];   //[nParticle]
-   Float_t         mtrkNdof[maxTracks];   //[nParticle]
+   Int_t         mtrkNdof[maxTracks];   //[nParticle]
    Float_t         mtrkDz1[maxTracks];   //[nParticle]
    Float_t         mtrkDzError1[maxTracks];   //[nParticle]
    Float_t         mtrkDxy1[maxTracks];   //[nParticle]
